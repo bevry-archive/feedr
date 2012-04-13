@@ -1,10 +1,11 @@
 {
-	"name": "docpad-feedr",
+	"name": "docpad-plugin-feedr",
 	"version": "0.2.0",
 	"description": "Adds support for reading feeds to DocPad",
 	"homepage": "https://github.com/bevry/docpad",
 	"keywords": [
 		"docpad",
+		"docpad-plugin",
 		"plugin",
 		"feeds",
 		"rss",
