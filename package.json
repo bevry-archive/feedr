@@ -2,7 +2,7 @@
 	"name": "docpad-plugin-feedr",
 	"version": "0.2.0",
 	"description": "Adds support for reading feeds to DocPad",
-	"homepage": "https://github.com/bevry/docpad",
+	"homepage": "https://github.com/bevry/docpad-extras",
 	"keywords": [
 		"docpad",
 		"docpad-plugin",
@@ -34,7 +34,7 @@
 		}
 	],
 	"bugs": {
-		"url": "https://github.com/bevry/docpad/issues"
+		"url": "https://github.com/bevry/docpad-extras/issues"
 	},
 	"licenses": [
 		{
@@ -44,22 +44,16 @@
 	],
 	"repository" : {
 		"type": "git",
-		"url": "http://github.com/bevry/docpad.git"
+		"url": "http://github.com/bevry/docpad-extras.git"
+	},
+	"engines" : {
+		"node": ">=0.4.0"
 	},
 	"dependencies": {
 		"request": "2.9.x",
 		"bal-util": "1.4.x",
 		"underscore": "1.3.x",
 		"xml2js": "0.1.x"
-	},
-	"engines" : {
-		"node": ">=0.4.0"
-	},
-	"bin": {
-		"docpad": "./bin/docpad"
-	},
-	"directories": {
-		"lib": "."
 	},
 	"main": "./feedr.plugin.coffee"
 }
