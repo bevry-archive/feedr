@@ -1,5 +1,8 @@
 ## History
 
+- v1.0.0 April 14, 2012
+	- Updated for DocPad v5.0
+
 - v0.2.0 April 6, 2012
 	- Now exposes `@feedr.feeds` to the `templateData` instead of `@feeds`
 
