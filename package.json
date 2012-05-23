@@ -14,27 +14,27 @@
 		"rdf",
 		"json"
 	],
-    "author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
-    "maintainers": [
-        "Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
-    ],
-    "contributors": [
-        "Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
-    ],
-    "bugs": {
-        "url": "https://github.com/bevry/docpad-extras/issues"
-    },
-    "repository" : {
-        "type": "git",
-        "url": "http://github.com/bevry/docpad-extras.git"
-    },
-    "engines" : {
-        "node": ">=0.4.0",
-        "docpad": "5.x"
-    },
+	"author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
+	"maintainers": [
+		"Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
+	],
+	"contributors": [
+		"Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
+	],
+	"bugs": {
+		"url": "https://github.com/bevry/docpad-extras/issues"
+	},
+	"repository" : {
+		"type": "git",
+		"url": "http://github.com/bevry/docpad-extras.git"
+	},
+	"engines" : {
+		"node": ">=0.4.0",
+		"docpad": "5.x"
+	},
 	"dependencies": {
 		"request": "2.9.x",
-		"bal-util": "1.4.x",
+		"bal-util": "1.6.x",
 		"underscore": "1.3.x",
 		"xml2js": "0.1.x"
 	},
