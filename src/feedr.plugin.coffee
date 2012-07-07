@@ -3,9 +3,8 @@ module.exports = (BasePlugin) ->
 	# Requires
 	balUtil = require('bal-util')
 	request = require('request')
-	_ = require('underscore')
-	path = require('path')
-	fs = require('fs')
+	osenv = require('osenv')
+	pathUtil = require('path')
 
 	# Define Plugin
 	class FeedrPlugin extends BasePlugin
@@ -17,57 +16,63 @@ module.exports = (BasePlugin) ->
 		renderBefore: ({templateData}, next) ->
 			# Prepare
 			feedr = @
-			feeds = @config.feeds or {}
-			templateData.feedr =
-				feeds: {}
+			feedr.config.feeds or= {}
+			templateData.feedr or= {}
+			templateData.feedr.feeds or= {}
 
 			# Tasks
 			tasks = new balUtil.Group (err) ->
-				return next?(err)
+				return next(err)
 
 			# Feeds
-			_.each feeds, (feedData,feedName) ->
-				tasks.push ->
-					feedr.readFeed feedName, feedData, (err,body) ->
-						return tasks.complete(err)  if err
-						templateData.feedr.feeds[feedName] = body
-						return tasks.complete(err)
+			balUtil.each feedr.config.feeds, (feedData,feedName) ->
+				tasks.push (complete) ->
+					feedr.readFeed feedName, feedData, (err,data) ->
+						return complete(err)  if err
+						templateData.feedr.feeds[feedName] = data
+						return complete(err)
 
-			# Async
-			tasks.async()
+			# Fetch the tmp path we will be writing to
+			if feedr.config.tmpPath
+				tasks.async()
+			else
+				osenv.tmpdir (err,tmpPath) ->
+					return next(err)  if err
+					feedr.config.tmpPath = tmpPath
+					tasks.async()
 
 		# Read Feeds
 		readFeed: (feedName,feedData,next) ->
 			# Prepare
-			feedData.path = "/tmp/docpad-feedr-#{feedName}"
+			feedData.path = pathUtil.join(@config.tmpPath, "docpad-feedr-#{feedName}")
 
 			# Write the feed
-			writeFeed = (body) ->
+			writeFeed = (data) ->
 				# Store the parsed data in the cache somewhere
-				fs.writeFile feedData.path, JSON.stringify(body), (err) ->
+				balUtil.writeFile feedData.path, JSON.stringify(data), (err) ->
 					# Check
-					return next?(err)  if err
+					return next(err)  if err
 
 					# Return the parsed data
-					return next?(null,body)
+					return next(null,data)
 
 			# Get the file via reading the cached copy
 			viaCache = ->
 				# Check the the file exists
-				path.exists feedData.path, (exists) ->
+				balUtil.exists feedData.path, (exists) ->
 					# Check it exists
-					return next?()  unless exists
+					return next()  unless exists
 
 					# It does exist, so let's continue to read the cached fie
-					fs.readFile feedData.path, (err,data) ->
+					balUtil.readFile feedData.path, (err,dataBuffer) ->
 						# Check
-						return next?(err)  if err
+						return next(err)  if err
 
 						# Parse the cached data
-						body = JSON.parse data.toString()
+						data = JSON.parse(dataBuffer.toString())
 
 						# Rreturn the parsed cached data
-						return next?(null,body)
+						return next(null,data)
 
 			# Get the file via doing a new request
 			viaRequest = ->
@@ -81,26 +86,25 @@ module.exports = (BasePlugin) ->
 					# Parse the requested data
 					if /^[\[\{]/.test(body)
 						# json
-						result = eval(body)
-						writeFeed(result)
+						data = JSON.parse(body)
+						writeFeed(data)
 					else if /^</.test(body)
 						# xml
-						fs = require("fs")
 						xml2js = require("xml2js")
 						parser = new xml2js.Parser()
-						parser.on 'end', (result) ->
-							writeFeed(result)
+						parser.on 'end', (data) ->
+							writeFeed(data)
 						parser.parseString(body)
 					else
 						# jsonp
 						body = body.replace(/^[a-z0-9]+/gi, '')
-						eval('result = '+body)
-						writeFeed(result)
+						data = JSON.parse(body)
+						writeFeed(data)
 
 			# Check if we should get the data from the cache or do a new request
 			balUtil.isPathOlderThan feedData.path, 1000*60*5, (err,older) ->
 				# Check
-				return next?(err)  if err
+				return next(err)  if err
 
 				# The file doesn't exist, or exists and is old
 				if older is null or older is true

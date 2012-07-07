@@ -1,5 +1,11 @@
 ## History
 
+- v2.0.1 July 8, 2012
+	- Removed underscore dependency
+	- Fixed path exists warning
+	- Will now store cached files inside the operating systems actual tmp path, instead of always assuming it is `/tmp`
+		- Customisable by the `tmpPath` configuration option
+
 - v1.0.0 April 14, 2012
 	- Updated for DocPad v5.0
 

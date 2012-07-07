@@ -9,7 +9,6 @@
 		# Configure the Feedr Plugin
 		# The Feedr Plugin will pull in remote feeds specified here and make their contents available to our templates
 		feedr:
-
 			# These are the feeds that Feedr will pull in
 			feeds:
 				# DocPad's Old Github Stream
