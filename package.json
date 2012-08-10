@@ -34,9 +34,8 @@
 	},
 	"dependencies": {
 		"request": "2.9.x",
-		"bal-util": "1.12.x",
-		"xml2js": "0.1.x",
-		"osenv": "0.0.3"
+		"bal-util": "1.13.x",
+		"xml2js": "0.1.x"
 	},
 	"devDependencies": {
 		"coffee-script": "1.3.x"

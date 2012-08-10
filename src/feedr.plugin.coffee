@@ -3,13 +3,18 @@ module.exports = (BasePlugin) ->
 	# Requires
 	balUtil = require('bal-util')
 	request = require('request')
-	osenv = require('osenv')
 	pathUtil = require('path')
 
 	# Define Plugin
 	class FeedrPlugin extends BasePlugin
 		# Plugin Name
 		name: 'feedr'
+
+		# Plugin configuration
+		config:
+			tmpPath: null
+			refreshCache: false
+			cacheTime: 1000*60*5
 
 		# Render Before
 		# Read the feeds here
@@ -36,7 +41,7 @@ module.exports = (BasePlugin) ->
 			if feedr.config.tmpPath
 				tasks.async()
 			else
-				osenv.tmpdir (err,tmpPath) ->
+				balUtil.getTmpPath (err,tmpPath) ->
 					return next(err)  if err
 					feedr.config.tmpPath = tmpPath
 					tasks.async()
@@ -44,7 +49,8 @@ module.exports = (BasePlugin) ->
 		# Read Feeds
 		readFeed: (feedName,feedData,next) ->
 			# Prepare
-			feedData.path = pathUtil.join(@config.tmpPath, "docpad-feedr-#{feedName}")
+			feedHash = require('crypto').createHash('md5').update("docpad-feedr-#{feedData.url}").digest('hex');
+			feedData.path = pathUtil.join(@config.tmpPath, feedHash)
 
 			# Write the feed
 			writeFeed = (data) ->
@@ -102,18 +108,21 @@ module.exports = (BasePlugin) ->
 						writeFeed(data)
 
 			# Check if we should get the data from the cache or do a new request
-			balUtil.isPathOlderThan feedData.path, 1000*60*5, (err,older) ->
-				# Check
-				return next(err)  if err
+			if @config.refreshCache
+				viaRequest()
+			else
+				balUtil.isPathOlderThan feedData.path, @config.cacheTIme, (err,older) ->
+					# Check
+					return next(err)  if err
 
-				# The file doesn't exist, or exists and is old
-				if older is null or older is true
-					# Refresh
-					viaRequest()
-				# The file exists and relatively new
-				else
-					# Get from cache
-					viaCache()
+					# The file doesn't exist, or exists and is old
+					if older is null or older is true
+						# Refresh
+						viaRequest()
+					# The file exists and relatively new
+					else
+						# Get from cache
+						viaCache()
 
 			# Chain
 			@
