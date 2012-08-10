@@ -111,7 +111,7 @@ module.exports = (BasePlugin) ->
 			if @config.refreshCache
 				viaRequest()
 			else
-				balUtil.isPathOlderThan feedData.path, @config.cacheTIme, (err,older) ->
+				balUtil.isPathOlderThan feedData.path, @config.cacheTime, (err,older) ->
 					# Check
 					return next(err)  if err
 

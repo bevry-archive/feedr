@@ -1,6 +1,6 @@
 {
 	"name": "docpad-plugin-feedr",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"description": "Adds support for reading feeds to DocPad",
 	"homepage": "https://github.com/bevry/docpad-extras",
 	"keywords": [
