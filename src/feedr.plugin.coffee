@@ -90,22 +90,27 @@ module.exports = (BasePlugin) ->
 					body = body.trim()
 
 					# Parse the requested data
-					if /^[\[\{]/.test(body)
-						# json
-						data = JSON.parse(body)
-						writeFeed(data)
-					else if /^</.test(body)
-						# xml
+					# xml
+					if /^</.test(body)
 						xml2js = require("xml2js")
 						parser = new xml2js.Parser()
 						parser.on 'end', (data) ->
+							# write
 							writeFeed(data)
 						parser.parseString(body)
 					else
-						# jsonp
-						body = body.replace(/^[a-z0-9]+/gi, '')
-						data = JSON.parse(body)
-						writeFeed(data)
+						# jsonp/json
+						try
+							# strip the jsonp callback if it exists, and try parse
+							body = body.replace(/^[a-z0-9]+/gi,'').replace(/^\(|\)$/g,'')
+							data = JSON.parse(body)
+						catch err
+							# strip some dodgy escaping and try parse
+							body = body.replace(/\\'/g,"'")
+							data = JSON.parse(body)
+						finally
+							# write
+							writeFeed(data)
 
 			# Check if we should get the data from the cache or do a new request
 			if @config.refreshCache
