@@ -1,6 +1,6 @@
 {
 	"name": "docpad-plugin-feedr",
-	"version": "2.0.2",
+	"version": "2.1.0",
 	"description": "Adds support for reading feeds to DocPad",
 	"homepage": "https://github.com/bevry/docpad-extras",
 	"keywords": [
@@ -12,7 +12,8 @@
 		"xml",
 		"atom",
 		"rdf",
-		"json"
+		"json",
+		"jsonp"
 	],
 	"author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
 	"maintainers": [

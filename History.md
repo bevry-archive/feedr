@@ -1,5 +1,10 @@
 ## History
 
+- v2.1.0 August 19, 2012
+	- Better handling of jsonp responses
+	- Better handling of bad json responses
+	- `"key": {"_content": "the actual value"}` inside responses will be converted to `"key": 'the actual value"` if `clean` is set to `true` inside the feed configuration
+
 - v2.0.2 August 10, 2012
 	- Re-added markdown files to npm distribution as they are required for the npm website
 	- Fixed a caching conflict issue when two feeds have the same name across different projects

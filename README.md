@@ -14,39 +14,32 @@ npm install --save docpad-plugin-feedr
 
 ### Setup
 
-First we have to tell Feedr which feeds it should retrieve, you can do this by adding the following to your website's `package.json` file:
+First we have to tell Feedr which feeds it should retrieve, you can do this by adding the following to your website's docpad configuration file:
 
-``` json
-"docpad": {
-	"plugins": {
-		"feedr": {
-			"feeds": {
-				"twitter": {
-					"url": "https://api.twitter.com/1/statuses/user_timeline.json?screen_name=balupton&count=20&include_entities=true&include_rts=true"
-				},
-				"someOtherFeedName": {
-					"url": "someOtherFeedUrl"
-				}
-			}
-		}
-	}
+``` coffeescript
+plugins:
+	feedr:
+		feeds:
+			twitter:
+				url: "https://api.twitter.com/1/statuses/user_timeline.json?screen_name=balupton&count=20&include_entities=true&include_rts=true"
+
+			someOtherFeedName:
+				url: "someOtherFeedUrl"
+}
+```
+
+Feedr can also clean up responses like `"key": {"_content": "the actual value"}` (as used on Flickr) to the cleaner `"key": 'the actual value"`. To enable this set `clean` to `true` inside your feed configuration like so:
+
+``` coffeescript
+flickrUser:
+	url: "http://api.flickr.com/services/rest/?method=flickr.people.getInfo&api_key=#{FLICKR_API_KEY}&user_id=#{FLICKR_USER_ID}&format=json&nojsoncallback=1"
+	clean: true
 }
 ```
 
 ### Rendering
 
 Then inside your templates, we would do something like the following to render the items:
-
-- Using [CoffeeKup](http://coffeekup.org/)
-
-	``` coffeescript
-	ul ->
-		for tweet in @feedr.feeds.twitter
-			continue  if tweet.in_reply_to_user_id
-			li datetime: tweet.created_at, ->
-				a href: "https://twitter.com/#!/#{tweet.user.screen_name}/status/#{tweet.id_str}", title: "View on Twitter", ->
-					tweet.text
-	```
 
 - Using [Eco](https://github.com/sstephenson/eco)
 
@@ -61,6 +54,17 @@ Then inside your templates, we would do something like the following to render t
 			</li>
 		<% end %>
 	</ul>
+	```
+
+- Using [CoffeeKup](http://coffeekup.org/)
+
+	``` coffeescript
+	ul ->
+		for tweet in @feedr.feeds.twitter
+			continue  if tweet.in_reply_to_user_id
+			li datetime: tweet.created_at, ->
+				a href: "https://twitter.com/#!/#{tweet.user.screen_name}/status/#{tweet.id_str}", title: "View on Twitter", ->
+					tweet.text
 	```
 
 
