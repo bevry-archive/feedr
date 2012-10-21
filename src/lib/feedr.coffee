@@ -10,8 +10,19 @@ class Feedr
 		log: null
 		logError: null
 		tmpPath: null
-		refreshCache: false
+		cache: true
 		cacheTime: 1000*60*5
+		xmljsOptions: null
+
+
+	# Constructor
+	constructor: (config) ->
+		# Extend and dereference our configuration
+		@config = balUtil.extend({},@config,config)
+
+		# Chain
+		@
+
 
 	# Read Feeds
 	# next(err,result)
@@ -20,6 +31,7 @@ class Feedr
 		feedr = @
 		{log,logError} = @config
 		result = {}
+		failures = 0
 
 		# Tasks
 		tasks = new balUtil.Group (err) ->
@@ -56,7 +68,7 @@ class Feedr
 	# next(err,data)
 	readFeed: (feedName,feedDetails,next) ->
 		# Prepare
-		{log,tmpPath,cacheTime,refreshCache} = @config
+		{log,tmpPath,cacheTime,cache,xml2jsOptions} = @config
 		feedHash = require('crypto').createHash('md5').update("feedr-"+JSON.stringify(feedDetails)).digest('hex');
 		feedDetails.path = pathUtil.join(tmpPath, feedHash)
 
@@ -122,8 +134,10 @@ class Feedr
 				# Parse the requested data
 				# xml
 				if /^</.test(body)
-					xml2js = require("xml2js")
-					parser = new xml2js.Parser()
+					xml2js = require('xml2js')
+					if balUtil.isString(xml2jsOptions)
+						xml2jsOptions = xml2js.defaults[xml2jsOptions]
+					parser = new xml2js.Parser(xml2jsOptions)
 					parser.on 'end', (data) ->
 						# write
 						writeFeed(data)
@@ -151,7 +165,7 @@ class Feedr
 						writeFeed(data)
 
 		# Check if we should get the data from the cache or do a new request
-		if refreshCache
+		if cache is false
 			viaRequest()
 		else
 			balUtil.isPathOlderThan feedDetails.path, cacheTime, (err,older) ->

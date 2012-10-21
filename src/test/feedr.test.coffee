@@ -21,3 +21,9 @@ joe.describe 'feedr', (describe,it) ->
 			assert.equal(err||null, null)
 			assert.ok(result)
 			done()
+
+	it 'should fetch the feeds correctly the second time after caching', (done) ->
+		feedr.readFeeds feeds, (err,result) ->
+			assert.equal(err||null, null)
+			assert.ok(result)
+			done()
