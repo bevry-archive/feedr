@@ -1,4 +1,4 @@
-# Feedr
+# Feedr [![Build Status](https://secure.travis-ci.org/bevry/feedr.png?branch=master)](http://travis-ci.org/bevry/feedr)
 
 Feedr takes in a remote feed (regardless of format type) and converts it into JSON data
 
