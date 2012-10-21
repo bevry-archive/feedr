@@ -30,6 +30,19 @@ dev:
 compile:
 	$(COFFEE) -cbo out src
 
+# Clean up
+clean:
+	rm -Rf out node_modules npm-debug.log
+
+# Install dependencies
+install:
+	npm install
+
+# Reset
+reset:
+	make clean
+	make install
+
 # Install dependencies
 install:
 	npm install
@@ -44,4 +57,4 @@ test:
 	npm test
 
 # Ensure the listed commands always re-run and are never cached
-.PHONY: compile dev install test-prepare test
+.PHONY: dev compile clean install reset test-prepare test
