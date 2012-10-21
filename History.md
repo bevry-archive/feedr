@@ -1,5 +1,8 @@
 ## History
 
+- v2.2.0 October 22, 2012
+	- Abstracted out from the [feedr docpad plugin](http://docpad.org/plugin/feedr)
+
 - v2.1.0 August 19, 2012
 	- Better handling of jsonp responses
 	- Better handling of bad json responses

@@ -1,12 +1,12 @@
-# Feedr Plugin for DocPad
+# Feedr
 
-This plugin is able to pull in remote json and xml feeds, convert them to JSON data, and expose them to `@feedr.feeds[feednName]` for your templates.
+Feedr takes in a remote feed (regardless of format type) and converts it into JSON data
 
 
 ## Install
 
 ```
-npm install --save docpad-plugin-feedr
+npm install --save feedr
 ```
 
 

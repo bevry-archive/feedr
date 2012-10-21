@@ -1,12 +1,9 @@
 {
-	"name": "docpad-plugin-feedr",
-	"version": "2.1.0",
-	"description": "Adds support for reading feeds to DocPad",
-	"homepage": "http://docpad.org/plugin/feedr",
+	"name": "feedr",
+	"version": "2.2.0",
+	"description": "Takes in a remote feed and converts it to json data",
+	"homepage": "http://bevry.me/project/feedr",
 	"keywords": [
-		"docpad",
-		"docpad-plugin",
-		"plugin",
 		"feeds",
 		"rss",
 		"xml",
@@ -23,26 +20,27 @@
 		"Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
 	],
 	"bugs": {
-		"url": "https://github.com/bevry/docpad-extras/issues"
+		"url": "http://bevry.me/project/feedr/issues"
 	},
 	"repository" : {
 		"type": "git",
-		"url": "http://github.com/bevry/docpad-extras.git"
+		"url": "https://github.com/bevry/feedr.git"
 	},
 	"engines" : {
-		"node": ">=0.4.0",
-		"docpad": "6.x"
+		"node": ">=0.4.0"
 	},
 	"dependencies": {
 		"request": "2.9.x",
 		"bal-util": "1.13.x",
-		"xml2js": "0.1.x"
+		"xml2js": "0.2.x"
 	},
 	"devDependencies": {
-		"coffee-script": "1.3.x"
+		"coffee-script": "1.3.x",
+		"joe": "1.0.x",
+		"chai": "1.3.x"
 	},
-	"main": "./out/feedr.plugin.js",
+	"main": "./out/lib/feedr.js",
 	"scripts": {
-		"test": "node ./test/feedr.test.js"
+		"test": "node ./out/test/feedr.test.js"
 	}
 }
