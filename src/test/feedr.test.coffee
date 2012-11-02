@@ -9,21 +9,38 @@ joe = require('joe')
 joe.describe 'feedr', (describe,it) ->
 
 	feedr = null
-	feeds =
+
+	fixturePath = __dirname+'/../../test/fixtures.json'
+	fixtureData = require(fixturePath)
+	feedsObject =
 		"github-atom":
-			url: "https://github.com/bevry/feedr/commits/master.atom"
+			url: "https://github.com/bevry/feedr/commits/for-testing.atom"
+	feedsArray = [feedsObject['github-atom'].url]
 
 	it 'should instantiate correct', ->
-		feedr = new Feedr()
+		feedr = new Feedr({cache:false})
 
-	it 'should fetch the feeds correctly', (done) ->
-		feedr.readFeeds feeds, (err,result) ->
+	it 'should fetch a feed correctly when passing string', (done) ->
+		feedr.readFeed feedsObject['github-atom'].url, (err,result) ->
 			assert.equal(err||null, null)
-			assert.ok(result)
+			assert.deepEqual(result,fixtureData)
 			done()
 
-	it 'should fetch the feeds correctly the second time after caching', (done) ->
-		feedr.readFeeds feeds, (err,result) ->
+	it 'should fetch a feed correctly when passing object', (done) ->
+		feedr.readFeed feedsObject['github-atom'], (err,result) ->
 			assert.equal(err||null, null)
-			assert.ok(result)
+			assert.deepEqual(result,fixtureData)
 			done()
+
+	it 'should fetch the feeds correctly when passing an object', (done) ->
+		feedr.readFeeds feedsObject, (err,result) ->
+			assert.equal(err||null, null)
+			assert.deepEqual(result['github-atom'],fixtureData)
+			done()
+
+	it 'should fetch the feeds correctly when passing an array', (done) ->
+		feedr.readFeeds feedsArray, (err,result) ->
+			assert.equal(err||null, null)
+			assert.deepEqual(result[0],fixtureData)
+			done()
+

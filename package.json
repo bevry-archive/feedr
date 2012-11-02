@@ -1,6 +1,6 @@
 {
 	"name": "feedr",
-	"version": "2.2.0",
+	"version": "2.3.0",
 	"description": "Takes in a remote feed and converts it to json data",
 	"homepage": "http://bevry.me/project/feedr",
 	"keywords": [

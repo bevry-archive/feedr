@@ -1,5 +1,10 @@
 ## History
 
+- v2.3.0 November 2, 2012
+	- Changed the signature of `readFeed` from `feedName, feedDetails, next` to `feedDetails, next` where `feedDetails = {name,url} or url`
+	- `readFeeds` can now accept an array
+	- Fixed caching when calling `readFeed` instead of `readFeeds`
+
 - v2.2.0 October 22, 2012
 	- Abstracted out from the [feedr docpad plugin](http://docpad.org/plugin/feedr)
 

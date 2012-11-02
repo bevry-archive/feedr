@@ -25,13 +25,15 @@ class Feedr
 
 
 	# Read Feeds
+	# feeds = {feedName:feedDetails}, feedDetails={url}
 	# next(err,result)
 	readFeeds: (feeds,next) ->
 		# Prepare
 		feedr = @
 		{log,logError} = @config
-		result = {}
 		failures = 0
+		isArray = balUtil.isArray(feeds)
+		result = if isArray then [] else {}
 
 		# Tasks
 		tasks = new balUtil.Group (err) ->
@@ -41,14 +43,25 @@ class Feedr
 		# Feeds
 		balUtil.each feeds, (feedDetails,feedName) ->
 			tasks.push (complete) ->
-				feedr.readFeed feedName, feedDetails, (err,data) ->
+				# Prepare
+				if balUtil.isString(feedDetails)
+					feedDetails = {url:feedDetails}
+				feedDetails.name ?= feedName
+
+				# Read
+				feedr.readFeed feedDetails, (err,data) ->
 					# Handle
 					if err
 						log? 'debug', "Feedr failed to fetch [#{feedDetails.url}] to [#{feedDetails.path}]"
 						logError? err
 						++failures
 					else
-						result[feedName] = data
+						if isArray
+							result.push(data)
+						else
+							result[feedName] = data
+
+					# Complete
 					return complete()
 
 		# Fetch the tmp path we will be writing to
@@ -65,12 +78,26 @@ class Feedr
 
 
 	# Read Feed
+	# feedDetails = {name,url} or url
 	# next(err,data)
-	readFeed: (feedName,feedDetails,next) ->
+	readFeed: (feedDetails,next) ->
+		# Prepare
+		feedr = @
+		# Fetch the tmp path we will be writing to
+		unless feedr.config.tmpPath
+			balUtil.getTmpPath (err,tmpPath) ->
+				return next(err)  if err
+				feedr.config.tmpPath = tmpPath
+				feedr.readFeed(feedDetails,next)
+			return @
+
 		# Prepare
 		{log,tmpPath,cacheTime,cache,xml2jsOptions} = @config
-		feedHash = require('crypto').createHash('md5').update("feedr-"+JSON.stringify(feedDetails)).digest('hex');
-		feedDetails.path = pathUtil.join(tmpPath, feedHash)
+		if balUtil.isString(feedDetails)
+			feedDetails = {url:feedDetails,name:feedDetails}
+		feedDetails.hash ?= require('crypto').createHash('md5').update("feedr-"+JSON.stringify(feedDetails.url)).digest('hex');
+		feedDetails.path ?= pathUtil.join(tmpPath, feedDetails.hash)
+		feedDetails.name ?= feedDetails.hash
 
 		# Cleanup some response data
 		cleanData = (data) ->
@@ -141,7 +168,10 @@ class Feedr
 					parser.on 'end', (data) ->
 						# write
 						writeFeed(data)
-					parser.parseString(body)
+					try
+						parser.parseString(body)
+					catch err
+						return next(err)  if err
 				else
 					# jsonp/json
 					try
