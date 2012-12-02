@@ -1,6 +1,5 @@
 # Requires
 balUtil = require('bal-util')
-request = require('request')
 pathUtil = require('path')
 
 # Define
@@ -93,8 +92,7 @@ class Feedr
 
 		# Prepare
 		{log,tmpPath,cacheTime,cache,xml2jsOptions} = @config
-		if balUtil.isString(feedDetails)
-			feedDetails = {url:feedDetails,name:feedDetails}
+		feedDetails = {url:feedDetails,name:feedDetails}  if balUtil.isString(feedDetails)
 		feedDetails.hash ?= require('crypto').createHash('md5').update("feedr-"+JSON.stringify(feedDetails.url)).digest('hex');
 		feedDetails.path ?= pathUtil.join(tmpPath, feedDetails.hash)
 		feedDetails.name ?= feedDetails.hash
@@ -151,12 +149,12 @@ class Feedr
 			log? 'debug', "Feedr is fetching [#{feedDetails.url}] to [#{feedDetails.path}]"
 
 			# Fetch and Save
-			request feedDetails.url, (err,response,body) ->
+			balUtil.readPath feedDetails.url, (err,data) ->
 				# If the request fails then we should revert to the cache
 				return viaCache()  if err
 
 				# Trim the requested data
-				body = body.trim()
+				body = data.toString().trim()
 
 				# Parse the requested data
 				# xml

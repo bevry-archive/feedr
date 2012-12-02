@@ -15,6 +15,8 @@ joe.describe 'feedr', (describe,it) ->
 	feedsObject =
 		"github-atom":
 			url: "https://github.com/bevry/feedr/commits/for-testing.atom"
+		"fail":
+			url: "https://i-dont-exist-123213123123.com/"
 	feedsArray = [feedsObject['github-atom'].url]
 
 	it 'should instantiate correct', ->
@@ -35,6 +37,7 @@ joe.describe 'feedr', (describe,it) ->
 	it 'should fetch the feeds correctly when passing an object', (done) ->
 		feedr.readFeeds feedsObject, (err,result) ->
 			assert.equal(err||null, null)
+			assert.equal(result['fail'],undefined)
 			assert.deepEqual(result['github-atom'],fixtureData)
 			done()
 

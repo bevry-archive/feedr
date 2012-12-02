@@ -1,5 +1,8 @@
 ## History
 
+- v2.4.0 December 2, 2012
+	- Dropped the request dependency
+
 - v2.3.0 November 2, 2012
 	- Changed the signature of `readFeed` from `feedName, feedDetails, next` to `feedDetails, next` where `feedDetails = {name,url} or url`
 	- `readFeeds` can now accept an array
