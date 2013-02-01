@@ -2,6 +2,7 @@
 
 - v2.4.1 February 1, 2013
 	- Added timeout support
+	- If `cache: false` then we should never revert to cache (even if request fails)
 
 - v2.4.0 December 2, 2012
 	- Dropped the request dependency
