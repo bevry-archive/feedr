@@ -45,7 +45,8 @@ feedr.readFeeds(feeds, function(err,result){
 - `logError: null` our error log function to use
 - `tmpPath: null` the tempory path to cache our feedr results to (will autodetect if `null`)
 - `cache: true` whether or not we should cache the results
-- `cacheTime: 1000*60*5` how long should the cache stay active
+- `cacheTime: 1000*60*5` how long should the cache stay active in milliseconds
+- `timeout: 10*1000` how long should we wait before aborting the request in milliseconds
 - `xmljsOptions: null` what options should we pass to [xml2js](https://github.com/Leonidas-from-XIV/node-xml2js) (can be a string which will reference to `xml2js.defaults`)
 
 
@@ -58,4 +59,4 @@ You can discover the history inside the `History.md` file
 ## License
 
 Licensed under the [MIT License](http://creativecommons.org/licenses/MIT/)
-<br/>Copyright &copy; 2012 [Bevry Pty Ltd](http://bevry.me)
+<br/>Copyright &copy; 2012+ [Bevry Pty Ltd](http://bevry.me)

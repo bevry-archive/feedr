@@ -12,6 +12,7 @@ class Feedr
 		cache: true
 		cacheTime: 1000*60*5
 		xmljsOptions: null
+		timeout: 10*1000
 
 
 	# Constructor
@@ -149,9 +150,12 @@ class Feedr
 			log? 'debug', "Feedr is fetching [#{feedDetails.url}] to [#{feedDetails.path}]"
 
 			# Fetch and Save
-			balUtil.readPath feedDetails.url, (err,data) ->
+			balUtil.readPath feedDetails.url, {timeout:feedr.config.timeout}, (err,data) ->
 				# If the request fails then we should revert to the cache
-				return viaCache()  if err
+				handleError = (err) ->
+					return viaCache()  if cache isnt false
+					return next(err)
+				return handleError(err)  if err
 
 				# Trim the requested data
 				body = data.toString().trim()
@@ -169,7 +173,7 @@ class Feedr
 					try
 						parser.parseString(body)
 					catch err
-						return next(err)  if err
+						return handleError(err)  if err
 				else
 					# jsonp/json
 					try
@@ -182,7 +186,7 @@ class Feedr
 							body = body.replace(/\\'/g,"'")
 							data = JSON.parse(body)
 						catch err
-							return next(err)  if err
+							return handleError(err)  if err
 					finally
 						# Clean the data if desired
 						if feedDetails.clean

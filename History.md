@@ -1,5 +1,8 @@
 ## History
 
+- v2.4.1 February 1, 2013
+	- Added timeout support
+
 - v2.4.0 December 2, 2012
 	- Dropped the request dependency
 
