@@ -1,5 +1,8 @@
 ## History
 
+- v2.4.2 February 12, 2013
+	- Added support for gzip
+
 - v2.4.1 February 1, 2013
 	- Added timeout support
 	- If `cache: false` then we should never revert to cache (even if request fails)

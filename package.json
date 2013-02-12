@@ -1,6 +1,6 @@
 {
 	"name": "feedr",
-	"version": "2.4.1",
+	"version": "2.4.2",
 	"description": "Takes in a remote feed and converts it to json data",
 	"homepage": "http://bevry.me/project/feedr",
 	"keywords": [
@@ -14,10 +14,10 @@
 	],
 	"author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
 	"maintainers": [
-		"Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
+		"Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
 	],
 	"contributors": [
-		"Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
+		"Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
 	],
 	"bugs": {
 		"url": "http://bevry.me/project/feedr/issues"
@@ -30,15 +30,15 @@
 		"node": ">=0.4.0"
 	},
 	"dependencies": {
-		"bal-util": "~1.16.2",
-		"xml2js": "~0.2.3"
+		"bal-util": "~1.16.6",
+		"xml2js": "~0.2.4"
 	},
 	"devDependencies": {
 		"coffee-script": "~1.4.0",
-		"joe": "1.1.x"
+		"joe": "~1.1.1"
 	},
 	"main": "./out/lib/feedr.js",
 	"scripts": {
-		"test": "node ./out/test/feedr.test.js"
+		"test": "node ./out/test/everything-test.js"
 	}
 }
