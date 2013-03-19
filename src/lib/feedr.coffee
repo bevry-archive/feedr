@@ -175,6 +175,10 @@ class Feedr
 					catch err
 						return handleError(err)  if err
 				else
+					# strip comments, whitespace, and semicolons from the start and finish
+					# targets facebook graph api
+					body = body.replace(/(^([\s\;]|\/\*\*\/)+|[\s\;]+$)/g,'')
+
 					# jsonp/json
 					try
 						# strip the jsonp callback if it exists, and try parse

@@ -1,5 +1,8 @@
 ## History
 
+- v2.4.3 March 20, 2013
+	- Added support for facebook graph api
+
 - v2.4.2 February 12, 2013
 	- Added support for gzip
 
