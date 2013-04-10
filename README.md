@@ -1,6 +1,11 @@
-# Feedr [![Build Status](https://secure.travis-ci.org/bevry/feedr.png?branch=master)](http://travis-ci.org/bevry/feedr)
+# Feedr
+
+[![Build Status](https://secure.travis-ci.org/bevry/feedr.png?branch=master)](http://travis-ci.org/bevry/feedr)
+[![NPM version](https://badge.fury.io/js/feedr.png)](https://npmjs.org/package/feedr)
+[![Flattr this project](https://raw.github.com/balupton/flattr-buttons/master/badge-89x18.gif)](http://flattr.com/thing/344188/balupton-on-Flattr)
 
 Feedr takes in a remote feed (regardless of format type) and converts it into JSON data
+
 
 
 ## Install
@@ -8,6 +13,7 @@ Feedr takes in a remote feed (regardless of format type) and converts it into JS
 ```
 npm install --save feedr
 ```
+
 
 
 ## Usage
@@ -39,6 +45,7 @@ feedr.readFeeds(feeds, function(err,result){
 ```
 
 
+
 ## Configuration
 
 - `log: null` our log function to use
@@ -52,11 +59,10 @@ feedr.readFeeds(feeds, function(err,result){
 
 
 ## History
-
 You can discover the history inside the `History.md` file
 
 
-## License
 
+## License
 Licensed under the [MIT License](http://creativecommons.org/licenses/MIT/)
 <br/>Copyright &copy; 2012+ [Bevry Pty Ltd](http://bevry.me)
