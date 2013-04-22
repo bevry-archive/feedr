@@ -1,4 +1,9 @@
 # Requires
+extendr = require('extendr')
+eachr = require('eachr')
+{TaskGroup} = require('taskgroup')
+typeChecker = require('typechecker')
+safefs = require('safefs')
 balUtil = require('bal-util')
 pathUtil = require('path')
 
@@ -14,15 +19,13 @@ class Feedr
 		xmljsOptions: null
 		timeout: 10*1000
 
-
 	# Constructor
 	constructor: (config) ->
 		# Extend and dereference our configuration
-		@config = balUtil.extend({},@config,config)
+		@config = extendr.extend({},@config,config)
 
 		# Chain
 		@
-
 
 	# Read Feeds
 	# feeds = {feedName:feedDetails}, feedDetails={url}
@@ -32,46 +35,45 @@ class Feedr
 		feedr = @
 		{log,logError} = @config
 		failures = 0
-		isArray = balUtil.isArray(feeds)
+		isArray = typeChecker.isArray(feeds)
 		result = if isArray then [] else {}
 
 		# Tasks
-		tasks = new balUtil.Group (err) ->
+		tasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
 			log? (if failures then 'warn' else 'debug'), 'Feedr finished fetching', (if failures then "with #{failures} failures" else '')
 			return next(err,result)
 
 		# Feeds
-		balUtil.each feeds, (feedDetails,feedName) ->
-			tasks.push (complete) ->
-				# Prepare
-				if balUtil.isString(feedDetails)
-					feedDetails = {url:feedDetails}
-				feedDetails.name ?= feedName
+		eachr feeds, (feedDetails,feedName) -> tasks.addTask (complete) ->
+			# Prepare
+			if typeChecker.isString(feedDetails)
+				feedDetails = {url:feedDetails}
+			feedDetails.name ?= feedName
 
-				# Read
-				feedr.readFeed feedDetails, (err,data) ->
-					# Handle
-					if err
-						log? 'debug', "Feedr failed to fetch [#{feedDetails.url}] to [#{feedDetails.path}]"
-						logError? err
-						++failures
+			# Read
+			feedr.readFeed feedDetails, (err,data) ->
+				# Handle
+				if err
+					log? 'debug', "Feedr failed to fetch [#{feedDetails.url}] to [#{feedDetails.path}]"
+					logError? err
+					++failures
+				else
+					if isArray
+						result.push(data)
 					else
-						if isArray
-							result.push(data)
-						else
-							result[feedName] = data
+						result[feedName] = data
 
-					# Complete
-					return complete()
+				# Complete
+				return complete()
 
 		# Fetch the tmp path we will be writing to
 		if feedr.config.tmpPath
-			tasks.async()
+			tasks.run()
 		else
 			balUtil.getTmpPath (err,tmpPath) ->
 				return next(err)  if err
 				feedr.config.tmpPath = tmpPath
-				tasks.async()
+				tasks.run()
 
 		# Chain
 		@
@@ -93,7 +95,7 @@ class Feedr
 
 		# Prepare
 		{log,tmpPath,cacheTime,cache,xml2jsOptions} = @config
-		feedDetails = {url:feedDetails,name:feedDetails}  if balUtil.isString(feedDetails)
+		feedDetails = {url:feedDetails,name:feedDetails}  if typeChecker.isString(feedDetails)
 		feedDetails.hash ?= require('crypto').createHash('md5').update("feedr-"+JSON.stringify(feedDetails.url)).digest('hex');
 		feedDetails.path ?= pathUtil.join(tmpPath, feedDetails.hash)
 		feedDetails.name ?= feedDetails.hash
@@ -103,7 +105,7 @@ class Feedr
 			keys = []
 			# Discover the keys inside data, and delve deeper
 			for own key,value of data
-				if balUtil.isPlainObject(data)
+				if typeChecker.isPlainObject(data)
 					data[key] = cleanData(value)
 				keys.push(key)
 			# Check if we are a simple rest object
@@ -116,7 +118,7 @@ class Feedr
 		# Write the feed
 		writeFeed = (data) ->
 			# Store the parsed data in the cache somewhere
-			balUtil.writeFile feedDetails.path, JSON.stringify(data), (err) ->
+			safefs.writeFile feedDetails.path, JSON.stringify(data), (err) ->
 				# Check
 				return next(err)  if err
 
@@ -129,12 +131,12 @@ class Feedr
 			log? 'debug', "Feedr fetched [#{feedDetails.url}] from cache"
 
 			# Check the the file exists
-			balUtil.exists feedDetails.path, (exists) ->
+			safefs.exists feedDetails.path, (exists) ->
 				# Check it exists
 				return next()  unless exists
 
 				# It does exist, so let's continue to read the cached fie
-				balUtil.readFile feedDetails.path, (err,dataBuffer) ->
+				safefs.readFile feedDetails.path, (err,dataBuffer) ->
 					# Check
 					return next(err)  if err
 
@@ -164,7 +166,7 @@ class Feedr
 				# xml
 				if /^</.test(body)
 					xml2js = require('xml2js')
-					if balUtil.isString(xml2jsOptions)
+					if typeChecker.isString(xml2jsOptions)
 						xml2jsOptions = xml2js.defaults[xml2jsOptions]
 					parser = new xml2js.Parser(xml2jsOptions)
 					parser.on 'end', (data) ->

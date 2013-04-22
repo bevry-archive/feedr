@@ -1,6 +1,6 @@
 {
 	"name": "feedr",
-	"version": "2.4.3",
+	"version": "2.4.4",
 	"description": "Takes in a remote feed and converts it to json data",
 	"homepage": "http://bevry.me/project/feedr",
 	"keywords": [
@@ -30,12 +30,19 @@
 		"node": ">=0.4.0"
 	},
 	"dependencies": {
-		"bal-util": "~1.16.12",
+		"safefs": "~3.0.1",
+		"eachr": "~2.0.2",
+		"extendr": "~2.0.1",
+		"typechecker": "~2.0.1",
+		"taskgroup": "~3.1.2",
+		"bal-util": "~2.0.4",
 		"xml2js": "~0.2.4"
 	},
 	"devDependencies": {
 		"coffee-script": "~1.6.2",
-		"joe": "~1.1.1"
+		"joe": "~1.2.0",
+		"joe-reporter-console": "~1.2.1",
+		"chai": "~1.5.0"
 	},
 	"main": "./out/lib/feedr.js",
 	"scripts": {

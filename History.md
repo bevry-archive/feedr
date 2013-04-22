@@ -1,5 +1,8 @@
 ## History
 
+- v2.4.4 April 22, 2013
+	- Dependency upgrades
+
 - v2.4.3 March 20, 2013
 	- Added support for facebook graph api
 

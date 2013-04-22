@@ -1,5 +1,5 @@
 # Require
-assert = require('assert')
+{expect} = require('chai')
 joe = require('joe')
 {Feedr} = require(__dirname+'/../lib/feedr')
 
@@ -37,29 +37,29 @@ joe.describe 'feedr', (describe,it) ->
 
 	it 'should fetch a feed correctly when passing string', (done) ->
 		feedr.readFeed feedsObject['github-atom'].url, (err,result) ->
-			assert.equal(err ? null, null)
-			#require('fs').writeFileSync(fixturePath, JSON.stringify(result))
-			assert.deepEqual(result,fixtureData)
+			expect(err,'error').to.not.exist
+			#require('fs').writeFileSync(fixturePath, JSON.stringify(result,null,4))
+			expect(result,'result').to.deep.equal(fixtureData)
 			done()
 
 	it 'should fetch a feed correctly when passing object', (done) ->
 		feedr.readFeed feedsObject['github-atom'], (err,result) ->
-			assert.equal(err ? null, null)
-			assert.deepEqual(result, fixtureData)
+			expect(err,'error').to.not.exist
+			expect(result,'result').to.deep.equal(fixtureData)
 			done()
 
 	it 'should fetch the feeds correctly when passing an object', (done) ->
 		feedr.readFeeds feedsObject, (err,result) ->
-			assert.equal(err ? null, null, 'err test')
-			assert.equal(result['fail'] ? null, null, 'fail test')
-			assert.equal(result['timeout'] ? null, null, 'timeout test')
-			assert.deepEqual(result['github-atom'], fixtureData, 'atom test')
+			expect(err,'error').to.not.exist
+			expect(result.fail,'fail').to.not.exist
+			expect(result.timeout,'timeout').to.not.exist
+			expect(result['github-atom'],'result').to.deep.equal(fixtureData)
 			done()
 
 	it 'should fetch the feeds correctly when passing an array', (done) ->
 		feedr.readFeeds feedsArray, (err,result) ->
-			assert.equal(err ? null, null)
-			assert.deepEqual(result[0], fixtureData)
+			expect(err,'err').to.not.exist
+			expect(result[0],'result').to.deep.equal(fixtureData)
 			done()
 
 	it 'should close our timeout server', ->
