@@ -6,6 +6,7 @@ typeChecker = require('typechecker')
 safefs = require('safefs')
 balUtil = require('bal-util')
 pathUtil = require('path')
+superAgent = require('superagent')
 
 # Define
 class Feedr
@@ -152,7 +153,12 @@ class Feedr
 			log? 'debug', "Feedr is fetching [#{feedDetails.url}] to [#{feedDetails.path}]"
 
 			# Fetch and Save
-			balUtil.readPath feedDetails.url, {timeout:feedr.config.timeout}, (err,data) ->
+			request = superAgent[feedDetails.method or 'get'](feedDetails.url).timeout(60*1000)
+			request.set('user-agent': 'Wget/1.14 (linux-gnu)')
+			request.set(feedDetails.headers)  if feedDetails.headers
+			request.query(feedDetails.query)  if feedDetails.query
+			request.send(feedDetails.body)    if feedDetails.body
+			request.end (err,res) ->
 				# If the request fails then we should revert to the cache
 				handleError = (err) ->
 					return viaCache()  if cache isnt false
@@ -160,7 +166,7 @@ class Feedr
 				return handleError(err)  if err
 
 				# Trim the requested data
-				body = data.toString().trim()
+				body = (res.text or '').toString().trim()
 
 				# Parse the requested data
 				# xml
