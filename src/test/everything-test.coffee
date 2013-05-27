@@ -33,7 +33,11 @@ joe.describe 'feedr', (describe,it) ->
 	feedsArray = [feedsObject['github-atom'].url]
 
 	it 'should instantiate correct', ->
-		feedr = new Feedr({cache:false})
+		feedr = new Feedr({
+			cache: false
+			log: console.log
+			logError: console.log
+		})
 
 	it 'should fetch a feed correctly when passing string', (done) ->
 		feedr.readFeed feedsObject['github-atom'].url, (err,result) ->

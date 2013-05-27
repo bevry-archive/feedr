@@ -1,5 +1,10 @@
 ## History
 
+- v2.5.0 May 27, 2013
+	- `cache`, `cacheTime`, `timeout`, `checkResult(data)` can now be specified on the feed details
+	- `checkResult(data)` should return an Error instance if it finds a problem with the fetched data
+	- `cacheTime` and `checkResult` have default implementations for github
+
 - v2.4.4 April 22, 2013
 	- Dependency upgrades
 
