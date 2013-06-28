@@ -4,6 +4,7 @@ eachr = require('eachr')
 {TaskGroup} = require('taskgroup')
 typeChecker = require('typechecker')
 safefs = require('safefs')
+safeps = require('safeps')
 balUtil = require('bal-util')
 pathUtil = require('path')
 
@@ -71,7 +72,7 @@ class Feedr
 		if config.tmpPath
 			tasks.run()
 		else
-			balUtil.getTmpPath (err,tmpPath) ->
+			safeps.getTmpPath (err,tmpPath) ->
 				return next(err)  if err
 				config.tmpPath = tmpPath
 				tasks.run()
@@ -91,7 +92,7 @@ class Feedr
 
 		# Fetch the tmp path we will be writing to
 		unless config.tmpPath
-			balUtil.getTmpPath (err,tmpPath) ->
+			safeps.getTmpPath (err,tmpPath) ->
 				return next(err)  if err
 				config.tmpPath = tmpPath
 				feedr.readFeed(feedDetails, next)
