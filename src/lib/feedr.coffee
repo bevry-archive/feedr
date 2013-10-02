@@ -233,18 +233,18 @@ class Feedr
 			# Store the meta data in the cache somewhere
 			readTasks.addTask (complete) ->
 				parseFile feedDetails.metaPath, (err,result) ->
-					return complete(err)  if err
+					return complete(err)  if err or !result
 					meta = result
 					return complete()
 
 			# Store the parsed data in the cache somewhere
 			readTasks.addTask (complete) ->
-				readFile feedDetails.path, (err,rawData) ->
-					return complete(err)  if err
+				readFile feedDetails.path, (err,result) ->
+					return complete(err)  if err or !result
 					if feedDetails.parse
-						data = JSON.parse(rawData.toString())
+						data = JSON.parse(result.toString())
 					else
-						data = rawData
+						data = result
 					return complete()
 
 			# Fire the write tasks

@@ -1,5 +1,8 @@
 ## History
 
+- v2.7.1 October 3, 2013
+	- Fixed `TypeError: Cannot call method 'toString' of null` (regression since v2.7.0)
+
 - v2.7.0 October 3, 2013
 	- Can now parse yaml files
 	- Can now customise parsing via `parse` feed optio
