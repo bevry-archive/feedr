@@ -1,5 +1,11 @@
 ## History
 
+- v2.7.0 October 3, 2013
+	- Can now parse yaml files
+	- Can now customise parsing via `parse` feed optio
+	- Parsing is now determined by extensions instead of file formats (b/c break)
+		- If your url does not have an extension you must eplicitly set the `parse` feed optionn
+
 - v2.6.0 October 2, 2013
 	- Some options have changed (b/c break)
 	- Much more intelligent cache handling

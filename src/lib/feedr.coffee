@@ -113,6 +113,24 @@ class Feedr
 		feedDetails.cache ?= feedr.config.cache
 		useCache = feedDetails.cache
 
+		# Parse option
+		feedDetails.parse ?= true
+		extname = pathUtil.extname feedDetails.url.replace(/[?#].*/, '')
+		if feedDetails.parse is true
+			feedDetails.parse =
+				if extname in ['.xml', '.atom', '.rss', '.rdf', '.html', '.html']
+					'xml'
+				else if extname in ['.json', '.jsonp', '.js']
+					'json'
+				else if extname in ['.yml', '.yaml']
+					'yaml'
+				else
+					false
+
+		# Check parse option
+		if feedDetails.parse and feedDetails.parse not in ['xml', 'json', 'yaml']
+			return next(new Error("unrecognised parse value: #{feedDetails.parse}"))
+
 		# Request options
 		requestOptions = extendr.deepExtend({
 			url: feedDetails.url
@@ -149,9 +167,9 @@ class Feedr
 			return data
 
 		# Read a file
-		parseFile = (path, next) ->
+		readFile = (path, next) ->
 			# Log
-			feedr.log 'debug', "Feedr is parsing [#{feedDetails.url}] on [#{path}]"
+			feedr.log 'debug', "Feedr is reading [#{feedDetails.url}] on [#{path}]"
 
 			# Check the the file exists
 			safefs.exists path, (exists) ->
@@ -159,15 +177,23 @@ class Feedr
 				return next(null, null)  unless exists
 
 				# It does exist, so let's continue to read the cached fie
-				safefs.readFile path, (err,dataBuffer) ->
+				safefs.readFile path, (err,rawData) ->
 					# Check
 					return next(err, null)  if err
 
-					# Parse the cached data
-					data = JSON.parse(dataBuffer.toString())
-
 					# Rreturn the parsed cached data
-					return next(null, data)
+					return next(null, rawData)
+
+		# Parse a file
+		parseFile = (path, next) ->
+			# Log
+			feedr.log 'debug', "Feedr is parsing [#{feedDetails.url}] on [#{path}]"
+
+			# Parse
+			readFile path, (err,rawData) ->
+				return next(err, null)  if err or !rawData
+				data = JSON.parse(rawData.toString())
+				return next(null, data)
 
 		# Write the feed
 		writeFeed = (response, data, next) ->
@@ -184,7 +210,11 @@ class Feedr
 
 			# Store the parsed data in the cache somewhere
 			writeTasks.addTask (complete) ->
-				safefs.writeFile(feedDetails.path, JSON.stringify(data), complete)
+				if feedDetails.parse
+					rawData = JSON.stringify(data)
+				else
+					rawData = data
+				safefs.writeFile(feedDetails.path, rawData, complete)
 
 			# Fire the write tasks
 			writeTasks.run()
@@ -209,9 +239,12 @@ class Feedr
 
 			# Store the parsed data in the cache somewhere
 			readTasks.addTask (complete) ->
-				parseFile feedDetails.path, (err,result) ->
+				readFile feedDetails.path, (err,rawData) ->
 					return complete(err)  if err
-					data = result
+					if feedDetails.parse
+						data = JSON.parse(rawData.toString())
+					else
+						data = rawData
 					return complete()
 
 			# Fire the write tasks
@@ -246,47 +279,64 @@ class Feedr
 				# Check cache
 				return viaCache(next)  if useCache and response.statusCode is 304
 
-				# Trim the requested data
-				body = data.toString().trim()
+				# Parse
+				switch feedDetails.parse
+					when 'xml'
+						# Prepare Parse
+						xml2js = require('xml2js')
+						parser = new xml2js.Parser(xml2jsOptions)
+						parser.on 'end', (data) ->
+							# Write
+							return handleSuccess(data)
 
-				# Parse the requested data
-				# xml
-				if /^</.test(body)
-					xml2js = require('xml2js')
-					parser = new xml2js.Parser(xml2jsOptions)
-					parser.on 'end', (data) ->
-						# Write
-						return handleSuccess(data)
-
-					try
-						parser.parseString(body)
-					catch err
-						return handleError(err)  if err
-				else
-					# strip comments, whitespace, and semicolons from the start and finish
-					# targets facebook graph api
-					body = body.replace(/(^([\s\;]|\/\*\*\/)+|[\s\;]+$)/g,'')
-
-					# jsonp/json
-					try
-						# strip the jsonp callback if it exists, and try parse
-						body = body.replace(/^[a-z0-9]+/gi,'').replace(/^\(|\)$/g,'')
-						data = JSON.parse(body)
-					catch err
-						# strip some dodgy escaping and try parse
+						# Parse
 						try
-							body = body.replace(/\\'/g,"'")
-							data = JSON.parse(body)
+							parser.parseString(data.toString().trim())
 						catch err
 							return handleError(err)  if err
 
-					# Clean the data if desired
-					if feedDetails.clean
-						feedr.log 'debug', "Feedr is cleaning data from [#{feedDetails.url}]"
-						data = cleanData(data)
+					when 'json'
+						# strip comments, whitespace, and semicolons from the start and finish
+						# targets facebook graph api
+						data = data.toString().trim().replace(/(^([\s\;]|\/\*\*\/)+|[\s\;]+$)/g,'')
 
-					# Write
-					return handleSuccess(data)
+						# strip the jsonp callback if it exists
+						data = data.replace(/^[a-z0-9]+/gi,'').replace(/^\(|\)$/g,'')
+
+						# try parse jsonp
+						try
+							data = JSON.parse(data)
+						catch err
+							# strip some dodgy escaping
+							data = data.replace(/\\'/g,"'")
+
+							# try parse
+							try
+								data = JSON.parse(data)
+							catch err
+								return handleError(err)  if err
+
+						# Clean the data if desired
+						if feedDetails.clean
+							feedr.log 'debug', "Feedr is cleaning data from [#{feedDetails.url}]"
+							data = cleanData(data)
+
+						# Write
+						return handleSuccess(data)
+
+					when 'yaml'
+						# Parse
+						try
+							data = require('yamljs').parse(data.toString().trim())
+						catch err
+							return handleError(err)  if err
+
+						# Write
+						return handleSuccess(data)
+
+					else
+						# Write
+						return handleSuccess(data)
 
 		# Refresh if we don't want to use the cache
 		return viaRequest(next)  if useCache is false
