@@ -34,9 +34,8 @@ joe.describe 'feedr', (describe,it) ->
 
 	it 'should instantiate correct', ->
 		feedr = new Feedr({
-			cache: false
+			cache: true
 			log: console.log
-			logError: console.log
 		})
 
 	it 'should fetch a feed correctly when passing string', (done) ->

@@ -1,5 +1,12 @@
 ## History
 
+- v2.6.0 October 2, 2013
+	- Some options have changed (b/c break)
+	- Much more intelligent cache handling
+		- We now use the expires and etag headers for caching
+	- Added the ability to customise the request options
+	- Dependency upgrades
+
 - v2.5.1 June 29, 2013
 	- Dependency upgrades
 

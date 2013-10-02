@@ -5,44 +5,47 @@ eachr = require('eachr')
 typeChecker = require('typechecker')
 safefs = require('safefs')
 safeps = require('safeps')
-balUtil = require('bal-util')
 pathUtil = require('path')
+request = require('request')
 
 # Define
 class Feedr
 	# Configuration
 	config:
 		log: null
-		logError: null
-		tmpPath: null
 		cache: true
-		cacheTime: 5*60*1000  # 5 minutes
-		xmljsOptions: null
-		timeout: 10*1000
+		tmpPath: null
+		requestOptions: null
+		xml2jsOptions: null
 
 	# Constructor
 	constructor: (config) ->
 		# Extend and dereference our configuration
-		@config = extendr.extend({},@config,config)
+		@config = extendr.deepExtend({}, @config, config)
 
 		# Chain
 		@
 
+	# Log
+	log: (args...) ->
+		@config.log?(args...)
+		@
+
 	# Read Feeds
-	# feeds = {feedName:feedDetails}, feedDetails={url}
+	# feeds = {feedName:feedDetails}
 	# next(err,result)
 	readFeeds: (feeds,next) ->
 		# Prepare
 		feedr = @
-		config = @config
-		{log,logError} = @config
 		failures = 0
+
+		# Extract
 		isArray = typeChecker.isArray(feeds)
 		result = if isArray then [] else {}
 
 		# Tasks
 		tasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
-			log? (if failures then 'warn' else 'debug'), 'Feedr finished fetching', (if failures then "with #{failures} failures" else '')
+			feedr.log (if failures then 'warn' else 'debug'), 'Feedr finished fetching', (if failures then "with #{failures} failures" else '')
 			return next(err,result)
 
 		# Feeds
@@ -56,8 +59,8 @@ class Feedr
 			feedr.readFeed feedDetails, (err,data) ->
 				# Handle
 				if err
-					log? 'debug', "Feedr failed to fetch [#{feedDetails.url}] to [#{feedDetails.path}]"
-					logError? err
+					feedr.log 'debug', "Feedr failed to fetch [#{feedDetails.url}] to [#{feedDetails.path}]"
+					feedr.log 'err', err
 					++failures
 				else
 					if isArray
@@ -69,12 +72,12 @@ class Feedr
 				return complete()
 
 		# Fetch the tmp path we will be writing to
-		if config.tmpPath
+		if feedr.config.tmpPath
 			tasks.run()
 		else
 			safeps.getTmpPath (err,tmpPath) ->
 				return next(err)  if err
-				config.tmpPath = tmpPath
+				feedr.config.tmpPath = tmpPath
 				tasks.run()
 
 		# Chain
@@ -82,53 +85,50 @@ class Feedr
 
 
 	# Read Feed
-	# feedDetails = {name,url} or url
 	# next(err,data)
 	readFeed: (feedDetails,next) ->
 		# Prepare
 		feedr = @
-		config = @config
-		{log,logError} = @config
 
 		# Fetch the tmp path we will be writing to
-		unless config.tmpPath
+		unless feedr.config.tmpPath
 			safeps.getTmpPath (err,tmpPath) ->
 				return next(err)  if err
-				config.tmpPath = tmpPath
+				feedr.config.tmpPath = tmpPath
 				feedr.readFeed(feedDetails, next)
 			return @
 
-		# Feed details
+		# Parse string if necessary
+		feedDetails ?= {}
 		feedDetails = {url:feedDetails,name:feedDetails}  if typeChecker.isString(feedDetails)
-		feedDetails.hash ?= require('crypto').createHash('md5').update("feedr-"+JSON.stringify(feedDetails.url)).digest('hex');
-		feedDetails.path ?= pathUtil.join(config.tmpPath, feedDetails.hash)
-		feedDetails.name ?= feedDetails.hash
-		feedDetails.timeout ?= config.timeout
 
-		# Cache time
-		feedDetails.cache ?= config.cache
-		feedDetails.cacheTime ?= 'auto'
-		if !feedDetails.cacheTime
-			feedDetails.cacheTime = feedDetails.cache = false
-		if feedDetails.cacheTime is 'auto'
-			if feedDetails.url.indexOf('github.com') isnt -1
-				feedDetails.cacheTime = 60*60*1000  # 1 hour
-			else
-				feedDetails.cacheTime = 'default'
-		if feedDetails.cacheTime is 'default'
-			feedDetails.cacheTime = config.cacheTime
+		# Check for url
+		return next(new Error('feed url was not supplied'))  unless feedDetails.url
+
+		# Ensure optional
+		feedDetails.hash ?= require('crypto').createHash('md5').update("feedr-"+JSON.stringify(feedDetails.url)).digest('hex');
+		feedDetails.path ?= pathUtil.join(feedr.config.tmpPath, feedDetails.hash)
+		feedDetails.metaPath ?= feedDetails.path+'-meta.json'
+		feedDetails.name ?= feedDetails.hash
+		feedDetails.cache ?= feedr.config.cache
+		useCache = feedDetails.cache
+
+		# Request options
+		requestOptions = extendr.deepExtend({
+			url: feedDetails.url
+			timeout: 1*60*1000
+		}, feedr.config.requestOptions or {}, feedDetails.requestOptions or {})
+
+		# XML options
+		xml2jsOptions = extendr.deepExtend({}, feedr.config.xml2jsOptions or {}, feedDetails.xml2jsOptions or {})
 
 		# Special error handling
-		if feedDetails.url.indexOf('github.com') isnt -1
-			feedDetails.checkResult = (data) ->
+		feedDetails.checkResponse = (response,data,next) ->
+			if response.url.indexOf('github.com') isnt -1 and data.message
+				err = new Error(data.message)
+			else
 				err = null
-				try
-					data = JSON.parse(data)
-					if data.message
-						err = new Error(data.message)
-				catch _err
-					# ignore
-				return err
+			return next(err)
 
 		# Cleanup some response data
 		cleanData = (data) ->
@@ -148,30 +148,20 @@ class Feedr
 			# Return the result
 			return data
 
-		# Write the feed
-		writeFeed = (data) ->
-			# Store the parsed data in the cache somewhere
-			safefs.writeFile feedDetails.path, JSON.stringify(data), (err) ->
-				# Check
-				return next(err)  if err
-
-				# Return the parsed data
-				return next(null, data)
-
-		# Get the file via reading the cached copy
-		viaCache = ->
+		# Read a file
+		parseFile = (path, next) ->
 			# Log
-			log? 'debug', "Feedr fetched [#{feedDetails.url}] from cache"
+			feedr.log 'debug', "Feedr is parsing [#{feedDetails.url}] on [#{path}]"
 
 			# Check the the file exists
-			safefs.exists feedDetails.path, (exists) ->
+			safefs.exists path, (exists) ->
 				# Check it exists
-				return next()  unless exists
+				return next(null, null)  unless exists
 
 				# It does exist, so let's continue to read the cached fie
-				safefs.readFile feedDetails.path, (err,dataBuffer) ->
+				safefs.readFile path, (err,dataBuffer) ->
 					# Check
-					return next(err)  if err
+					return next(err, null)  if err
 
 					# Parse the cached data
 					data = JSON.parse(dataBuffer.toString())
@@ -179,19 +169,82 @@ class Feedr
 					# Rreturn the parsed cached data
 					return next(null, data)
 
-		# Get the file via doing a new request
-		viaRequest = ->
+		# Write the feed
+		writeFeed = (response, data, next) ->
 			# Log
-			log? 'debug', "Feedr is fetching [#{feedDetails.url}] to [#{feedDetails.path}]"
+			feedr.log 'debug', "Feedr is writing [#{feedDetails.url}] to [#{feedDetails.path}]"
+
+			# Prepare
+			writeTasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
+				return next(err, data, response.headers)
+
+			# Store the meta data in the cache somewhere
+			writeTasks.addTask (complete) ->
+				safefs.writeFile(feedDetails.metaPath, JSON.stringify(response.headers), complete)
+
+			# Store the parsed data in the cache somewhere
+			writeTasks.addTask (complete) ->
+				safefs.writeFile(feedDetails.path, JSON.stringify(data), complete)
+
+			# Fire the write tasks
+			writeTasks.run()
+
+		# Get the file via reading the cached copy
+		viaCache = (next) ->
+			# Log
+			feedr.log 'debug', "Feedr is remembering [#{feedDetails.url}] from cache"
+
+			# Prepare
+			meta = null
+			data = null
+			readTasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
+				return next(err, data, meta)
+
+			# Store the meta data in the cache somewhere
+			readTasks.addTask (complete) ->
+				parseFile feedDetails.metaPath, (err,result) ->
+					return complete(err)  if err
+					meta = result
+					return complete()
+
+			# Store the parsed data in the cache somewhere
+			readTasks.addTask (complete) ->
+				parseFile feedDetails.path, (err,result) ->
+					return complete(err)  if err
+					data = result
+					return complete()
+
+			# Fire the write tasks
+			readTasks.run()
+
+		# Get the file via performing a fresh request
+		viaRequest = (next) ->
+			# Log
+			feedr.log 'debug', "Feedr is fetching [#{feedDetails.url}] to [#{feedDetails.path}]"
+
+			# Add etag if we have it
+			if useCache and feedDetails.metaData?.etag
+				requestOptions.headers ?= {}
+				requestOptions.headers['If-None-Match'] ?= feedDetails.metaData.etag
 
 			# Fetch and Save
-			balUtil.readPath feedDetails.url, {timeout:feedDetails.timeout}, (err,data) ->
-				# If the request fails then we should revert to the cache
+			request requestOptions, (err,response,data) ->
+				# What should happen if an error occurs
 				handleError = (err) ->
-					return viaCache()  if feedDetails.cache isnt false
-					return next(err)
-				err ?= feedDetails.checkResult?(data)
+					return viaCache(next)  if useCache
+					return next(err, data)
+
+				# What should happen if success occurs
+				handleSuccess = (data) ->
+					return feedDetails.checkResponse response, data, (err) ->
+						return handleError(err)  if err
+						return writeFeed(response, data, next)
+
+				# Check error
 				return handleError(err)  if err
+
+				# Check cache
+				return viaCache(next)  if useCache and response.statusCode is 304
 
 				# Trim the requested data
 				body = data.toString().trim()
@@ -200,13 +253,10 @@ class Feedr
 				# xml
 				if /^</.test(body)
 					xml2js = require('xml2js')
-					xml2jsOptions = config.xml2jsOptions
-					if typeChecker.isString(xml2jsOptions)
-						xml2jsOptions = xml2js.defaults[xml2jsOptions]
 					parser = new xml2js.Parser(xml2jsOptions)
 					parser.on 'end', (data) ->
-						# write
-						return writeFeed(data)
+						# Write
+						return handleSuccess(data)
 
 					try
 						parser.parseString(body)
@@ -229,34 +279,37 @@ class Feedr
 							data = JSON.parse(body)
 						catch err
 							return handleError(err)  if err
-					finally
-						# Clean the data if desired
-						if feedDetails.clean
-							log? 'debug', "Feedr is cleaning data from [#{feedDetails.url}]"
-							data = cleanData(data)
 
-						# Write
-						return writeFeed(data)
+					# Clean the data if desired
+					if feedDetails.clean
+						feedr.log 'debug', "Feedr is cleaning data from [#{feedDetails.url}]"
+						data = cleanData(data)
 
-		# Check if we should get the data from the cache or do a new request
-		if feedDetails.cache is false
-			viaRequest()
-		else
-			balUtil.isPathOlderThan feedDetails.path, feedDetails.cacheTime, (err,older) ->
-				# Check
-				return next(err)  if err
+					# Write
+					return handleSuccess(data)
 
-				# The file doesn't exist, or exists and is old
-				if older is null or older is true
-					# Refresh
-					return viaRequest()
-				# The file exists and relatively new
-				else
-					# Get from cache
-					return viaCache()
+		# Refresh if we don't want to use the cache
+		return viaRequest(next)  if useCache is false
+
+		# Fetch the latest cache data to check if it is still valid
+		parseFile feedDetails.metaPath, (err,metaData) ->
+			# There isn't a cache file
+			return viaRequest(next)  if err or !metaData
+
+			# Apply to the feed details
+			feedDetails.metaData = metaData
+
+			# There is an expires header and it is still valid
+			return viaCache(next)  if metaData.expires and (new Date() < new Date(metaData.expires))
+
+			# There was no expires header
+			return viaRequest(next)
 
 		# Chain
 		@
 
 # Export
-module.exports = {Feedr}
+module.exports =
+	Feedr: Feedr
+	create: (args...) ->
+		return new Feedr(args...)
