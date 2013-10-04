@@ -46,7 +46,7 @@ class Feedr
 		# Tasks
 		tasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
 			feedr.log (if failures then 'warn' else 'debug'), 'Feedr finished fetching', (if failures then "with #{failures} failures" else '')
-			return next(err,result)
+			return next(err, result)
 
 		# Feeds
 		eachr feeds, (feedDetails,feedName) -> tasks.addTask (complete) ->
@@ -103,7 +103,7 @@ class Feedr
 		feedDetails = {url:feedDetails,name:feedDetails}  if typeChecker.isString(feedDetails)
 
 		# Check for url
-		return next(new Error('feed url was not supplied'))  unless feedDetails.url
+		return next(new Error('feed url was not supplied'), null, null)  unless feedDetails.url
 
 		# Ensure optional
 		feedDetails.hash ?= require('crypto').createHash('md5').update("feedr-"+JSON.stringify(feedDetails.url)).digest('hex');
@@ -129,7 +129,7 @@ class Feedr
 
 		# Check parse option
 		if feedDetails.parse and feedDetails.parse not in ['xml', 'json', 'yaml']
-			return next(new Error("unrecognised parse value: #{feedDetails.parse}"))
+			return next(new Error("unrecognised parse value: #{feedDetails.parse}"), null, null)
 
 		# Request options
 		requestOptions = extendr.deepExtend({
@@ -141,12 +141,12 @@ class Feedr
 		xml2jsOptions = extendr.deepExtend({}, feedr.config.xml2jsOptions or {}, feedDetails.xml2jsOptions or {})
 
 		# Special error handling
-		feedDetails.checkResponse = (response,data,next) ->
-			if response.url.indexOf('github.com') isnt -1 and data.message
+		feedDetails.checkResponse ?= (response,data,complete) ->
+			if feedDetails.url.indexOf('github.com') isnt -1 and data?.message
 				err = new Error(data.message)
 			else
 				err = null
-			return next(err)
+			return complete(err)
 
 		# Cleanup some response data
 		cleanData = (data) ->
@@ -167,42 +167,45 @@ class Feedr
 			return data
 
 		# Read a file
-		readFile = (path, next) ->
+		readFile = (path, complete) ->
 			# Log
 			feedr.log 'debug', "Feedr is reading [#{feedDetails.url}] on [#{path}]"
 
 			# Check the the file exists
 			safefs.exists path, (exists) ->
 				# Check it exists
-				return next(null, null)  unless exists
+				return complete(null, null)  unless exists
 
 				# It does exist, so let's continue to read the cached fie
 				safefs.readFile path, (err,rawData) ->
 					# Check
-					return next(err, null)  if err
+					return complete(err, null)  if err
 
 					# Rreturn the parsed cached data
-					return next(null, rawData)
+					return complete(null, rawData)
 
 		# Parse a file
-		parseFile = (path, next) ->
+		parseFile = (path, complete) ->
 			# Log
 			feedr.log 'debug', "Feedr is parsing [#{feedDetails.url}] on [#{path}]"
 
 			# Parse
 			readFile path, (err,rawData) ->
-				return next(err, null)  if err or !rawData
-				data = JSON.parse(rawData.toString())
-				return next(null, data)
+				return complete(err, null)  if err or !rawData
+				try
+					data = JSON.parse(rawData.toString())
+				catch err
+					return complete(err, null)
+				return complete(null, data)
 
 		# Write the feed
-		writeFeed = (response, data, next) ->
+		writeFeed = (response, data, complete) ->
 			# Log
 			feedr.log 'debug', "Feedr is writing [#{feedDetails.url}] to [#{feedDetails.path}]"
 
 			# Prepare
 			writeTasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
-				return next(err, data, response.headers)
+				return complete(err, data)
 
 			# Store the meta data in the cache somewhere
 			writeTasks.addTask (complete) ->
@@ -239,12 +242,15 @@ class Feedr
 
 			# Store the parsed data in the cache somewhere
 			readTasks.addTask (complete) ->
-				readFile feedDetails.path, (err,result) ->
-					return complete(err)  if err or !result
+				readFile feedDetails.path, (err,rawData) ->
+					return complete(err)  if err or !rawData
 					if feedDetails.parse
-						data = JSON.parse(result.toString())
+						try
+							data = JSON.parse(rawData.toString())
+						catch err
+							return complete(err)
 					else
-						data = result
+						data = rawData
 					return complete()
 
 			# Fire the write tasks
@@ -265,13 +271,14 @@ class Feedr
 				# What should happen if an error occurs
 				handleError = (err) ->
 					return viaCache(next)  if useCache
-					return next(err, data)
+					return next(err, data, requestOptions.headers)
 
 				# What should happen if success occurs
 				handleSuccess = (data) ->
 					return feedDetails.checkResponse response, data, (err) ->
 						return handleError(err)  if err
-						return writeFeed(response, data, next)
+						return writeFeed response, data, (err) ->
+							return next(err, data, requestOptions.headers)
 
 				# Check error
 				return handleError(err)  if err

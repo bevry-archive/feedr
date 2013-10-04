@@ -20,8 +20,11 @@ joe.describe 'feedr', (describe,it) ->
 
 	feedr = null
 
+	cleanData = (data) ->
+		return JSON.parse JSON.stringify(data).replace(/"https:\/\/0.gravatar.com\/avatar\/.+?"/g, '""')
+
 	fixturePath = __dirname+'/../../test/fixtures.json'
-	fixtureData = require(fixturePath)
+	fixtureData = cleanData require(fixturePath)
 	feedsObject =
 		"github-atom":
 			url: "https://github.com/bevry/feedr/commits/for-testing.atom"
@@ -40,29 +43,33 @@ joe.describe 'feedr', (describe,it) ->
 
 	it 'should fetch a feed correctly when passing string', (done) ->
 		feedr.readFeed feedsObject['github-atom'].url, (err,result) ->
-			expect(err,'error').to.not.exist
-			#require('fs').writeFileSync(fixturePath, JSON.stringify(result,null,4))
-			expect(result,'result').to.deep.equal(fixtureData)
+			expect(err, 'error').to.not.exist
+			result = cleanData(result)
+			require('fs').writeFileSync(fixturePath, JSON.stringify(result, null, 4))
+			expect(result, 'result').to.deep.equal(fixtureData)
 			done()
 
 	it 'should fetch a feed correctly when passing object', (done) ->
 		feedr.readFeed feedsObject['github-atom'], (err,result) ->
-			expect(err,'error').to.not.exist
-			expect(result,'result').to.deep.equal(fixtureData)
+			expect(err, 'error').to.not.exist
+			result = cleanData(result)
+			expect(result, 'result').to.deep.equal(fixtureData)
 			done()
 
 	it 'should fetch the feeds correctly when passing an object', (done) ->
 		feedr.readFeeds feedsObject, (err,result) ->
-			expect(err,'error').to.not.exist
-			expect(result.fail,'fail').to.not.exist
-			expect(result.timeout,'timeout').to.not.exist
+			expect(err, 'error').to.not.exist
+			expect(result.fail, 'fail').to.not.exist
+			expect(result.timeout, 'timeout').to.not.exist
+			result['github-atom'] = cleanData(result['github-atom'])
 			expect(result['github-atom'],'result').to.deep.equal(fixtureData)
 			done()
 
 	it 'should fetch the feeds correctly when passing an array', (done) ->
 		feedr.readFeeds feedsArray, (err,result) ->
-			expect(err,'err').to.not.exist
-			expect(result[0],'result').to.deep.equal(fixtureData)
+			expect(err, 'err').to.not.exist
+			result[0] = cleanData(result[0])
+			expect(result[0], 'result').to.deep.equal(fixtureData)
 			done()
 
 	it 'should close our timeout server', ->

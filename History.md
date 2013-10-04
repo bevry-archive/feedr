@@ -1,5 +1,9 @@
 ## History
 
+- v2.7.2 October 4, 2013
+	- Fixed `checkResponse` option
+	- Better catching of errors with invalid JSON
+
 - v2.7.1 October 3, 2013
 	- Fixed `TypeError: Cannot call method 'toString' of null` (regression since v2.7.0)
 

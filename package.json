@@ -1,6 +1,6 @@
 {
   "name": "feedr",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "description": "Feedr takes in a remote feed (regardless of format type) and converts it into JSON data",
   "homepage": "http://bevry.me/project/feedr",
   "keywords": [
