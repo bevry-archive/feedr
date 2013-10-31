@@ -1,5 +1,8 @@
 ## History
 
+- v2.7.3 October 31, 2013
+	- Can now parse CSON files
+
 - v2.7.2 October 4, 2013
 	- Fixed `checkResponse` option
 	- Better catching of errors with invalid JSON

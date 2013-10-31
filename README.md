@@ -1,19 +1,42 @@
+
+<!-- TITLE/ -->
+
 # Feedr
 
-[![Build Status](https://secure.travis-ci.org/bevry/feedr.png?branch=master)](http://travis-ci.org/bevry/feedr)
-[![NPM version](https://badge.fury.io/js/feedr.png)](https://npmjs.org/package/feedr)
-[![Flattr this project](https://raw.github.com/balupton/flattr-buttons/master/badge-89x18.gif)](http://flattr.com/thing/344188/balupton-on-Flattr)
+<!-- /TITLE -->
+
+
+<!-- BADGES/ -->
+
+[![Build Status](http://img.shields.io/travis-ci/bevry/feedr.png?branch=master)](http://travis-ci.org/bevry/feedr "Check this project's build status on TravisCI")
+[![NPM version](http://badge.fury.io/js/feedr.png)](https://npmjs.org/package/feedr "View this project on NPM")
+[![Gittip donate button](http://img.shields.io/gittip/bevry.png)](https://www.gittip.com/bevry/ "Donate weekly to this project using Gittip")
+[![Flattr donate button](http://img.shields.io/flattr/donate.png?color=yellow)](http://flattr.com/thing/344188/balupton-on-Flattr "Donate monthly to this project using Flattr")
+[![PayPayl donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QB8GQPZAH84N6 "Donate once-off to this project using Paypal")
+
+<!-- /BADGES -->
+
+
+<!-- DESCRIPTION/ -->
 
 Feedr takes in a remote feed (regardless of format type) and converts it into JSON data
 
+<!-- /DESCRIPTION -->
 
+
+<!-- INSTALL/ -->
 
 ## Install
 
-```
-npm install --save feedr
-```
+### [Node](http://nodejs.org/), [Browserify](http://browserify.org/)
+- Use: `require('feedr')`
+- Install: `npm install --save feedr`
 
+### [Ender](http://ender.jit.su/)
+- Use: `require('feedr')`
+- Install: `ender add feedr`
+
+<!-- /INSTALL -->
 
 
 ## Usage
@@ -69,11 +92,60 @@ Feed configuration properties are:
 - `requestOptions` defaults to global value, the options to send to [request](https://github.com/mikeal/request)
 
 
+<!-- HISTORY/ -->
+
 ## History
-You can discover the history inside the `History.md` file
+[Discover the change history by heading on over to the `History.md` file.](https://github.com/bevry/feedr/blob/master/History.md#files)
+
+<!-- /HISTORY -->
 
 
+<!-- CONTRIBUTE/ -->
+
+## Contribute
+
+[Discover how you can contribute by heading on over to the `Contributing.md` file.](https://github.com/bevry/feedr/blob/master/Contributing.md#files)
+
+<!-- /CONTRIBUTE -->
+
+
+<!-- BACKERS/ -->
+
+## Backers
+
+### Maintainers
+
+These amazing people are maintaining this project:
+
+- Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)
+
+### Sponsors
+
+No sponsors yet! Will you be the first?
+
+[![Gittip donate button](http://img.shields.io/gittip/bevry.png)](https://www.gittip.com/bevry/ "Donate weekly to this project using Gittip")
+[![Flattr donate button](http://img.shields.io/flattr/donate.png?color=yellow)](http://flattr.com/thing/344188/balupton-on-Flattr "Donate monthly to this project using Flattr")
+[![PayPayl donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QB8GQPZAH84N6 "Donate once-off to this project using Paypal")
+
+### Contributors
+
+These amazing people have contributed code to this project:
+
+- Benjamin Lupton <b@lupton.cc> (https://github.com/balupton) - [view contributions](https://github.com/bevry/feedr/commits?author=balupton)
+
+[Become a contributor!](https://github.com/bevry/feedr/blob/master/Contributing.md#files)
+
+<!-- /BACKERS -->
+
+
+<!-- LICENSE/ -->
 
 ## License
-Licensed under the [MIT License](http://creativecommons.org/licenses/MIT/)
-<br/>Copyright &copy; 2012+ [Bevry Pty Ltd](http://bevry.me)
+
+Licensed under the incredibly [permissive](http://en.wikipedia.org/wiki/Permissive_free_software_licence) [MIT license](http://creativecommons.org/licenses/MIT/)
+
+Copyright &copy; 2012+ Bevry Pty Ltd <us@bevry.me> (http://bevry.me)
+
+<!-- /LICENSE -->
+
+

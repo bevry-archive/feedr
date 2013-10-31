@@ -122,6 +122,8 @@ class Feedr
 					'xml'
 				else if extname in ['.json', '.jsonp', '.js']
 					'json'
+				else if extname in ['.coffee', '.cson']
+					'cson'
 				else if extname in ['.yml', '.yaml']
 					'yaml'
 				else
@@ -301,6 +303,12 @@ class Feedr
 							parser.parseString(data.toString().trim())
 						catch err
 							return handleError(err)  if err
+
+					when 'cson'
+						# Parse
+						require('CSON').parse data.toString(), (err,data) ->
+							return handleError(err)  if err
+							return handleSuccess(data)
 
 					when 'json'
 						# strip comments, whitespace, and semicolons from the start and finish
