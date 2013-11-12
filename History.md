@@ -1,4 +1,7 @@
-## History
+# History
+
+- v2.7.4 November 13, 2013
+	- `readFeeds` can now accept default options to apply to each feed that will be ready
 
 - v2.7.3 October 31, 2013
 	- Can now parse CSON files

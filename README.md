@@ -58,16 +58,15 @@ feeds = {
 };
 
 // Read a single feed
-feedr.readFeed(feeds.github, function(err, data, headers){
+feedr.readFeed(feeds.github, {/* optional configuration*/}, function(err, data, headers){
 	console.log(err, data, headers);
 });
 
 // Read all the feeds together
-feedr.readFeeds(feeds, function(err, result){
+feedr.readFeeds(feeds, {/* optional configuration*/}, function(err, result){
 	console.log(err, result.github, result.twitter);
 });
 ```
-
 
 
 ## Configuration

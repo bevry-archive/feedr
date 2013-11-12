@@ -34,10 +34,28 @@ class Feedr
 	# Read Feeds
 	# feeds = {feedName:feedDetails}
 	# next(err,result)
-	readFeeds: (feeds,next) ->
+	readFeeds: (args...) ->
 		# Prepare
 		feedr = @
 		failures = 0
+
+		# Prepare options
+		feeds = null
+		defaultFeedDetails = {}
+		next = null
+
+		# Extract the configuration from the arguments
+		for arg,index in args
+			switch true
+				when typeChecker.isFunction(arg)
+					next = arg
+				when typeChecker.isArray(arg)
+					feeds = arg
+				when typeChecker.isPlainObject(arg)
+					if index is 0
+						feeds = arg
+					else
+						extendr.extend(defaultFeedDetails, arg)
 
 		# Extract
 		isArray = typeChecker.isArray(feeds)
@@ -52,8 +70,9 @@ class Feedr
 		eachr feeds, (feedDetails,feedName) -> tasks.addTask (complete) ->
 			# Prepare
 			if typeChecker.isString(feedDetails)
-				feedDetails = {url:feedDetails}
+				feedDetails = {url: feedDetails}
 			feedDetails.name ?= feedName
+			feedDetails = extendr.extend({}, defaultFeedDetails, feedDetails)
 
 			# Read
 			feedr.readFeed feedDetails, (err,data) ->
@@ -86,7 +105,7 @@ class Feedr
 
 	# Read Feed
 	# next(err,data)
-	readFeed: (feedDetails,next) ->
+	readFeed: (args...) ->
 		# Prepare
 		feedr = @
 
@@ -95,12 +114,23 @@ class Feedr
 			safeps.getTmpPath (err,tmpPath) ->
 				return next(err)  if err
 				feedr.config.tmpPath = tmpPath
-				feedr.readFeed(feedDetails, next)
+				feedr.readFeed(args...)
 			return @
 
-		# Parse string if necessary
-		feedDetails ?= {}
-		feedDetails = {url:feedDetails,name:feedDetails}  if typeChecker.isString(feedDetails)
+		# Prepare options
+		feedDetails = {}
+		next = null
+
+		# Extract the configuration from the arguments
+		for arg in args
+			switch true
+				when typeChecker.isString(arg)
+					feedDetails.name ?= arg
+					feedDetails.url = arg
+				when typeChecker.isFunction(arg)
+					next = arg
+				when typeChecker.isPlainObject(arg)
+					extendr.extend(feedDetails, arg)
 
 		# Check for url
 		return next(new Error('feed url was not supplied'), null, null)  unless feedDetails.url
