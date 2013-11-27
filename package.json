@@ -1,7 +1,7 @@
 {
   "title": "Feedr",
   "name": "feedr",
-  "version": "2.7.4",
+  "version": "2.7.5",
   "description": "Feedr takes in a remote feed (regardless of format type) and converts it into JSON data",
   "homepage": "http://bevry.me/project/feedr",
   "license": {
@@ -46,7 +46,7 @@
     "eachr": "~2.0.2",
     "extendr": "~2.1.0",
     "typechecker": "~2.0.1",
-    "taskgroup": "~3.2.3",
+    "taskgroup": "~3.3.4",
     "xml2js": "~0.2.4",
     "request": "~2.27.0",
     "yamljs": "~0.1.4",

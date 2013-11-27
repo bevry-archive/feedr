@@ -167,6 +167,8 @@ class Feedr
 		requestOptions = extendr.deepExtend({
 			url: feedDetails.url
 			timeout: 1*60*1000
+			headers:
+				'User-Agent': 'Wget/1.14 (linux-gnu)'
 		}, feedr.config.requestOptions or {}, feedDetails.requestOptions or {})
 
 		# XML options
@@ -295,7 +297,6 @@ class Feedr
 
 			# Add etag if we have it
 			if useCache and feedDetails.metaData?.etag
-				requestOptions.headers ?= {}
 				requestOptions.headers['If-None-Match'] ?= feedDetails.metaData.etag
 
 			# Fetch and Save

@@ -1,5 +1,9 @@
 # History
 
+- v2.7.5 November 27, 2013
+	- Use the `Wget/1.14 (linux-gnu)` User-Agent by default
+	- Updated dependencies
+
 - v2.7.4 November 13, 2013
 	- `readFeeds` can now accept default options to apply to each feed that will be ready
 
