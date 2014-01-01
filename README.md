@@ -9,6 +9,8 @@
 
 [![Build Status](http://img.shields.io/travis-ci/bevry/feedr.png?branch=master)](http://travis-ci.org/bevry/feedr "Check this project's build status on TravisCI")
 [![NPM version](http://badge.fury.io/js/feedr.png)](https://npmjs.org/package/feedr "View this project on NPM")
+[![Dependency Status](https://david-dm.org/bevry/feedr.png)](https://david-dm.org/bevry/feedr)
+[![Development Dependency Status](https://david-dm.org/bevry/feedr/dev-status.png)](https://david-dm.org/bevry/feedr#info=devDependencies)
 [![Gittip donate button](http://img.shields.io/gittip/bevry.png)](https://www.gittip.com/bevry/ "Donate weekly to this project using Gittip")
 [![Flattr donate button](http://img.shields.io/flattr/donate.png?color=yellow)](http://flattr.com/thing/344188/balupton-on-Flattr "Donate monthly to this project using Flattr")
 [![PayPayl donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QB8GQPZAH84N6 "Donate once-off to this project using Paypal")
@@ -27,13 +29,9 @@ Feedr takes in a remote feed (regardless of format type) and converts it into JS
 
 ## Install
 
-### [Node](http://nodejs.org/), [Browserify](http://browserify.org/)
+### [Node](http://nodejs.org/)
 - Use: `require('feedr')`
 - Install: `npm install --save feedr`
-
-### [Ender](http://ender.jit.su/)
-- Use: `require('feedr')`
-- Install: `ender add feedr`
 
 <!-- /INSTALL -->
 
@@ -93,7 +91,7 @@ Feed configuration properties are:
 <!-- HISTORY/ -->
 
 ## History
-[Discover the change history by heading on over to the `History.md` file.](https://github.com/bevry/feedr/blob/master/History.md#files)
+[Discover the change history by heading on over to the `HISTORY.md` file.](https://github.com/bevry/feedr/blob/master/HISTORY.md#files)
 
 <!-- /HISTORY -->
 
@@ -102,7 +100,7 @@ Feed configuration properties are:
 
 ## Contribute
 
-[Discover how you can contribute by heading on over to the `Contributing.md` file.](https://github.com/bevry/feedr/blob/master/Contributing.md#files)
+[Discover how you can contribute by heading on over to the `CONTRIBUTING.md` file.](https://github.com/bevry/feedr/blob/master/CONTRIBUTING.md#files)
 
 <!-- /CONTRIBUTE -->
 
@@ -129,9 +127,9 @@ No sponsors yet! Will you be the first?
 
 These amazing people have contributed code to this project:
 
-- Benjamin Lupton <b@lupton.cc> (https://github.com/balupton) - [view contributions](https://github.com/bevry/feedr/commits?author=balupton)
+- [Benjamin Lupton](https://github.com/balupton) <b@lupton.cc> — [view contributions](https://github.com/bevry/feedr/commits?author=balupton)
 
-[Become a contributor!](https://github.com/bevry/feedr/blob/master/Contributing.md#files)
+[Become a contributor!](https://github.com/bevry/feedr/blob/master/CONTRIBUTING.md#files)
 
 <!-- /BACKERS -->
 

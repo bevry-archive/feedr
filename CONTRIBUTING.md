@@ -1,10 +1,17 @@
 <!--
-v1.3.9 November 17, 2013
+v1.3.10 December 10, 2013
 https://github.com/bevry/base
 -->
 
 
 # Contribute
+
+
+## Resources
+
+- [Coding Standards](http://bevry.me/bevry/coding-standards)
+- [Documentation Guidelines](http://bevry.me/bevry/documentation-guidelines)
+- [Support Guidelines](http://bevry.me/bevry/support-guidelines)
 
 
 ## Development

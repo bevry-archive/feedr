@@ -136,7 +136,7 @@ class Feedr
 		return next(new Error('feed url was not supplied'), null, null)  unless feedDetails.url
 
 		# Ensure optional
-		feedDetails.hash ?= require('crypto').createHash('md5').update("feedr-"+JSON.stringify(feedDetails.url)).digest('hex');
+		feedDetails.hash ?= require('crypto').createHash('md5').update("feedr-"+JSON.stringify(feedDetails.url)).digest('hex')
 		feedDetails.path ?= pathUtil.join(feedr.config.tmpPath, feedDetails.hash)
 		feedDetails.metaPath ?= feedDetails.path+'-meta.json'
 		feedDetails.name ?= feedDetails.hash
@@ -203,19 +203,35 @@ class Feedr
 		# Read a file
 		readFile = (path, complete) ->
 			# Log
-			feedr.log 'debug', "Feedr is reading [#{feedDetails.url}] on [#{path}]"
+			feedr.log 'debug', "Feedr is reading [#{feedDetails.url}] on [#{path}], checking exists"
 
 			# Check the the file exists
 			safefs.exists path, (exists) ->
 				# Check it exists
-				return complete(null, null)  unless exists
+				unless exists
+					# Log
+					feedr.log 'debug', "Feedr is reading [#{feedDetails.url}] on [#{path}], it doesn't exist"
+
+					# Exit
+					return complete(null, null)
+
+				# Log
+				feedr.log 'debug', "Feedr is reading [#{feedDetails.url}] on [#{path}], it exists, now reading"
 
 				# It does exist, so let's continue to read the cached fie
 				safefs.readFile path, (err,rawData) ->
 					# Check
-					return complete(err, null)  if err
+					if err
+						# Log
+						feedr.log 'debug', "Feedr is reading [#{feedDetails.url}] on [#{path}], it exists, read failed", err
 
-					# Rreturn the parsed cached data
+						# Exit
+						return complete(err, null)  if err
+
+					# Log
+					feedr.log 'debug', "Feedr is reading [#{feedDetails.url}] on [#{path}], it exists, read completed"
+
+					# Return the parsed cached data
 					return complete(null, rawData)
 
 		# Parse a file
@@ -225,11 +241,28 @@ class Feedr
 
 			# Parse
 			readFile path, (err,rawData) ->
-				return complete(err, null)  if err or !rawData
+				# Check
+				if err or !rawData
+					# Log
+					feedr.log 'debug', "Feedr is parsing [#{feedDetails.url}] on [#{path}], read failed", err
+
+					# Exit
+					return complete(err, null)
+
+				# Attempt
 				try
 					data = JSON.parse(rawData.toString())
 				catch err
+					# Log
+					feedr.log 'debug', "Feedr is parsing [#{feedDetails.url}] on [#{path}], parse failed", err
+
+					# Exit
 					return complete(err, null)
+
+				# Log
+				feedr.log 'debug', "Feedr is parsing [#{feedDetails.url}] on [#{path}], parse completed", err
+
+				# Exit
 				return complete(null, data)
 
 		# Write the feed
@@ -239,24 +272,35 @@ class Feedr
 
 			# Prepare
 			writeTasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
+				if err
+					# Log
+					feedr.log 'debug', "Feedr is writing [#{feedDetails.url}] to [#{feedDetails.path}], write failed", err
+
+					# Exit
+					return complete(err, null)
+
+				# Log
+				feedr.log 'debug', "Feedr is writing [#{feedDetails.url}] to [#{feedDetails.path}], write completed"
+
+				# Exit
 				return complete(err, data)
 
-			# Store the meta data in the cache somewhere
-			writeTasks.addTask (complete) ->
-				safefs.writeFile(feedDetails.metaPath, JSON.stringify(response.headers), complete)
+			writeTasks.addTask 'store the meta data in a cache somewhere', (complete) ->
+				writeData = JSON.stringify(response.headers)
+				safefs.writeFile(feedDetails.metaPath, writeData, complete)
 
-			# Store the parsed data in the cache somewhere
-			writeTasks.addTask (complete) ->
+			writeTasks.addTask 'store the parsed data in a cache somewhere', (complete) ->
 				if feedDetails.parse
-					rawData = JSON.stringify(data)
+					writeData = JSON.stringify(data)
 				else
-					rawData = data
-				safefs.writeFile(feedDetails.path, rawData, complete)
+					writeData = data
+				safefs.writeFile(feedDetails.path, writeData, complete)
 
 			# Fire the write tasks
 			writeTasks.run()
 
 		# Get the file via reading the cached copy
+		# next(err, data, meta)
 		viaCache = (next) ->
 			# Log
 			feedr.log 'debug', "Feedr is remembering [#{feedDetails.url}] from cache"
@@ -267,15 +311,13 @@ class Feedr
 			readTasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
 				return next(err, data, meta)
 
-			# Store the meta data in the cache somewhere
-			readTasks.addTask (complete) ->
+			readTasks.addTask 'read the meta data in a cache somewhere', (complete) ->
 				parseFile feedDetails.metaPath, (err,result) ->
 					return complete(err)  if err or !result
 					meta = result
 					return complete()
 
-			# Store the parsed data in the cache somewhere
-			readTasks.addTask (complete) ->
+			readTasks.addTask 'read the parsed data in a cache somewhere', (complete) ->
 				readFile feedDetails.path, (err,rawData) ->
 					return complete(err)  if err or !rawData
 					if feedDetails.parse
@@ -291,9 +333,10 @@ class Feedr
 			readTasks.run()
 
 		# Get the file via performing a fresh request
+		# next(err, data, meta)
 		viaRequest = (next) ->
 			# Log
-			feedr.log 'debug', "Feedr is fetching [#{feedDetails.url}] to [#{feedDetails.path}]"
+			feedr.log 'debug', "Feedr is fetching [#{feedDetails.url}] to [#{feedDetails.path}], requesting"
 
 			# Add etag if we have it
 			if useCache and feedDetails.metaData?.etag
@@ -301,13 +344,24 @@ class Feedr
 
 			# Fetch and Save
 			request requestOptions, (err,response,data) ->
+				# Log
+				feedr.log 'debug', "Feedr is fetching [#{feedDetails.url}] to [#{feedDetails.path}], requested"
+
 				# What should happen if an error occurs
 				handleError = (err) ->
+					# Log
+					feedr.log 'debug', "Feedr is fetching [#{feedDetails.url}] to [#{feedDetails.path}], error", err
+
+					# Exit
 					return viaCache(next)  if useCache
 					return next(err, data, requestOptions.headers)
 
 				# What should happen if success occurs
 				handleSuccess = (data) ->
+					# Log
+					feedr.log 'debug', "Feedr is fetching [#{feedDetails.url}] to [#{feedDetails.path}], requested, checking"
+
+					# Exit
 					return feedDetails.checkResponse response, data, (err) ->
 						return handleError(err)  if err
 						return writeFeed response, data, (err) ->

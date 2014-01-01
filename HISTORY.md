@@ -1,5 +1,9 @@
 # History
 
+- v2.7.6 January 2, 2014
+	- Updated dependencies
+	- More debug log messages
+
 - v2.7.5 November 27, 2013
 	- Use the `Wget/1.14 (linux-gnu)` User-Agent by default
 	- Updated dependencies
