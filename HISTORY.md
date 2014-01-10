@@ -1,5 +1,8 @@
 # History
 
+- v2.7.7 January 10, 2014
+	- Updated dependencies
+
 - v2.7.6 January 2, 2014
 	- Updated dependencies
 	- More debug log messages
