@@ -83,7 +83,7 @@ Feed configuration properties are:
 - `hash` defaults to hash of the url, the hashed url for caching
 - `name` defaults to hash, the name of the feed for use in debugging
 - `path` defaults to tmp feed path, the path to save the file to
-- `parse` defaults to auto detection based on the extension of the url, whether or not to parse the data into a javascript object, can be set to `false`, `true`, `"xml"`, `"yaml"`, `"json"`, `"cson"` (note, [CSON](https://github.com/bevry/cson) is a unsafe but secure format)
+- `parse` defaults to auto detection based on the extension of the url, whether or not to parse the data into a javascript object, can be set to `false`, `true`, `"xml"`, `"yaml"`, `"json"`, `"cson"` (note, [CSON](https://github.com/bevry/cson) is an unsafe but secure format)
 - `checkResponse` defaults to `null`, a function accepting `response`, `data`, and `next` to check the response for errors
 - `xml2jsOptions` defaults to global value, the options to send to [xml2js](https://github.com/Leonidas-from-XIV/node-xml2js)
 - `requestOptions` defaults to global value, the options to send to [request](https://github.com/mikeal/request)
