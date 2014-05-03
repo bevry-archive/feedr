@@ -1,5 +1,9 @@
 # History
 
+- v2.8.0 May 3, 2014
+	- Added support for `"preferred"` and millisecond values for `cache` configuration option
+	- Updated dependencies
+
 - v2.7.7 January 10, 2014
 	- Updated dependencies
 

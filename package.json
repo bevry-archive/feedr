@@ -1,7 +1,7 @@
 {
   "title": "Feedr",
   "name": "feedr",
-  "version": "2.7.7",
+  "version": "2.8.0",
   "description": "Feedr takes in a remote feed (regardless of format type) and converts it into JSON data",
   "homepage": "http://bevry.me/project/feedr",
   "license": {
@@ -15,7 +15,8 @@
     "gittip": "bevry",
     "flattr": "344188/balupton-on-Flattr",
     "paypal": "QB8GQPZAH84N6",
-    "bitcoin": "https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a"
+    "bitcoin": "https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a",
+    "wishlist": "http://amzn.com/w/2F8TXKSNAFG4V"
   },
   "keywords": [
     "feeds",
@@ -50,17 +51,17 @@
     "extendr": "~2.1.0",
     "typechecker": "~2.0.1",
     "taskgroup": "~3.3.4",
-    "xml2js": "~0.4.1",
-    "request": "~2.31.0",
-    "yamljs": "~0.1.4",
+    "xml2js": "~0.4.2",
+    "request": "~2.34.0",
+    "yamljs": "~0.1.5",
     "cson": "~1.4.4"
   },
   "devDependencies": {
-    "coffee-script": "~1.6.2",
-    "joe": "~1.3.0",
+    "coffee-script": "~1.7.1",
+    "joe": "~1.4.0",
     "joe-reporter-console": "~1.2.1",
-    "chai": "~1.8.0",
-    "projectz": "~0.3.5"
+    "chai": "~1.9.1",
+    "projectz": "~0.3.11"
   },
   "main": "./out/lib/feedr.js",
   "scripts": {

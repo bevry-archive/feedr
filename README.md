@@ -15,6 +15,7 @@
 [![Flattr donate button](http://img.shields.io/flattr/donate.png?color=yellow)](http://flattr.com/thing/344188/balupton-on-Flattr "Donate monthly to this project using Flattr")
 [![PayPayl donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QB8GQPZAH84N6 "Donate once-off to this project using Paypal")
 [![BitCoin donate button](http://img.shields.io/bitcoin/donate.png?color=yellow)](https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a "Donate once-off to this project using BitCoin")
+[![Wishlist browse button](http://img.shields.io/wishlist/browse.png?color=yellow)](http://amzn.com/w/2F8TXKSNAFG4V "Buy an item on our wishlist for us")
 
 <!-- /BADGES -->
 
@@ -30,7 +31,7 @@ Feedr takes in a remote feed (regardless of format type) and converts it into JS
 
 ## Install
 
-### [Node](http://nodejs.org/)
+### [NPM](http://npmjs.org/)
 - Use: `require('feedr')`
 - Install: `npm install --save feedr`
 
@@ -69,11 +70,11 @@ feedr.readFeeds(feeds, {/* optional configuration*/}, function(err, result){
 
 ## Configuration
 
-Global configuration properties are:
+Feed configuration defaults / global configuration properties are:
 
 - `log` defaults to `null`, log function to use
 - `tmpPath` defaults to system tmp path, the tempory path to cache our feedr results to
-- `cache` defaults to `true`, whether or not we should use the cache if it is valid
+- `cache` defaults to `true`, whether or not we should use the cache if it is valid, use `preferred` to always use cache if it exists, use milliseconds to specify a max age
 - `xml2jsOptions` defaults to `null`, the options to send to [xml2js](https://github.com/Leonidas-from-XIV/node-xml2js)
 - `requestOptions` defaults to `null`, the options to send to [request](https://github.com/mikeal/request)
 
@@ -124,6 +125,7 @@ No sponsors yet! Will you be the first?
 [![Flattr donate button](http://img.shields.io/flattr/donate.png?color=yellow)](http://flattr.com/thing/344188/balupton-on-Flattr "Donate monthly to this project using Flattr")
 [![PayPayl donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QB8GQPZAH84N6 "Donate once-off to this project using Paypal")
 [![BitCoin donate button](http://img.shields.io/bitcoin/donate.png?color=yellow)](https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a "Donate once-off to this project using BitCoin")
+[![Wishlist browse button](http://img.shields.io/wishlist/browse.png?color=yellow)](http://amzn.com/w/2F8TXKSNAFG4V "Buy an item on our wishlist for us")
 
 ### Contributors
 

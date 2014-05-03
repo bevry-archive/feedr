@@ -141,7 +141,6 @@ class Feedr
 		feedDetails.metaPath ?= feedDetails.path+'-meta.json'
 		feedDetails.name ?= feedDetails.hash
 		feedDetails.cache ?= feedr.config.cache
-		useCache = feedDetails.cache
 
 		# Parse option
 		feedDetails.parse ?= true
@@ -339,7 +338,7 @@ class Feedr
 			feedr.log 'debug', "Feedr is fetching [#{feedDetails.url}] to [#{feedDetails.path}], requesting"
 
 			# Add etag if we have it
-			if useCache and feedDetails.metaData?.etag
+			if feedDetails.cache and feedDetails.metaData?.etag
 				requestOptions.headers['If-None-Match'] ?= feedDetails.metaData.etag
 
 			# Fetch and Save
@@ -353,7 +352,7 @@ class Feedr
 					feedr.log 'debug', "Feedr is fetching [#{feedDetails.url}] to [#{feedDetails.path}], error", err
 
 					# Exit
-					return viaCache(next)  if useCache
+					return viaCache(next)  if feedDetails.cache
 					return next(err, data, requestOptions.headers)
 
 				# What should happen if success occurs
@@ -371,7 +370,7 @@ class Feedr
 				return handleError(err)  if err
 
 				# Check cache
-				return viaCache(next)  if useCache and response.statusCode is 304
+				return viaCache(next)  if feedDetails.cache and response.statusCode is 304
 
 				# Parse
 				switch feedDetails.parse
@@ -439,7 +438,7 @@ class Feedr
 						return handleSuccess(data)
 
 		# Refresh if we don't want to use the cache
-		return viaRequest(next)  if useCache is false
+		return viaRequest(next)  if feedDetails.cache is false
 
 		# Fetch the latest cache data to check if it is still valid
 		parseFile feedDetails.metaPath, (err,metaData) ->
@@ -450,13 +449,39 @@ class Feedr
 			feedDetails.metaData = metaData
 
 			# There is an expires header and it is still valid
-			return viaCache(next)  if metaData.expires and (new Date() < new Date(metaData.expires))
+			# cache preferred, use cache if exists, otherwise fall back to relevant
+			# cache number, use cache if within number, otherwise fall back to relevant
+			return viaCache(next)  if feedr.isFeedCacheStillRelevant(feedDetails, metaData)
 
 			# There was no expires header
 			return viaRequest(next)
 
 		# Chain
 		@
+
+	# Check to see if the feed is still relevant
+	# feedDetails={cache}, cache=boolean/"preferred"/number
+	# metaData={expires, date}
+	# return boolean
+	isFeedCacheStillRelevant: (feedDetails, metaData) ->
+		return feedDetails.cache and (
+			(
+				# User always wants to use cache
+				feedDetails.cache is 'preferred'
+			) or (
+				# If the cache is still relevant according to the website
+				metaData.expires and (
+					new Date() < new Date(metaData.expires)
+				)
+			) or (
+				# If the cache is still relevant according to the user
+				typeChecker.isNumber(feedDetails.cache) and metaData.date and (
+					new Date() < new Date(
+						new Date(metaData.date).getTime() + feedDetails.cache
+					)
+				)
+			)
+		)
 
 # Export
 module.exports =

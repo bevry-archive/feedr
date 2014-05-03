@@ -28,7 +28,7 @@
             "Recent Commits to feedr:for-testing"
         ],
         "updated": [
-            "2012-10-21T14:14:03-07:00"
+            "2012-10-22T08:14:03+11:00"
         ],
         "entry": [
             {
@@ -48,14 +48,14 @@
                     "\n        Fixed config dereferencing. Changed refreshCache to cache. Fixed failures count. Added xml2jsOptions. Added cache testing.\n    "
                 ],
                 "updated": [
-                    "2012-10-21T14:14:03-07:00"
+                    "2012-10-22T08:14:03+11:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -95,14 +95,14 @@
                     "\n        removed chai dependency\n    "
                 ],
                 "updated": [
-                    "2012-10-21T13:38:09-07:00"
+                    "2012-10-22T07:38:09+11:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -142,14 +142,14 @@
                     "\n        Improved makefile\n    "
                 ],
                 "updated": [
-                    "2012-10-21T13:35:59-07:00"
+                    "2012-10-22T07:35:59+11:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -189,14 +189,14 @@
                     "\n        Attempt at fixing travis\n    "
                 ],
                 "updated": [
-                    "2012-10-21T13:34:20-07:00"
+                    "2012-10-22T07:34:20+11:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -236,14 +236,14 @@
                     "\n        Updated readme\n    "
                 ],
                 "updated": [
-                    "2012-10-21T13:30:53-07:00"
+                    "2012-10-22T07:30:53+11:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -283,14 +283,14 @@
                     "\n        Updated code for the abstraction. Need to complete readme.\n    "
                 ],
                 "updated": [
-                    "2012-10-21T13:25:00-07:00"
+                    "2012-10-22T07:25:00+11:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -330,14 +330,14 @@
                     "\n        Working on the abstraction from the docpad plugin\n    "
                 ],
                 "updated": [
-                    "2012-10-21T13:24:08-07:00"
+                    "2012-10-22T07:24:08+11:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -377,14 +377,14 @@
                     "\n        Updated plugin homepages. Updated HighlightJS readme.\n    "
                 ],
                 "updated": [
-                    "2012-10-01T02:09:59-07:00"
+                    "2012-10-01T19:09:59+10:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -424,14 +424,14 @@
                     "\n        Published new version of the cache, feeder and text plugins. Fixes and improvements.\n    "
                 ],
                 "updated": [
-                    "2012-08-18T07:24:08-07:00"
+                    "2012-08-19T00:24:08+10:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -471,14 +471,14 @@
                     "\n        Fixed the cachr plugin. Improved the text plugin.\n    "
                 ],
                 "updated": [
-                    "2012-08-16T20:37:49-07:00"
+                    "2012-08-17T13:37:49+10:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -518,14 +518,14 @@
                     "\n        Re-added markdown files to nom distribution as they are required for the nom website. Fixed typo in feeder plugin. Updated text plugin for DocPad 6.5\n    "
                 ],
                 "updated": [
-                    "2012-08-10T05:44:20-07:00"
+                    "2012-08-10T22:44:20+10:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -565,14 +565,14 @@
                     "\n        That feedr problem in the last commit was actually on our side. It was due to conflicts in the cache. Now resolved. Also removed osenv dependency for the new balUtil version.\n    "
                 ],
                 "updated": [
-                    "2012-08-10T03:31:18-07:00"
+                    "2012-08-10T20:31:18+10:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -612,14 +612,14 @@
                     "\n        Fixed feedr plugin. GitHub fixed their feeds so output changed.\n    "
                 ],
                 "updated": [
-                    "2012-08-10T03:16:38-07:00"
+                    "2012-08-10T20:16:38+10:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -659,14 +659,14 @@
                     "\n        Added readme files to everything. Split the coffee plugin into individual plugins.\n    "
                 ],
                 "updated": [
-                    "2012-07-17T22:04:03-07:00"
+                    "2012-07-18T15:04:03+10:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -706,14 +706,14 @@
                     "\n        Many changes\n    "
                 ],
                 "updated": [
-                    "2012-07-07T09:44:08-07:00"
+                    "2012-07-08T02:44:08+10:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -753,14 +753,14 @@
                     "\n        Somewhere the feedr plugin was lost. Re-added and updated it.\n    "
                 ],
                 "updated": [
-                    "2012-06-11T03:31:05-07:00"
+                    "2012-06-11T20:31:05+10:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -800,14 +800,14 @@
                     "\n        Plugins updated for DocPad 5.3.x/6.0.x. Plugins now pre-compile. Plugins now run their own tests (can now run their tests individually).\n    "
                 ],
                 "updated": [
-                    "2012-06-06T17:20:48-07:00"
+                    "2012-06-07T10:20:48+10:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -847,14 +847,14 @@
                     "\n        Lots of updates, see description\n    "
                 ],
                 "updated": [
-                    "2012-05-22T23:15:21-07:00"
+                    "2012-05-23T16:15:21+10:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -894,14 +894,14 @@
                     "\n        Added History.md files to most plugins. Published nearly all plugins (as v1.0.0). Added tests for html2jade.\n    "
                 ],
                 "updated": [
-                    "2012-04-14T05:43:11-07:00"
+                    "2012-04-14T22:43:11+10:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
@@ -941,14 +941,14 @@
                     "\n        Cleaned up the package.json files. Added tests for the partials plugin. Got the partials plugin going with DocPad 5.x\n    "
                 ],
                 "updated": [
-                    "2012-04-14T03:41:20-07:00"
+                    "2012-04-14T20:41:20+10:00"
                 ],
                 "media:thumbnail": [
                     {
                         "$": {
                             "height": "30",
                             "width": "30",
-                            "url": "https://2.gravatar.com/avatar/9400cb5aeb155ccec614652542fd274d?d=https%3A%2F%2Fidenticons.github.com%2F28fbafb0c2a98d9a643600bd876de1b4.png&r=x&s=30"
+                            "url": "https://avatars1.githubusercontent.com/u/61148?s=30"
                         }
                     }
                 ],
