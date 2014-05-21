@@ -74,7 +74,11 @@ Feed configuration defaults / global configuration properties are:
 
 - `log` defaults to `null`, log function to use
 - `tmpPath` defaults to system tmp path, the tempory path to cache our feedr results to
-- `cache` defaults to `true`, whether or not we should use the cache if it is valid, use `preferred` to always use cache if it exists, use milliseconds to specify a max age
+- `cache` defaults to one day `1000*60*60*24`, available values:
+	- `Number` prefers to use the cache when it is within the range of the number in milliseconds
+	- `true` prefers to use the cache when the response headers indicate that the cache is still valid
+	- `"preferred"` will always use the cache if the cache exists
+	- `false` will never use the cache
 - `xml2jsOptions` defaults to `null`, the options to send to [xml2js](https://github.com/Leonidas-from-XIV/node-xml2js)
 - `requestOptions` defaults to `null`, the options to send to [request](https://github.com/mikeal/request)
 
@@ -84,7 +88,7 @@ Feed configuration properties are:
 - `hash` defaults to hash of the url, the hashed url for caching
 - `name` defaults to hash, the name of the feed for use in debugging
 - `path` defaults to tmp feed path, the path to save the file to
-- `parse` defaults to auto detection based on the extension of the url, whether or not to parse the data into a javascript object, can be set to `false`, `true`, `"xml"`, `"yaml"`, `"json"`, `"cson"` (note, [CSON](https://github.com/bevry/cson) is an unsafe but secure format)
+- `parse` defaults `true`, whether or not we should attempt to parse the response data, supported formats are `xml`, `json`, `cson`, and `yaml`
 - `checkResponse` defaults to `null`, a function accepting `response`, `data`, and `next` to check the response for errors
 - `xml2jsOptions` defaults to global value, the options to send to [xml2js](https://github.com/Leonidas-from-XIV/node-xml2js)
 - `requestOptions` defaults to global value, the options to send to [request](https://github.com/mikeal/request)

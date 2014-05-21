@@ -1,5 +1,11 @@
 # History
 
+- v2.9.0 May 21, 2014
+	- `cache` option now defaults to one day `1000*60*60*24` to avoid superflous requests, refer to the updated readme for what the new values mean
+	- `parse` option is now only a boolean
+	- parsing auto-detection now checks content-types as well as the previous extension check
+	- Updated dependencies
+
 - v2.8.0 May 3, 2014
 	- Added support for `"preferred"` and millisecond values for `cache` configuration option
 	- Updated dependencies

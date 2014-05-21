@@ -13,7 +13,7 @@ class Feedr
 	# Configuration
 	config:
 		log: null
-		cache: true
+		cache: 1000*60*60*24  # one day by default
 		tmpPath: null
 		requestOptions: null
 		xml2jsOptions: null
@@ -144,23 +144,6 @@ class Feedr
 
 		# Parse option
 		feedDetails.parse ?= true
-		extname = pathUtil.extname feedDetails.url.replace(/[?#].*/, '')
-		if feedDetails.parse is true
-			feedDetails.parse =
-				if extname in ['.xml', '.atom', '.rss', '.rdf', '.html', '.html']
-					'xml'
-				else if extname in ['.json', '.jsonp', '.js']
-					'json'
-				else if extname in ['.coffee', '.cson']
-					'cson'
-				else if extname in ['.yml', '.yaml']
-					'yaml'
-				else
-					false
-
-		# Check parse option
-		if feedDetails.parse and feedDetails.parse not in ['xml', 'json', 'yaml']
-			return next(new Error("unrecognised parse value: #{feedDetails.parse}"), null, null)
 
 		# Request options
 		requestOptions = extendr.deepExtend({
@@ -372,8 +355,39 @@ class Feedr
 				# Check cache
 				return viaCache(next)  if feedDetails.cache and response.statusCode is 304
 
+				# Determine Parse Type
+				if feedDetails.parse
+					contentType = response.headers['content-type']
+					extension = pathUtil.extname feedDetails.url.replace(/[?#].*/, '')
+					if feedDetails.parse is true
+						parseFormat =
+							if (
+								extension in ['.xml', '.atom', '.rss', '.rdf', '.html', '.html']  or
+								contentType.indexOf('xml') isnt -1  or
+								contentType.indexOf('html') isnt -1
+							) then 'xml'
+
+							else if (
+								extension in ['.json', '.jsonp', '.js']  or
+								contentType.indexOf('javascript') isnt -1  or
+								contentType.indexOf('json') isnt -1
+							) then 'json'
+
+							else if (
+								extension in ['.coffee', '.cson']  or
+								contentType.indexOf('coffeescript') isnt -1  or
+								contentType.indexOf('cson') isnt -1
+							) then 'cson'
+
+							else if (
+								extension in ['.yml', '.yaml']  or
+								contentType.indexOf('yaml') isnt -1
+							) then 'yaml'
+
+							else false
+
 				# Parse
-				switch feedDetails.parse
+				switch parseFormat
 					when 'xml'
 						# Prepare Parse
 						xml2js = require('xml2js')

@@ -1,7 +1,7 @@
 {
   "title": "Feedr",
   "name": "feedr",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "description": "Feedr takes in a remote feed (regardless of format type) and converts it into JSON data",
   "homepage": "http://bevry.me/project/feedr",
   "license": {
@@ -25,7 +25,8 @@
     "atom",
     "rdf",
     "json",
-    "jsonp"
+    "jsonp",
+    "cson"
   ],
   "author": "2012+ Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
   "maintainers": [
@@ -50,11 +51,11 @@
     "eachr": "~2.0.2",
     "extendr": "~2.1.0",
     "typechecker": "~2.0.1",
-    "taskgroup": "~3.3.4",
-    "xml2js": "~0.4.2",
-    "request": "~2.34.0",
+    "taskgroup": "~3.4.0",
+    "xml2js": "~0.4.3",
+    "request": "~2.36.0",
     "yamljs": "~0.1.5",
-    "cson": "~1.4.4"
+    "cson": "~1.6.0"
   },
   "devDependencies": {
     "coffee-script": "~1.7.1",
