@@ -62,7 +62,7 @@ class Feedr
 		result = if isArray then [] else {}
 
 		# Tasks
-		tasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
+		tasks = TaskGroup.create(concurrency:0).done (err) ->
 			feedr.log (if failures then 'warn' else 'debug'), 'Feedr finished fetching', (if failures then "with #{failures} failures" else '')
 			return next(err, result)
 
@@ -253,7 +253,7 @@ class Feedr
 			feedr.log 'debug', "Feedr is writing [#{feedDetails.url}] to [#{feedDetails.path}]"
 
 			# Prepare
-			writeTasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
+			writeTasks = TaskGroup.create(concurrency:0).done (err) ->
 				if err
 					# Log
 					feedr.log 'debug', "Feedr is writing [#{feedDetails.url}] to [#{feedDetails.path}], write failed", err
@@ -290,7 +290,7 @@ class Feedr
 			# Prepare
 			meta = null
 			data = null
-			readTasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
+			readTasks = TaskGroup.create(concurrency:0).done (err) ->
 				return next(err, data, meta)
 
 			readTasks.addTask 'read the meta data in a cache somewhere', (complete) ->

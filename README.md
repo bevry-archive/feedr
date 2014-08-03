@@ -136,6 +136,7 @@ No sponsors yet! Will you be the first?
 These amazing people have contributed code to this project:
 
 - [Benjamin Lupton](https://github.com/balupton) <b@lupton.cc> — [view contributions](https://github.com/bevry/feedr/commits?author=balupton)
+- [Zearin](https://github.com/Zearin) — [view contributions](https://github.com/bevry/feedr/commits?author=Zearin)
 
 [Become a contributor!](https://github.com/bevry/feedr/blob/master/CONTRIBUTING.md#files)
 
