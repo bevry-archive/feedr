@@ -1,5 +1,12 @@
 # History
 
+## v2.10.0 August 8, 2014
+- Large internal refactor
+- `checkResponse` is now renamed to `check`, b/c enabled
+- If a feed fails, the `err` argument will indicate this instead of merely outputting the error
+- Feed details are now updated on the inputted feed details object, instead of a clone
+- Now supports `raw`/`false` parse option
+
 ## v2.9.1 August 3, 2014
 - Updated dependencies
 

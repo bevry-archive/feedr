@@ -22,7 +22,7 @@
 
 <!-- DESCRIPTION/ -->
 
-Feedr takes in a remote feed (regardless of format type) and converts it into JSON data
+Use feedr to fetch a remote resource, respect its caching, and parse its data.
 
 <!-- /DESCRIPTION -->
 
@@ -42,29 +42,26 @@ Feedr takes in a remote feed (regardless of format type) and converts it into JS
 
 ``` javascript
 // Prepare
-var Feedr, feedr, feeds;
+var Feedr, feedr, feeds
 
-// Include the Feedr Class
-Feedr = require('feedr').Feedr;
-
-// Create our Feedr instance, we can pass optional configuration if we wanted
-feedr = new Feedr();
+// Create a new feedr instance
+feedr = require('feedr').create({/* optional configuration */})
 
 // Prepare our feeds that we want read
 feeds = {
 	github: "https://github.com/bevry/feedr/commits/master.atom",
-	twitter: "https://api.twitter.com/1/statuses/user_timeline.json?screen_name=balupton&count=20&include_entities=true&include_rts=true"
-};
+	gittip: "https://www.gittip.com/balupton/public.json"
+}
 
 // Read a single feed
-feedr.readFeed(feeds.github, {/* optional configuration*/}, function(err, data, headers){
-	console.log(err, data, headers);
-});
+feedr.readFeed(feeds.github, {/* optional configuration */}, function(err, data, headers){
+	console.log(err, data, headers)
+})
 
 // Read all the feeds together
-feedr.readFeeds(feeds, {/* optional configuration*/}, function(err, result){
-	console.log(err, result.github, result.twitter);
-});
+feedr.readFeeds(feeds, {/* optional configuration */}, function(err, result){
+	console.log(err, result.github, result.twitter)
+})
 ```
 
 
@@ -88,8 +85,8 @@ Feed configuration properties are:
 - `hash` defaults to hash of the url, the hashed url for caching
 - `name` defaults to hash, the name of the feed for use in debugging
 - `path` defaults to tmp feed path, the path to save the file to
-- `parse` defaults `true`, whether or not we should attempt to parse the response data, supported formats are `xml`, `json`, `cson`, and `yaml`
-- `checkResponse` defaults to `null`, a function accepting `response`, `data`, and `next` to check the response for errors
+- `parse` defaults to `true`, whether or not we should attempt to parse the response data, supported values are `xml`, `json`, `cson`, `yaml`, `string`, `raw`/`false`. If `true` will try all the available parsers. Can also be a function with the signature `({response, data, feed, feedr}, next(err, data))`
+- `check` defaults to `true`, whether or not we should check the response data for custom error messages. Can also be a function with the signature `({response, data, feed, feedr}, next(err))`
 - `xml2jsOptions` defaults to global value, the options to send to [xml2js](https://github.com/Leonidas-from-XIV/node-xml2js)
 - `requestOptions` defaults to global value, the options to send to [request](https://github.com/mikeal/request)
 

@@ -1,9 +1,9 @@
 {
   "title": "Feedr",
   "name": "feedr",
-  "version": "2.9.1",
-  "description": "Feedr takes in a remote feed (regardless of format type) and converts it into JSON data",
-  "homepage": "http://bevry.me/project/feedr",
+  "version": "2.10.0",
+  "description": "Use feedr to fetch a remote resource, respect its caching, and parse its data.",
+  "homepage": "https://github.com/bevry/feedr",
   "license": {
     "type": "MIT"
   },
@@ -26,7 +26,12 @@
     "rdf",
     "json",
     "jsonp",
-    "cson"
+    "cson",
+    "request",
+    "superagent",
+    "download",
+    "url",
+    "cache"
   ],
   "author": "2012+ Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
   "maintainers": [
@@ -37,7 +42,7 @@
     "Zearin (https://github.com/Zearin)"
   ],
   "bugs": {
-    "url": "http://bevry.me/project/feedr/issues"
+    "url": "https://github.com/bevry/feedr/issues"
   },
   "repository": {
     "type": "git",
@@ -47,16 +52,18 @@
     "node": ">=0.4.0"
   },
   "dependencies": {
+    "csextends": "^1.0.3",
+    "cson": "~1.6.1",
+    "eachr": "^2.0.2",
+    "extendr": "~2.1.0",
+    "istextorbinary": "^1.0.0",
+    "request": "~2.40.0",
     "safefs": "~3.1.0",
     "safeps": "~2.2.12",
-    "eachr": "~2.0.2",
-    "extendr": "~2.1.0",
+    "taskgroup": "~4.0.5",
     "typechecker": "~2.0.1",
-    "taskgroup": "~4.0.3",
     "xml2js": "~0.4.4",
-    "request": "~2.39.0",
-    "yamljs": "~0.1.5",
-    "cson": "~1.6.1"
+    "yamljs": "~0.1.5"
   },
   "devDependencies": {
     "coffee-script": "~1.7.1",
@@ -68,5 +75,8 @@
   "main": "./out/lib/feedr.js",
   "scripts": {
     "test": "node ./out/test/feedr-test.js"
+  },
+  "cakeConfiguration": {
+    "COFFEE_SRC_PATH": "src"
   }
 }
