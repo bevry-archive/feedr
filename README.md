@@ -22,7 +22,7 @@
 
 <!-- DESCRIPTION/ -->
 
-Use feedr to fetch a remote resource, respect its caching, and parse its data.
+Use feedr to fetch the data from a remote url, respect its caching, and parse its data. Despite its name, it's not just for feed data but also for all data that you can feed into it (including binary data).
 
 <!-- /DESCRIPTION -->
 

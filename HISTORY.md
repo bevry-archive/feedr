@@ -1,5 +1,8 @@
 # History
 
+## v2.10.3 August 8, 2014
+- Fixed with better tests
+
 ## v2.10.2 August 8, 2014
 - Fixed specific parsing
 
