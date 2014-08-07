@@ -1,5 +1,8 @@
 # History
 
+## v2.10.2 August 8, 2014
+- Fixed specific parsing
+
 ## v2.10.1 August 8, 2014
 - Fixed xml parsing
 

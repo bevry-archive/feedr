@@ -10,6 +10,7 @@ module.exports =
 		parse: ({feedr, feed, response, data}, next) ->
 			# Detect
 			return next()  unless (
+				feed.parse is 'xml' or
 				feed.extension in ['.xml', '.atom', '.rss', '.rdf', '.html', '.html']  or
 				response.headers['content-type'].indexOf('xml') isnt -1  or
 				response.headers['content-type'].indexOf('html') isnt -1
@@ -34,6 +35,7 @@ module.exports =
 		parse: ({feed, response, data}, next) ->
 			# Detect
 			return next()  unless (
+				feed.parse is 'cson' or
 				feed.extension in ['.coffee', '.cson']  or
 				response.headers['content-type'].indexOf('coffeescript') isnt -1  or
 				response.headers['content-type'].indexOf('cson') isnt -1
@@ -46,6 +48,7 @@ module.exports =
 		parse: ({feedr, feed, response, data}, next) ->
 			# Detect
 			return next()  unless (
+				feed.parse is 'json' or
 				feed.extension in ['.json', '.jsonp', '.js']  or
 				response.headers['content-type'].indexOf('javascript') isnt -1  or
 				response.headers['content-type'].indexOf('json') isnt -1
@@ -83,6 +86,7 @@ module.exports =
 		parse: ({feed, response, data}, next) ->
 			# Detect
 			return next()  unless (
+				feed.parse is 'yaml' or
 				feed.extension in ['.yml', '.yaml']  or
 				response.headers['content-type'].indexOf('yaml') isnt -1
 			)
