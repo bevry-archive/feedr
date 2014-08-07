@@ -92,10 +92,10 @@ joe.describe 'feedr', (describe,it) ->
 		})
 
 	it 'should fetch a feed correctly when passing string', (done) ->
-		feedr.readFeed feedsObject['github-atom'].url, (err,result) ->
+		feedr.readFeed {url:feedsObject['github-atom'].url, cache:false}, (err,result) ->
 			expect(err, 'error').to.not.exist
 			result = cleanData(result)
-			require('fs').writeFileSync(fixturePath, JSON.stringify(result, null, 4))
+			require('fs').writeFileSync(fixturePath, JSON.stringify(result, null, '  '))
 			expect(result, 'result').to.deep.equal(fixtureData)
 			done()
 

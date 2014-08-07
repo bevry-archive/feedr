@@ -21,7 +21,6 @@ class Feedr
 		cache: 1000*60*60*24  # one day by default
 		tmpPath: null
 		requestOptions: null
-		xml2jsOptions: null
 		plugins: null
 
 	# Constructor
@@ -93,7 +92,7 @@ class Feedr
 			# Prepare
 			if typeChecker.isString(feed)
 				feed = {url: feed}
-			feeds[index] = feed = extendr.extend({}, defaultfeed, feed)
+			feeds[index] = feed = extendr.deepExtend({}, defaultfeed, feed)
 
 			# Read
 			feedr.readFeed feed, (err,data) ->
@@ -159,68 +158,73 @@ class Feedr
 	readFeed: (args...) ->
 		# Prepare
 		feedr = @
-		feed = {}
 		next = null
 
 		# Extract the configuration from the arguments
 		for arg in args
 			switch true
 				when typeChecker.isString(arg)
-					feed.url = arg
+					url = arg
 				when typeChecker.isFunction(arg)
 					next = arg
 				when typeChecker.isPlainObject(arg)
-					extendr.extend(feed, arg)
+					feed = arg
 
 		# Check for url
+		feed ?= {}
+		feed.url = url  if url?
 		unless feed.url
 			noUrlError = new Error('Feed url was not supplied')
-			return next(noUrlError, null) 
+			return next(noUrlError) 
 
 		# Ensure optional
 		feed = @prepareFeed(feed)
 
 		# Plugins
-		plugins = (feed.plugins ? plugins) or []
-		if typeof plugins is 'string'
-			plugins = [plugins]
-		if Array.isArray(plugins)
-			plugins.forEach (name,index) ->
-				if typeof name is 'string'
-					try 
-						plugins[index] = require('feedr-plugin-'+name)
-					catch err
-						return next(err, null)
+		plugins = {}
+		feedPlugins = (feed.plugins ? plugins) or []
+		if typeof feedPlugins is 'string'
+			feedPlugins = [feedPlugins]
+		if Array.isArray(feedPlugins)
+			feedPlugins.forEach (name,index) ->
+				try 
+					plugins[index] = require('feedr-plugin-'+name)
+				catch err
+					next(err)
+					return false
+		else
+			plugins = require(__dirname+'/plugins')
 
 		# Parser
 		if feed.parse is 'function'
 			# Custom
-			parseResponse = (opts, next) ->
+			parseResponse = (opts, parseComplete) ->
 				feed.parse opts, (err,data) ->
-					return complete(err)  if err
+					return parseComplete(err)  if err
 					opts.data  if data?
-					return complete()
+					return parseComplete()
 		else if feed.parse is true
 			# Auto
-			parseResponse = (opts,next) ->
-				checkTasks = new TaskGroup(concurrency:0).done(next)
+			parseResponse = (opts,parseComplete) ->
+				checkTasks = new TaskGroup().done(parseComplete)
 				eachr plugins, (value, key) ->
 					if value.parse?
-						checkTasks.addTask (complete) ->
+						checkTasks.addTask (parseTaskComplete) ->
 							value.parse opts, (err,data) ->
-								return complete(err)  if err
+								return parseTaskComplete(err)  if err
 								if data?
 									feedr.log 'debug', "Feedr parsed [#{feed.url}] with #{key}"
 									opts.data = data
-								return complete()
+									checkTasks.clear()
+								return parseTaskComplete()
 				checkTasks.run()
 		else if feed.parse and typeof plugins[feed.parse]?.parse isnt 'function'
 			# Missing
-			invalidParseError = new Error('Invalid parse vlaue: '+feed.parse)
-			return next(invalidParseError, null)
+			invalidParseError = new Error('Invalid parse value: '+feed.parse)
+			return next(invalidParseError)
 		else
 			# Raw
-			parseResponse = (opts,complete) -> complete()
+			parseResponse = (opts,parseComplete) -> parseComplete()
 
 		# Checker
 		if feed.check is 'function'
@@ -228,20 +232,20 @@ class Feedr
 			checkResponse = feed.check
 		else if feed.check is true
 			# Auto
-			checkResponse = (opts,next) ->
-				checkTasks = new TaskGroup().done(next)
+			checkResponse = (opts,checkComplete) ->
+				checkTasks = new TaskGroup().done(checkComplete)
 				eachr plugins, (value, key) ->
 					if value.check?
-						checkTasks.addTask (complete) ->
-							value.check(opts, complete)
+						checkTasks.addTask (checkTaskComplete) ->
+							value.check(opts, checkTaskComplete)
 				checkTasks.run()
 		else if feed.check and typeof plugins[feed.check]?.check isnt 'function'
 			# Missing
 			invalidCheckError = new Error('Invalid check value: '+feed.check)
-			return next(invalidCheckError, null)
+			return next(invalidCheckError)
 		else
 			# Raw
-			checkResponse = (opts,complete) -> complete()
+			checkResponse = (opts,checkComplete) -> checkComplete()
 
 		# Request options
 		requestOptions = extendr.deepExtend({
@@ -252,11 +256,8 @@ class Feedr
 				'User-Agent': 'Wget/1.14 (linux-gnu)'
 		}, feedr.config.requestOptions or {}, feed.requestOptions or {})
 
-		# XML options
-		xml2jsOptions = extendr.deepExtend({}, feedr.config.xml2jsOptions or {}, feed.xml2jsOptions or {})
-
 		# Read a file
-		readFile = (path, complete) ->
+		readFile = (path, readFileComplete) ->
 			# Log
 			feedr.log 'debug', "Feedr is reading [#{feed.url}] on [#{path}], checking exists"
 
@@ -268,7 +269,7 @@ class Feedr
 					feedr.log 'debug', "Feedr is reading [#{feed.url}] on [#{path}], it doesn't exist"
 
 					# Exit
-					return complete(null, null)
+					return readFileComplete()
 
 				# Log
 				feedr.log 'debug', "Feedr is reading [#{feed.url}] on [#{path}], it exists, now reading"
@@ -281,16 +282,16 @@ class Feedr
 						feedr.log 'debug', "Feedr is reading [#{feed.url}] on [#{path}], it exists, read failed", err.stack
 
 						# Exit
-						return complete(err, null)  if err
+						return readFileComplete(err)  if err
 
 					# Log
 					feedr.log 'debug', "Feedr is reading [#{feed.url}] on [#{path}], it exists, read completed"
 
 					# Return the parsed cached data
-					return complete(null, rawData)
+					return readFileComplete(null, rawData)
 
 		# Parse a file
-		parseFile = (path, next) ->
+		readMetaFile = (path, readMetaFileComplete) ->
 			# Log
 			feedr.log 'debug', "Feedr is parsing [#{feed.url}] on [#{path}]"
 
@@ -302,7 +303,7 @@ class Feedr
 					feedr.log 'debug', "Feedr is parsing [#{feed.url}] on [#{path}], read failed", err?.stack
 
 					# Exit
-					return next(err, null)
+					return readMetaFileComplete(err)
 
 				# Attempt
 				try
@@ -312,16 +313,16 @@ class Feedr
 					feedr.log 'debug', "Feedr is parsing [#{feed.url}] on [#{path}], parse failed", err.stack
 
 					# Exit
-					return next(err, null)
+					return readMetaFileComplete(err)
 
 				# Log
 				feedr.log 'debug', "Feedr is parsing [#{feed.url}] on [#{path}], parse completed"
 
 				# Exit
-				return next(null, data)
+				return readMetaFileComplete(null, data)
 
 		# Write the feed
-		writeFeed = (response, data, next) ->
+		writeFeed = (response, data, writeFeedComplete) ->
 			# Log
 			feedr.log 'debug', "Feedr is writing [#{feed.url}] to [#{feed.path}]"
 
@@ -332,31 +333,31 @@ class Feedr
 					feedr.log 'debug', "Feedr is writing [#{feed.url}] to [#{feed.path}], write failed", err.stack
 
 					# Exit
-					return next(err, null)
+					return writeFeedComplete(err)
 
 				# Log
 				feedr.log 'debug', "Feedr is writing [#{feed.url}] to [#{feed.path}], write completed"
 
 				# Exit
-				return next(null, data)
+				return writeFeedComplete(null, data)
 
-			writeTasks.addTask 'store the meta data in a cache somewhere', (complete) ->
+			writeTasks.addTask 'store the meta data in a cache somewhere', (writeTaskComplete) ->
 				writeData = JSON.stringify(response.headers, null, '  ')
-				safefs.writeFile(feed.metaPath, writeData, complete)
+				safefs.writeFile(feed.metaPath, writeData, writeTaskComplete)
 
-			writeTasks.addTask 'store the parsed data in a cache somewhere', (complete) ->
+			writeTasks.addTask 'store the parsed data in a cache somewhere', (writeTaskComplete) ->
 				if feed.parse
 					writeData = JSON.stringify(data)
 				else
 					writeData = data
-				safefs.writeFile(feed.path, writeData, complete)
+				safefs.writeFile(feed.path, writeData, writeTaskComplete)
 
 			# Fire the write tasks
 			writeTasks.run()
 
 		# Get the file via reading the cached copy
 		# next(err, data, meta)
-		viaCache = (next) ->
+		viaCache = (viaCacheComplete) ->
 			# Log
 			feedr.log 'debug', "Feedr is remembering [#{feed.url}] from cache"
 
@@ -364,32 +365,32 @@ class Feedr
 			meta = null
 			data = null
 			readTasks = TaskGroup.create(concurrency:0).done (err) ->
-				return next(err, data, meta)
+				return viaCacheComplete(err, data, meta)
 
-			readTasks.addTask 'read the meta data in a cache somewhere', (complete) ->
-				parseFile feed.metaPath, (err,result) ->
-					return complete(err)  if err or !result
+			readTasks.addTask 'read the meta data in a cache somewhere', (viaCacheTaskComplete) ->
+				readMetaFile feed.metaPath, (err,result) ->
+					return viaCacheTaskComplete(err)  if err or !result
 					meta = result
-					return complete()
+					return viaCacheTaskComplete()
 
-			readTasks.addTask 'read the parsed data in a cache somewhere', (complete) ->
+			readTasks.addTask 'read the parsed data in a cache somewhere', (viaCacheTaskComplete) ->
 				readFile feed.path, (err,rawData) ->
-					return complete(err)  if err or !rawData
+					return viaCacheTaskComplete(err)  if err or !rawData
 					if feed.parse
 						try
 							data = JSON.parse(rawData.toString())
 						catch err
-							return complete(err)
+							return viaCacheTaskComplete(err)
 					else
 						data = rawData
-					return complete()
+					return viaCacheTaskComplete()
 
 			# Fire the write tasks
 			readTasks.run()
 
 		# Get the file via performing a fresh request
 		# next(err, data, meta)
-		viaRequest = (next) ->
+		viaRequest = (viaRequestComplete) ->
 			# Log
 			feedr.log 'debug', "Feedr is fetching [#{feed.url}] to [#{feed.path}], requesting"
 
@@ -411,7 +412,7 @@ class Feedr
 
 					# Exit
 					return viaCache(next)  if feed.cache
-					return next(err, opts.data, requestOptions.headers)
+					return viaRequestComplete(err, opts.data, requestOptions.headers)
 
 				# Check error
 				if err
@@ -432,14 +433,14 @@ class Feedr
 					return checkResponse opts, (err) ->
 						return handleError(err)  if err
 						return writeFeed response, opts.data, (err) ->
-							return next(err, opts.data, meta)
+							return viaRequestComplete(err, opts.data, meta)
 
 
 		# Refresh if we don't want to use the cache
 		return viaRequest(next)  if feed.cache is false
 
 		# Fetch the latest cache data to check if it is still valid
-		parseFile feed.metaPath, (err,metaData) ->
+		readMetaFile feed.metaPath, (err,metaData) ->
 			# There isn't a cache file
 			return viaRequest(next)  if err or !metaData
 
@@ -480,109 +481,6 @@ class Feedr
 				)
 			)
 		)
-
-# Parsers
-plugins = 
-	github:
-		check: ({feed, data}, next) ->
-			if feed.url.indexOf('github.com') isnt -1 and data?.message
-				failedResponseError = new Error(data.message)
-				return next(failedResponseError)
-			return next()
-
-	xml:
-		parse: ({feed, response, data}, next) ->
-			# Detect
-			return next()  unless (
-				feed.extension in ['.xml', '.atom', '.rss', '.rdf', '.html', '.html']  or
-				response.headers['content-type'].indexOf('xml') isnt -1  or
-				response.headers['content-type'].indexOf('html') isnt -1
-			)
-
-			# Prepare Parse
-			xml2js = require('xml2js')
-			parser = new xml2js.Parser(xml2jsOptions)
-			parser.on 'end', (data) -> return next(null, data)
-
-			# Parse
-			try
-				parser.parseString(data.toString().trim())
-			catch err
-				return next(err)
-
-	cson:
-		parse: ({feed, response, data}, next) ->
-			# Detect
-			return next()  unless (
-				feed.extension in ['.coffee', '.cson']  or
-				response.headers['content-type'].indexOf('coffeescript') isnt -1  or
-				response.headers['content-type'].indexOf('cson') isnt -1
-			)
-
-			# Parse
-			require('CSON').parse(data.toString(), next)
-
-	json:
-		parse: ({feedr, feed, response, data}, next) ->
-			# Detect
-			return next()  unless (
-				feed.extension in ['.json', '.jsonp', '.js']  or
-				response.headers['content-type'].indexOf('javascript') isnt -1  or
-				response.headers['content-type'].indexOf('json') isnt -1
-			)
-
-			# strip comments, whitespace, and semicolons from the start and finish
-			# targets facebook graph api
-			data = data.toString().trim().replace(/(^([\s\;]|\/\*\*\/)+|[\s\;]+$)/g,'')
-
-			# strip the jsonp callback if it exists
-			data = data.replace(/^[a-z0-9]+/gi,'').replace(/^\(|\)$/g,'')
-
-			# try parse jsonp
-			try
-				data = JSON.parse(data)
-			catch err
-				# strip some dodgy escaping
-				data = data.replace(/\\'/g,"'")
-
-				# try parse
-				try
-					data = JSON.parse(data)
-				catch err
-					return next(err)
-
-			# Clean the data if desired
-			if feed.clean
-				feedr.log 'debug', "Feedr is cleaning data from [#{feed.url}]"
-				data = feedr.cleanData(data)
-
-			# Write
-			return next(null, data)
-
-	yaml:
-		parse: ({feed, response, data}, next) ->
-			# Detect
-			return next()  unless (
-				feed.extension in ['.yml', '.yaml']  or
-				response.headers['content-type'].indexOf('yaml') isnt -1
-			)
-
-			# Parse
-			try
-				data = require('yamljs').parse(data.toString().trim())
-			catch err
-				return next(err)
-
-			# Write
-			return next(null, data)
-
-	string:
-		parse: ({feed, data}, next) ->
-			# Detect
-			return next()  unless require('istextorbinary').isTextSync(feed.basename, data)
-
-			# Parse
-			return next(null, data.toString())
 
 # Export
 module.exports = Feedr

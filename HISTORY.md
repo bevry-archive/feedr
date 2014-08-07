@@ -1,5 +1,8 @@
 # History
 
+## v2.10.1 August 8, 2014
+- Fixed xml parsing
+
 ## v2.10.0 August 8, 2014
 - Large internal refactor
 - `checkResponse` is now renamed to `check`, b/c enabled
