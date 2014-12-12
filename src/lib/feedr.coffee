@@ -75,9 +75,9 @@ class Feedr
 		result = {}
 
 		# Tasks
-		tasks = TaskGroup.create(concurrency:0, onError:'ignore').done ->
+		tasks = new TaskGroup(concurrency:0, onError:'ignore').done ->
 			message = 'Feedr finished fetching'
-			
+
 			if failures.length isnt 0
 				message += "with #{failures.length} failures:\n" + failures.map((i) -> i.message).join('\n')
 				err = new Error(message)
@@ -174,7 +174,7 @@ class Feedr
 		feed.url = url  if url?
 		unless feed.url
 			noUrlError = new Error('Feed url was not supplied')
-			return next(noUrlError) 
+			return next(noUrlError)
 
 		# Ensure optional
 		feed = @prepareFeed(feed)
@@ -183,7 +183,7 @@ class Feedr
 		plugins = {}
 		if feed.plugins?.length
 			feed.plugins.forEach (name,index) ->
-				try 
+				try
 					plugins[index] = require('feedr-plugin-'+name)
 				catch err
 					next(err)
@@ -198,7 +198,7 @@ class Feedr
 				return next(err)  if err
 				if data
 					feedr.log 'debug', "Feedr parse [#{feed.url}] with #{name} attempt, used"
-					opts.data = data  
+					opts.data = data
 				else
 					feedr.log 'debug', "Feedr parse [#{feed.url}] with #{name} attempt, ignored"
 				return next(null, data)
@@ -219,7 +219,7 @@ class Feedr
 			else
 				invalidParseError = new Error('Invalid parse value: '+feed.parse)
 				return next(invalidParseError)
-		
+
 		# Custom
 		else if typeof feed.parse is 'function'
 			parseResponse = generateParser.bind(null, 'custom', feed.parse)
@@ -236,7 +236,7 @@ class Feedr
 								parseTaskComplete(err)
 							)
 				checkTasks.run()
-		
+
 		# Raw
 		else
 			parseResponse = (opts,parseComplete) -> parseComplete()
@@ -252,7 +252,7 @@ class Feedr
 			else
 				invalidCheckError = new Error('Invalid check value: '+feed.check)
 				return next(invalidCheckError)
-		
+
 		# Custom
 		else if typeof feed.check is 'function'
 			checkResponse = generateChecker.bind(null, 'custom', feed.check)
@@ -266,7 +266,7 @@ class Feedr
 						checkTasks.addTask (checkTaskComplete) ->
 							generateChecker.bind(null, key, value.check)(opts, checkTaskComplete)
 				checkTasks.run()
-		
+
 		# Raw
 		else
 			checkResponse = (opts,checkComplete) -> checkComplete()
@@ -335,7 +335,7 @@ class Feedr
 					data = JSON.parse(rawData.toString())
 				catch err
 					# Log
-					feedr.log 'debug', "Feedr is parsing [#{feed.url}] on [#{path}], parse failed", err.stack
+					feedr.log 'warn', "Feedr is parsing [#{feed.url}] on [#{path}], parse failed", err.stack
 
 					# Exit
 					return readMetaFileComplete(err)
@@ -352,10 +352,10 @@ class Feedr
 			feedr.log 'debug', "Feedr is writing [#{feed.url}] to [#{feed.path}]"
 
 			# Prepare
-			writeTasks = TaskGroup.create(concurrency:0).done (err) ->
+			writeTasks = new TaskGroup(concurrency:0).done (err) ->
 				if err
 					# Log
-					feedr.log 'debug', "Feedr is writing [#{feed.url}] to [#{feed.path}], write failed", err.stack
+					feedr.log 'warn', "Feedr is writing [#{feed.url}] to [#{feed.path}], write failed", err.stack
 
 					# Exit
 					return writeFeedComplete(err)
@@ -392,7 +392,7 @@ class Feedr
 			# Prepare
 			meta = null
 			data = null
-			readTasks = TaskGroup.create().done (err) ->
+			readTasks = new TaskGroup().done (err) ->
 				return viaCacheComplete(err, data, meta?.headers)
 
 			readTasks.addTask 'read the meta data in a cache somewhere', (viaCacheTaskComplete) ->
@@ -435,7 +435,7 @@ class Feedr
 				# What should happen if an error occurs
 				handleError = (err) ->
 					# Log
-					feedr.log 'debug', "Feedr is fetching [#{feed.url}] to [#{feed.path}], error", err.stack
+					feedr.log 'warn', "Feedr is fetching [#{feed.url}] to [#{feed.path}], failed", err.stack
 
 					# Exit
 					return viaCache(next)  if feed.cache
