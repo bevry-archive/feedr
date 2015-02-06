@@ -1,5 +1,8 @@
 # History
 
+## v2.11.0 February 7, 2015
+- Updated dependencies
+
 ## v2.10.4 December 12, 2014
 - Certain failures will now emit warning messages
 - Updated dependencies
