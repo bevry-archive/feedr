@@ -1,7 +1,7 @@
 {
   "title": "Feedr",
   "name": "feedr",
-  "version": "2.11.0",
+  "version": "2.11.1",
   "description": "Use feedr to fetch the data from a remote url, respect its caching, and parse its data. Despite its name, it's not just for feed data but also for all data that you can feed into it (including binary data).",
   "homepage": "https://github.com/bevry/feedr",
   "license": {
@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "csextends": "^1.0.3",
-    "cson": "^2.0.0",
+    "cson": "^3.0.1",
     "eachr": "^2.0.2",
     "extendr": "^2.1.0",
     "istextorbinary": "^1.0.0",
@@ -67,11 +67,11 @@
     "yamljs": "~0.2.1"
   },
   "devDependencies": {
-    "coffee-script": "^1.9.0",
+    "coffee-script": "^1.9.1",
     "joe": "^1.6.0",
     "joe-reporter-console": "^1.2.1",
-    "chai": "^1.10.0",
-    "projectz": "^0.3.17"
+    "chai": "^2.1.1",
+    "projectz": "^0.5.0"
   },
   "main": "./out/lib/feedr.js",
   "scripts": {

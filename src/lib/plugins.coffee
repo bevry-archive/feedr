@@ -18,7 +18,7 @@ module.exports =
 
 			# XML options
 			xml2jsOptions = require('extendr').deepExtend({}, feedr.config.xml2jsOptions or {}, feed.xml2jsOptions or {})
-			
+
 			# Prepare Parse
 			xml2js = require('xml2js')
 			parser = new xml2js.Parser(xml2jsOptions)
@@ -42,7 +42,7 @@ module.exports =
 			)
 
 			# Parse
-			require('CSON').parse(data.toString(), next)
+			require('CSON').parseCSONString(data.toString(), next)
 
 	json:
 		parse: ({feedr, feed, response, data}, next) ->

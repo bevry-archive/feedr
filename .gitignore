@@ -1,4 +1,4 @@
-# v1.3.10 December 10, 2013
+# March 15, 2015
 # https://github.com/bevry/base
 
 # Temp Files
@@ -11,6 +11,9 @@ components/
 bower_components/
 node_modules/
 out/
+
+# Editor Caches
+.c9/
 
 # Private Files
 .env
