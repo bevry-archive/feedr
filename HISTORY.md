@@ -1,5 +1,8 @@
 # History
 
+## v2.12.0 March 17, 2015
+- Better YAML parser
+
 ## v2.11.1 March 16, 2015
 - Updated dependencies
 

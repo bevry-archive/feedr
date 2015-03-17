@@ -93,7 +93,7 @@ module.exports =
 
 			# Parse
 			try
-				data = require('yamljs').parse(data.toString().trim())
+				data = require('js-yaml').load(data.toString().trim())
 			catch err
 				return next(err)
 
