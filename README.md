@@ -42,25 +42,22 @@ Use feedr to fetch the data from a remote url, respect its caching, and parse it
 ## Usage
 
 ``` javascript
-// Prepare
-var Feedr, feedr, feeds
-
 // Create a new feedr instance
-feedr = require('feedr').create({/* optional configuration */})
+let feedr = require('feedr').create({/* optional configuration */})
 
 // Prepare our feeds that we want read
-feeds = {
+let feeds = {
 	github: "https://github.com/bevry/feedr/commits/master.atom",
 	gittip: "https://www.gittip.com/balupton/public.json"
 }
 
 // Read a single feed
-feedr.readFeed(feeds.github, {/* optional configuration */}, function(err, data, headers){
+feedr.readFeed(feeds.github, {/* optional configuration */}, function (err, data, headers) {
 	console.log(err, data, headers)
 })
 
 // Read all the feeds together
-feedr.readFeeds(feeds, {/* optional configuration */}, function(err, result){
+feedr.readFeeds(feeds, {/* optional configuration */}, function (err, result) {
 	console.log(err, result.github, result.twitter)
 })
 ```
@@ -154,5 +151,3 @@ and licensed under:
 - The incredibly [permissive](http://en.wikipedia.org/wiki/Permissive_free_software_licence) [MIT License](http://opensource.org/licenses/mit-license.php)
 
 <!-- /LICENSE -->
-
-

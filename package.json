@@ -53,7 +53,6 @@
     "node": ">=0.4.0"
   },
   "dependencies": {
-    "csextends": "^1.0.3",
     "cson": "^3.0.1",
     "eachr": "^2.0.2",
     "extendr": "^2.1.0",
@@ -67,17 +66,29 @@
     "js-yaml": "^3.2.7"
   },
   "devDependencies": {
-    "coffee-script": "^1.9.1",
+    "assert-helpers": "^1.0.2",
+    "babel": "^5.8.21",
+    "babel-eslint": "^4.0.10",
+    "eslint": "^1.2.1",
     "joe": "^1.6.0",
     "joe-reporter-console": "^1.2.1",
-    "chai": "^2.1.1",
     "projectz": "^0.5.0"
   },
-  "main": "./out/lib/feedr.js",
+  "main": "./es6guardian.js",
   "scripts": {
-    "test": "node ./out/test/feedr-test.js"
+    "clean": "node --harmony nakefile.js clean",
+    "setup": "node --harmony nakefile.js setup",
+    "compile": "node --harmony nakefile.js compile",
+    "watch": "node --harmony nakefile.js watch",
+    "verify": "node --harmony nakefile.js verify",
+    "meta": "node --harmony nakefile.js meta",
+    "prepare": "node --harmony nakefile.js prepare",
+    "release": "node --harmony nakefile.js release",
+
+    "test": "node --harmony ./es5/test/feedr-test.js",
   },
-  "cakeConfiguration": {
-    "COFFEE_SRC_PATH": "src"
+  "nakeConfiguration": {
+    "BABEL_SRC_PATH": "es6",
+    "ESLINT_SRC_PATH": "es6"
   }
 }
