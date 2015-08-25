@@ -85,7 +85,7 @@
     "prepare": "node --harmony nakefile.js prepare",
     "release": "node --harmony nakefile.js release",
 
-    "test": "node --harmony ./es5/test/feedr-test.js",
+    "test": "node --harmony ./es5/test/feedr-test.js"
   },
   "nakeConfiguration": {
     "BABEL_SRC_PATH": "es6",

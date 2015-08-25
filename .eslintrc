@@ -1,4 +1,4 @@
-// 21 August 2015
+// 25 August 2015
 // https://github.com/bevry/base
 {
 	"parser": "babel-eslint",
@@ -155,8 +155,8 @@
 		// Disable complexity checks, they are annoying and not that useful in detecting actual complexity
 		"complexity": 0,
 
-		// Seems like a good idea to error about this
-		"consistent-return": 2,
+		// We use blank returns for break statements
+		"consistent-return": 0,
 
 		// Always require curly braces unless the statement is all on a single line
 		"curly": [2, "multi-line"],
@@ -470,9 +470,9 @@
 		// Sometimes this is useful when avoiding shadowing
 		"no-underscore-dangle": 0,
 
-		// Unless it is needed such as IIFE rule then error
+		// Unless it is needed such as IIFE rule then warn as sometimes it can be useful for clarity
 		// "no-wrap-func": 2,
-		"no-extra-parens": 2,
+		"no-extra-parens": 1,
 
 		// We like multiple var statements
 		"one-var": 0,

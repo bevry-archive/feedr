@@ -1,174 +1,221 @@
-# Require
-{expect} = require('chai')
-joe = require('joe')
-{Feedr} = require(__dirname+'/../lib/feedr')
-fsUtil = require('fs')
+// Require
+const rootPath = require('path').join(__dirname, '..', '..')
+const {equal, deepEqual, errorEqual} = require('assert-helpers')
+const joe = require('joe')
+const Feedr = require(rootPath)
+const fsUtil = require('fs')
+const eachr = require('eachr')
 
-# =====================================
-# Timout Server
+// =====================================
+// Timout Server
 
-timeoutServerAddress = "127.0.0.1"
-timeoutServerPort = 9666
-timeoutServer = require('http').createServer((req,res) ->
+const timeoutServerAddress = '127.0.0.1'
+const timeoutServerPort = 9666
+const timeoutServer = require('http').createServer(function (req, res) {
 	res.writeHead(200, {'Content-Type': 'text/plain'})
-).listen(timeoutServerPort, timeoutServerAddress)
+}).listen(timeoutServerPort, timeoutServerAddress)
 
 
-# =====================================
-# Tests
+// =====================================
+// Tests
 
-joe.describe 'feedr', (describe,it) ->
-	fixturePath = {
-		atom: __dirname+'/../../test/atom.json'
-		json: __dirname+'/../../test/package.json'
-		raw: __dirname+'/../../test/bevry.png'
+joe.describe('feedr', function (describe, it) {
+	const fixturePath = {
+		atom: rootPath + '/test/atom.json',
+		json: rootPath + '/test/package.json',
+		raw: rootPath + '/test/bevry.png'
 	}
-	fixtureData = {}
-	feedr = null
-	feedrConfig = {
-		cache: true
-		log: console.log
+	const fixtureData = {}
+	const feedrConfig = {
+		cache: true,
+		log: console.log,
+		plugins: 'xml json'
 	}
-	write = true
+	const write = false
 
-	cleanData = (data) ->
-		return JSON.parse JSON.stringify(data).replace(/"https:\/\/0.gravatar.com\/avatar\/.+?"/g, '""')
+	const cleanData = function (data) {
+		return JSON.parse(
+			JSON.stringify(data).replace(/"https:\/\/0.gravatar.com\/avatar\/.+?"/g, '""')
+		)
+	}
 
-	feedsObject =
-		"atom":
-			url: "https://github.com/bevry/feedr/commits/for-testing.atom"
-		"json":
-			url: "https://raw.githubusercontent.com/bevry/feedr/for-testing/package.json"
-		"raw":
-			url: "https://raw.githubusercontent.com/bevry/designs/1437c9993a77b24c3ad1856087908b508f3ceec6/bevry/avatars/No%20Shadow/avatar.png"
-		"fail":
-			url: "https://i-dont-exist-123213123123.com/"
-		"timeout":
-			url: "http://#{timeoutServerAddress}:#{timeoutServerPort}"
+	const feedsObject = {
+		atom: {
+			url: 'https://github.com/bevry/feedr/commits/for-testing.atom'
+		},
+		json: {
+			url: 'https://raw.githubusercontent.com/bevry/feedr/for-testing/package.json'
+		},
+		raw: {
+			url: 'https://raw.githubusercontent.com/bevry/designs/1437c9993a77b24c3ad1856087908b508f3ceec6/bevry/avatars/No%20Shadow/avatar.png',
+		},
+		fail: {
+			url: 'https://i-dont-exist-123213123123.com/'
+		},
+		timeout: {
+			url: `http://${timeoutServerAddress}:${timeoutServerPort}`
+		}
+	}
 
-	feedsArray = (value.url  for own key,value of feedsObject)
+	const feedsArray = []
+	eachr(feedsObject, function (feed) {
+		feedsArray.push(feed.url)
+	})
 
-	describe 'caching relevance works', (describe, it) ->
-		it 'should be false when not using cache', ->
-			expect(
-				Feedr::isFeedCacheStillRelevant({
+	describe('caching relevance works', function (describe, it) {
+		it('should be false when not using cache', function () {
+			equal(
+				Feedr.isFeedCacheStillRelevant({
 					cache: false
 				}, {})
-			).to.equal(false)
+			, false)
+		})
 
-		it 'should be false when using cache and is not relevant', ->
-			now = new Date()
-			expect(
-				Feedr::isFeedCacheStillRelevant({
+		it('should be false when using cache and is not relevant', function () {
+			const now = new Date()
+			equal(
+				Feedr.isFeedCacheStillRelevant({
 					cache: true
 				}, {
-					expires: new Date(now.getTime() - 1000 * 60)  # a minute from now
+					expires: new Date(now.getTime() - 1000 * 60)  // a minute from now
 				})
-			).to.equal(false)
+			, false)
+		})
 
-		it 'should be true when using cache and is relevant', ->
-			now = new Date()
-			expect(
-				Feedr::isFeedCacheStillRelevant({
+		it('should be true when using cache and is relevant', function () {
+			const now = new Date()
+			equal(
+				Feedr.isFeedCacheStillRelevant({
 					cache: true
 				}, {
-					expires: new Date(now.getTime() + 1000 * 60)  # a minute from now
+					expires: new Date(now.getTime() + 1000 * 60)  // a minute from now
 				})
-			).to.equal(true)
+			, true)
+		})
 
-		it 'should be false when using cache and is not relevant and outside max age', ->
-			now = new Date()
-			expect(
-				Feedr::isFeedCacheStillRelevant({
-					cache: 1000 * 60  # a minute from now
+		it('should be false when using cache and is not relevant and outside max age', function () {
+			const now = new Date()
+			equal(
+				Feedr.isFeedCacheStillRelevant({
+					cache: 1000 * 60  // a minute from now
 				}, {
-					expires: new Date(now.getTime() - 1000 * 60)  # a minute ago
-					date: new Date(now.getTime() - 1000 * 60 * 60)  # an hour ago
+					expires: new Date(now.getTime() - 1000 * 60),  // a minute ago
+					date: new Date(now.getTime() - 1000 * 60 * 60)  // an hour ago
 				})
-			).to.equal(false)
+			, false)
+		})
 
-		it 'should be true when using cache and is not relevant and within max age', ->
-			now = new Date()
-			expect(
-				Feedr::isFeedCacheStillRelevant({
-					cache: 1000 * 60  # a minute from now
+		it('should be true when using cache and is not relevant and within max age', function () {
+			const now = new Date()
+			equal(
+				Feedr.isFeedCacheStillRelevant({
+					cache: 1000 * 60  // a minute from now
 				}, {
-					expires: new Date(now.getTime() - 1000 * 60)  # a minute ago
+					expires: new Date(now.getTime() - 1000 * 60),  // a minute ago
 					date: now
 				})
-			).to.equal(true)
+			, true)
+		})
+	})
 
-	it 'should instantiate correct', ->
+	let feedr = null
+	it('should instantiate correct', function () {
 		feedr = new Feedr(feedrConfig)
+	})
 
-
-	describe 'atom feed', (describe,it) ->
-		it 'pass object', (done) ->
-			feedr.readFeed {url:feedsObject['atom'].url, parse:'xml', cache:false}, (err,result) ->
-				expect(err, 'error').to.not.exist
+	describe('atom feed', function (describe, it) {
+		it('pass object', function (done) {
+			feedr.readFeed({url: feedsObject.atom.url, parse: 'xml', cache: false}, function (err, result) {
+				errorEqual(err, null, 'error')
 				result = cleanData(result)
-				fsUtil.writeFileSync(fixturePath.atom, JSON.stringify(result, null, '  '))  if write
-				fixtureData.atom = cleanData require(fixturePath.atom)
-				expect(result, 'result').to.deep.equal(fixtureData.atom)
+				if ( write ) {
+					fsUtil.writeFileSync(fixturePath.atom, JSON.stringify(result, null, '  '))
+				}
+				fixtureData.atom = cleanData(require(fixturePath.atom))
+				deepEqual(result, fixtureData.atom, 'result')
 				done()
+			})
+		})
 
-		it 'pass string', (done) ->
-			feedr.readFeed feedsObject['atom'].url, (err,result) ->
-				expect(err, 'error').to.not.exist
+		it('pass string', function (done) {
+			feedr.readFeed(feedsObject.atom.url, function (err, result) {
+				errorEqual(err, null, 'error')
 				result = cleanData(result)
-				expect(result, 'result').to.deep.equal(fixtureData.atom)
+				deepEqual(result, fixtureData.atom, 'result')
 				done()
+			})
+		})
+	})
 
-	describe 'json feed', (describe,it) ->
-		it 'pass object', (done) ->
-			feedr.readFeed {url:feedsObject['json'].url, parse:'json', cache:false}, (err,result) ->
-				expect(err, 'error').to.not.exist
-				fsUtil.writeFileSync(fixturePath.json, JSON.stringify(result, null, '  '))  if write
+	describe('json feed', function (describe, it) {
+		it('pass object', function (done) {
+			feedr.readFeed({url: feedsObject.json.url, parse: 'json', cache: false}, function (err, result) {
+				errorEqual(err, null, 'error')
+				if ( write ) {
+					fsUtil.writeFileSync(fixturePath.json, JSON.stringify(result, null, '  '))
+				}
 				fixtureData.json = require(fixturePath.json)
-				expect(result, 'result').to.deep.equal(fixtureData.json)
+				deepEqual(result, fixtureData.json, 'result')
 				done()
+			})
+		})
 
-		it 'pass string', (done) ->
-			feedr.readFeed feedsObject['json'].url, (err,result) ->
-				expect(err, 'error').to.not.exist
-				expect(result, 'result').to.deep.equal(fixtureData.json)
+		it('pass string', function (done) {
+			feedr.readFeed(feedsObject.json.url, function (err, result) {
+				equal(err || null, null, 'error')
+				deepEqual(result, fixtureData.json, 'result')
 				done()
+			})
+		})
+	})
 
-	describe 'raw feed', (describe,it) ->
-		it 'pass object', (done) ->
-			feedr.readFeed {url:feedsObject['raw'].url, parse:'raw', cache:false}, (err,result) ->
-				expect(err, 'error').to.not.exist
-				fsUtil.writeFileSync(fixturePath.raw, result)  if write
+	describe('raw feed', function (describe, it) {
+		it('pass object', function (done) {
+			feedr.readFeed({url: feedsObject.raw.url, parse: 'raw', cache: false}, function (err, result) {
+				errorEqual(err, null, 'error')
+				if ( write ) {
+					fsUtil.writeFileSync(fixturePath.raw, result)
+				}
 				fixtureData.raw = fsUtil.readFileSync(fixturePath.raw)
-				expect(result, 'result').to.deep.equal(fixtureData.raw)
+				deepEqual(result, fixtureData.raw, 'result')
 				done()
+			})
+		})
 
-		it 'pass string', (done) ->
-			feedr.readFeed feedsObject['raw'].url, (err,result) ->
-				expect(err, 'error').to.not.exist
-				expect(result, 'result').to.deep.equal(fixtureData.raw)
+		it('pass string', function (done) {
+			feedr.readFeed(feedsObject.raw.url, function (err, result) {
+				errorEqual(err, null, 'error')
+				deepEqual(result, fixtureData.raw, 'result')
 				done()
+			})
+		})
+	})
 
-	it 'should fetch the feeds correctly when passing an object', (done) ->
-		feedr.readFeeds feedsObject, (err,result) ->
-			expect(err, 'err').to.not.exist
-			expect(cleanData(result['atom']), 'atom result').to.deep.equal(fixtureData.atom)
-			expect(result['json'], 'json result').to.deep.equal(fixtureData.json)
-			expect(result['raw'], 'raw result').to.deep.equal(fixtureData.raw)
-			expect(result.fail, 'fail').to.not.exist
-			expect(result.timeout, 'timeout').to.not.exist
+	it('should fetch the feeds correctly when passing an object', function (done) {
+		feedr.readFeeds(feedsObject, function (err, result) {
+			errorEqual(err, null, 'error')
+			deepEqual(cleanData(result.atom), fixtureData.atom, 'result')
+			deepEqual(result.json, fixtureData.json, 'result')
+			deepEqual(result.raw, fixtureData.raw, 'result')
+			equal(result.fail, null, 'fail')
+			equal(result.timeout, null, 'timeout')
 			done()
+		})
+	})
 
-	it 'should fetch the feeds correctly when passing an array', (done) ->
-		feedr.readFeeds feedsArray, (err,result) ->
-			expect(err, 'err').to.not.exist
-			expect(cleanData(result[0]), 'atom result').to.deep.equal(fixtureData.atom)
-			expect(result[1], 'json result').to.deep.equal(fixtureData.json)
-			expect(result[2], 'raw result').to.deep.equal(fixtureData.raw)
-			expect(result[3], 'fail').to.not.exist
-			expect(result.timeout, 'timeout').to.not.exist
+	it('should fetch the feeds correctly when passing an array', function (done) {
+		feedr.readFeeds(feedsArray, function (err, result) {
+			errorEqual(err, null, 'error')
+			deepEqual(cleanData(result[0]), fixtureData.atom, 'result')
+			deepEqual(result[1], fixtureData.json, 'result')
+			deepEqual(result[2], fixtureData.raw, 'result')
+			equal(result[3], null, 'fail')
+			equal(result[4], null, 'timeout')
 			done()
+		})
+	})
 
-	it 'should close our timeout server', ->
+	it('should close our timeout server', function () {
 		timeoutServer.close()
-
+	})
+})
