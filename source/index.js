@@ -232,7 +232,7 @@ class Feedr {
 		// Ensure optional
 		feed = this.prepareFeed(feed)
 
-		// Plugins
+		// Load plugins into `plugins[name] = plugin`
 		const plugins = {}
 		if ( typeChecker.isString(feed.plugins) ) {
 			feed.plugins = feed.plugins.split(' ')
@@ -249,34 +249,123 @@ class Feedr {
 			}
 		}
 
-		// Generators
-		const generateParser = function (name, method, opts, complete) {
-			me.log('debug', `Feedr parse [${feed.url}] with ${name} attempt`)
+
+		const fireMethod = function (method, opts, complete) {
+			if ( typeChecker.isFunction(method) === false ) {
+				const err = new Error('Method is not a function')
+				opts.log('debug', err)
+				complete(err)
+				return
+			}
+			opts.log('debug', `started`)
 			method(opts, function (err, data) {
 				if ( err ) {
+					opts.log('debug', `failed`, err)
 					complete(err)
-					return
 				}
-				if ( data ) {
-					me.log('debug', `Feedr parse [${feed.url}] with ${name} attempt, used`)
-					opts.data = data
+				else if ( !data ) {
+					opts.log('debug', `skipped`)
+					complete()
 				}
 				else {
-					me.log('debug', `Feedr parse [${feed.url}] with ${name} attempt, ignored`)
+					opts.log('debug', `completed`)
+					opts.data = data
+					complete(null, data)
 				}
-				complete(null, data)
 			})
 		}
-		const generateChecker = function (name, method, opts, complete) {
-			me.log('debug', `Feedr check [${feed.url}] with ${name} attempt`)
-			method(opts, function (err, data) {
-				if ( err ) {
-					complete(err)
-					return
+		const triggerPluginMethod = function(methodName, preference, opts, complete) {
+			let method = null
+			if ( preference ) {
+				if ( typeChecker.isString(preference) ) {
+					method = plugins[preference]
+					opts.log = function (level, ...args) {
+						me.log(level, `feedr [${preference}:${methodName}] [${opts.feed.url}]`, ...args)
+					}
+					fireMethod(method, opts, complete)
 				}
-				me.log('debug', `Feedr check [${feed.url}] with ${name} attempt, success`)
-				complete(null, data)
-			})
+				else if ( typeChecker.isFunction(preference) ) {
+					method = preference
+					opts.log = function (level, ...args) {
+						me.log(level, `feedr [custom:${methodName}] [${opts.feed.url}]`, ...args)
+					}
+					fireMethod(method, opts, complete)
+				}
+				else {
+					const err = new Error('feedr preference was invalid, it must be a plugin name or a method function')
+					opts.log('debug', err)
+					complete(err)
+				}
+			}
+			else {
+				// fire all the plugins
+				me.log('debug', `feedr [${methodName}] [${opts.feed.url}] firing all plugins`)
+				const tasks = new TaskGroup().done(function (err) {
+					if ( err ) {
+						me.log('debug', `feedr [${methodName}] [${opts.feed.url}] firing all plugins failed`, err)
+					}
+					else {
+						me.log('debug', `feedr [${methodName}] [${opts.feed.url}] firing all plugins passed`, err)
+					}
+					complete(err)
+				})
+				eachr(plugins, function (value, pluginName) {
+					if ( value.parse != null ) {
+						checkTasks.addTask(function (complete) {
+							opts.log = function (level, ...args) {
+								me.log(level, `feedr [${pluginName}:${methodName}] [${opts.feed.url}]`, ...args)
+							}
+							fireMethod(method, opts, complete)
+						})
+					})
+							generateParser.bind(null, key, value.parse)(opts, function (err, data) {
+								if ( data ) {
+									checkTasks.clear()
+								}
+								parseTaskComplete(err)
+							})
+						})
+					}
+				})
+					checkTasks.run()
+
+			}
+			if ( method ) {
+				fireMethod(method, opts, complete)
+			}
+			else {
+
+			}
+		}
+		// Generators
+		const wrapPluginMethod = function(pluginName, methodName, method, next) {
+			let message = `Feedr is using ${pluginName}:${methodName} on ${feed.url}`
+			if ( !method ) {
+				method = plugins[pluginName][methodName]
+			}
+			if ( typeChecker.isFunction(method) === false ) {
+				const err = new Error('The method was not a function')
+				me.log('debug', `${message}, it was an invalid function`, err.stack, method)
+				next(err)
+			}
+			return function (opts, complete) {
+				me.log('debug', `${message}, it has started`)
+				method(opts, function (err, data) {
+					if ( err ) {
+						me.log('debug', `${message}, it has failed`, err.stack)
+						complete(err)
+					}
+					else if ( !data ) {
+						me.log('debug', `${message}, it has skipped`)
+						complete()
+					}
+					else {
+						me.log('debug', `${message}, it has completed`)
+						opts.data = data
+						complete(null, data)
+					}
+				})
+			}
 		}
 		let parseResponse = null
 		let checkResponse = null
@@ -285,7 +374,7 @@ class Feedr {
 		if ( typeChecker.isString(feed.parse) ) {
 			// Specific
 			if ( typeChecker.isFunction(plugins[feed.parse] && plugins[feed.parse].parse) ) {
-				parseResponse = generateParser.bind(null, feed.parse, plugins[feed.parse].parse)
+				parseResponse = wrapPluginMethod(feed.parse, 'parse')
 			}
 
 			// Missing

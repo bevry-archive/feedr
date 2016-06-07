@@ -1,4 +1,4 @@
-module.exports.parse = function parseJSON ({feedr, feed, response, data}, next) {
+module.exports = function ({feedr, feed, response, data, log}, next) {
 	// Detect
 	const isJSON =
 		feed.parse === 'json' ||
@@ -37,7 +37,7 @@ module.exports.parse = function parseJSON ({feedr, feed, response, data}, next) 
 
 	// Clean the data if desired
 	if ( feed.clean ) {
-		feedr.log('debug', `Feedr is cleaning data from [${feed.url}]`)
+		log('debug', `cleaning data`)
 		data = feedr.cleanData(data)
 	}
 
