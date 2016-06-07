@@ -1,4 +1,4 @@
-export const parse = function ({feed, response, data}, next) {
+module.exports.parse = function parseCSON ({feed, response, data}, next) {
 	// Detect
 	const isCSON = (
 		feed.parse === 'cson' ||

@@ -1,22 +1,25 @@
 <!-- TITLE/ -->
 
-# Feedr
+<h1>Feedr</h1>
 
 <!-- /TITLE -->
 
 
 <!-- BADGES/ -->
 
-[![Build Status](https://img.shields.io/travis/bevry/feedr/master.svg)](http://travis-ci.org/bevry/feedr "Check this project's build status on TravisCI")
-[![NPM version](https://img.shields.io/npm/v/feedr.svg)](https://npmjs.org/package/feedr "View this project on NPM")
-[![NPM downloads](https://img.shields.io/npm/dm/feedr.svg)](https://npmjs.org/package/feedr "View this project on NPM")
-[![Dependency Status](https://img.shields.io/david/bevry/feedr.svg)](https://david-dm.org/bevry/feedr)
-[![Dev Dependency Status](https://img.shields.io/david/dev/bevry/feedr.svg)](https://david-dm.org/bevry/feedr#info=devDependencies)<br/>
-[![Gratipay donate button](https://img.shields.io/gratipay/bevry.svg)](https://www.gratipay.com/bevry/ "Donate weekly to this project using Gratipay")
-[![Flattr donate button](https://img.shields.io/badge/flattr-donate-yellow.svg)](http://flattr.com/thing/344188/balupton-on-Flattr "Donate monthly to this project using Flattr")
-[![PayPayl donate button](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QB8GQPZAH84N6 "Donate once-off to this project using Paypal")
-[![BitCoin donate button](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a "Donate once-off to this project using BitCoin")
-[![Wishlist browse button](https://img.shields.io/badge/wishlist-donate-yellow.svg)](http://amzn.com/w/2F8TXKSNAFG4V "Buy an item on our wishlist for us")
+<span class="badge-travisci"><a href="http://travis-ci.org/bevry/feedr" title="Check this project's build status on TravisCI"><img src="https://img.shields.io/travis/bevry/feedr/master.svg" alt="Travis CI Build Status" /></a></span>
+<span class="badge-npmversion"><a href="https://npmjs.org/package/feedr" title="View this project on NPM"><img src="https://img.shields.io/npm/v/feedr.svg" alt="NPM version" /></a></span>
+<span class="badge-npmdownloads"><a href="https://npmjs.org/package/feedr" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/feedr.svg" alt="NPM downloads" /></a></span>
+<span class="badge-daviddm"><a href="https://david-dm.org/bevry/feedr" title="View the status of this project's dependencies on DavidDM"><img src="https://img.shields.io/david/bevry/feedr.svg" alt="Dependency Status" /></a></span>
+<span class="badge-daviddmdev"><a href="https://david-dm.org/bevry/feedr#info=devDependencies" title="View the status of this project's development dependencies on DavidDM"><img src="https://img.shields.io/david/dev/bevry/feedr.svg" alt="Dev Dependency Status" /></a></span>
+<br class="badge-separator" />
+<span class="badge-slackin"><a href="https://slack.bevry.me" title="Join this project's slack community"><img src="https://slack.bevry.me/badge.svg" alt="Slack community badge" /></a></span>
+<span class="badge-patreon"><a href="http://patreon.com/bevry" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span>
+<span class="badge-gratipay"><a href="https://www.gratipay.com/bevry" title="Donate weekly to this project using Gratipay"><img src="https://img.shields.io/badge/gratipay-donate-yellow.svg" alt="Gratipay donate button" /></a></span>
+<span class="badge-flattr"><a href="https://flattr.com/profile/balupton" title="Donate to this project using Flattr"><img src="https://img.shields.io/badge/flattr-donate-yellow.svg" alt="Flattr donate button" /></a></span>
+<span class="badge-paypal"><a href="https://bevry.me/paypal" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button" /></a></span>
+<span class="badge-bitcoin"><a href="https://bevry.me/bitcoin" title="Donate once-off to this project using Bitcoin"><img src="https://img.shields.io/badge/bitcoin-donate-yellow.svg" alt="Bitcoin donate button" /></a></span>
+<span class="badge-wishlist"><a href="https://bevry.me/wishlist" title="Buy an item on our wishlist for us"><img src="https://img.shields.io/badge/wishlist-donate-yellow.svg" alt="Wishlist browse button" /></a></span>
 
 <!-- /BADGES -->
 
@@ -30,11 +33,21 @@ Use feedr to fetch the data from a remote url, respect its caching, and parse it
 
 <!-- INSTALL/ -->
 
-## Install
+<h2>Install</h2>
 
-### [NPM](http://npmjs.org/)
-- Use: `require('feedr')`
-- Install: `npm install --save feedr`
+<a href="https://npmjs.com" title="npm is a package manager for javascript"><h3>NPM</h3></a><ul>
+<li>Install: <code>npm install --save feedr</code></li>
+<li>Module: <code>require('feedr')</code></li></ul>
+
+<h3><a href="https://github.com/bevry/editions" title="Editions are the best way to produce and consume packages you care about.">Editions</a></h3>
+
+<p>This package is published with the following editions:</p>
+
+<ul><li><code>feedr</code> aliases <code>feedr/index.js</code> which uses <a href="https://github.com/bevry/editions" title="Editions are the best way to produce and consume packages you care about.">Editions</a> to automatically select the correct edition for the consumers environment</li>
+<li><code>feedr/source/index.js</code> is Source + <a href="https://babeljs.io/docs/learn-es2015/" title="ECMAScript Next">ESNext</a> + <a href="https://nodejs.org/dist/latest-v5.x/docs/api/modules.html" title="Node/CJS Modules">Require</a></li>
+<li><code>feedr/es2015/index.js</code> is <a href="https://babeljs.io" title="The compiler for writing next generation JavaScript">Babel</a> Compiled + <a href="http://babeljs.io/docs/plugins/preset-es2015/" title="ECMAScript 2015">ES2015</a> + <a href="https://nodejs.org/dist/latest-v5.x/docs/api/modules.html" title="Node/CJS Modules">Require</a></li></ul>
+
+<p>Older environments may need <a href="https://babeljs.io/docs/usage/polyfill/" title="A polyfill that emulates missing ECMAScript environment features">Babel's Polyfill</a> or something similar.</p>
 
 <!-- /INSTALL -->
 
@@ -43,22 +56,22 @@ Use feedr to fetch the data from a remote url, respect its caching, and parse it
 
 ``` javascript
 // Create a new feedr instance
-let feedr = require('feedr').create({/* optional configuration */})
+const feedr = require('feedr').create({/* optional configuration */})
 
 // Prepare our feeds that we want read
-let feeds = {
-	github: "https://github.com/bevry/feedr/commits/master.atom",
-	gittip: "https://www.gittip.com/balupton/public.json"
+const feeds = {
+	someAtomFeed: 'https://github.com/bevry/feedr/commits/for-testing.atom'
+	someJsonFile: 'https://raw.githubusercontent.com/bevry/feedr/for-testing/package.json'
 }
 
 // Read a single feed
-feedr.readFeed(feeds.github, {/* optional configuration */}, function (err, data, headers) {
+feedr.readFeed(feeds.someAtomFeed, {/* optional configuration */}, function (err, data, headers) {
 	console.log(err, data, headers)
 })
 
 // Read all the feeds together
 feedr.readFeeds(feeds, {/* optional configuration */}, function (err, result) {
-	console.log(err, result.github, result.twitter)
+	console.log(err, result.someAtomFeed, result.someJsonFile)
 })
 ```
 
@@ -91,63 +104,65 @@ Feed configuration properties are:
 
 <!-- HISTORY/ -->
 
-## History
-[Discover the change history by heading on over to the `HISTORY.md` file.](https://github.com/bevry/feedr/blob/master/HISTORY.md#files)
+<h2>History</h2>
+
+<a href="https://github.com/bevry/feedr/blob/master/HISTORY.md#files">Discover the release history by heading on over to the <code>HISTORY.md</code> file.</a>
 
 <!-- /HISTORY -->
 
 
 <!-- CONTRIBUTE/ -->
 
-## Contribute
+<h2>Contribute</h2>
 
-[Discover how you can contribute by heading on over to the `CONTRIBUTING.md` file.](https://github.com/bevry/feedr/blob/master/CONTRIBUTING.md#files)
+<a href="https://github.com/bevry/feedr/blob/master/CONTRIBUTING.md#files">Discover how you can contribute by heading on over to the <code>CONTRIBUTING.md</code> file.</a>
 
 <!-- /CONTRIBUTE -->
 
 
 <!-- BACKERS/ -->
 
-## Backers
+<h2>Backers</h2>
 
-### Maintainers
+<h3>Maintainers</h3>
 
 These amazing people are maintaining this project:
 
-- Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)
+<ul><li><a href="https://balupton.com">Benjamin Lupton</a> — <a href="https://github.com/bevry/feedr/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/feedr">view contributions</a></li></ul>
 
-### Sponsors
+<h3>Sponsors</h3>
 
 No sponsors yet! Will you be the first?
 
-[![Gratipay donate button](https://img.shields.io/gratipay/bevry.svg)](https://www.gratipay.com/bevry/ "Donate weekly to this project using Gratipay")
-[![Flattr donate button](https://img.shields.io/badge/flattr-donate-yellow.svg)](http://flattr.com/thing/344188/balupton-on-Flattr "Donate monthly to this project using Flattr")
-[![PayPayl donate button](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QB8GQPZAH84N6 "Donate once-off to this project using Paypal")
-[![BitCoin donate button](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a "Donate once-off to this project using BitCoin")
-[![Wishlist browse button](https://img.shields.io/badge/wishlist-donate-yellow.svg)](http://amzn.com/w/2F8TXKSNAFG4V "Buy an item on our wishlist for us")
+<span class="badge-patreon"><a href="http://patreon.com/bevry" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span>
+<span class="badge-gratipay"><a href="https://www.gratipay.com/bevry" title="Donate weekly to this project using Gratipay"><img src="https://img.shields.io/badge/gratipay-donate-yellow.svg" alt="Gratipay donate button" /></a></span>
+<span class="badge-flattr"><a href="https://flattr.com/profile/balupton" title="Donate to this project using Flattr"><img src="https://img.shields.io/badge/flattr-donate-yellow.svg" alt="Flattr donate button" /></a></span>
+<span class="badge-paypal"><a href="https://bevry.me/paypal" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button" /></a></span>
+<span class="badge-bitcoin"><a href="https://bevry.me/bitcoin" title="Donate once-off to this project using Bitcoin"><img src="https://img.shields.io/badge/bitcoin-donate-yellow.svg" alt="Bitcoin donate button" /></a></span>
+<span class="badge-wishlist"><a href="https://bevry.me/wishlist" title="Buy an item on our wishlist for us"><img src="https://img.shields.io/badge/wishlist-donate-yellow.svg" alt="Wishlist browse button" /></a></span>
 
-### Contributors
+<h3>Contributors</h3>
 
 These amazing people have contributed code to this project:
 
-- [Benjamin Lupton](https://github.com/balupton) <b@lupton.cc> — [view contributions](https://github.com/bevry/feedr/commits?author=balupton)
-- [Zearin](https://github.com/Zearin) — [view contributions](https://github.com/bevry/feedr/commits?author=Zearin)
+<ul><li><a href="https://github.com/Zearin">Zearin</a> — <a href="https://github.com/bevry/feedr/commits?author=Zearin" title="View the GitHub contributions of Zearin on repository bevry/feedr">view contributions</a></li>
+<li><a href="https://balupton.com">Benjamin Lupton</a> — <a href="https://github.com/bevry/feedr/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/feedr">view contributions</a></li></ul>
 
-[Become a contributor!](https://github.com/bevry/feedr/blob/master/CONTRIBUTING.md#files)
+<a href="https://github.com/bevry/feedr/blob/master/CONTRIBUTING.md#files">Discover how you can contribute by heading on over to the <code>CONTRIBUTING.md</code> file.</a>
 
 <!-- /BACKERS -->
 
 
 <!-- LICENSE/ -->
 
-## License
+<h2>License</h2>
 
 Unless stated otherwise all works are:
 
-- Copyright &copy; 2012+ Bevry Pty Ltd <us@bevry.me> (http://bevry.me)
+<ul><li>Copyright &copy; 2012+ <a href="https://bevry.me">Bevry Pty Ltd</a></li></ul>
 
 and licensed under:
 
-- The incredibly [permissive](http://en.wikipedia.org/wiki/Permissive_free_software_licence) [MIT License](http://opensource.org/licenses/mit-license.php)
+<ul><li><a href="http://spdx.org/licenses/MIT.html">MIT License</a></li></ul>
 
 <!-- /LICENSE -->

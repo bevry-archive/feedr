@@ -1,4 +1,4 @@
-export const parse = function ({feedr, feed, response, data}, next) {
+module.exports.parse = function parseXML ({feedr, feed, response, data}, next) {
 	// Detect
 	const isXML = feed.parse === 'xml' ||
 		['.xml', '.atom', '.rss', '.rdf', '.html', '.html'].indexOf(feed.extension) !== -1  ||
@@ -10,7 +10,7 @@ export const parse = function ({feedr, feed, response, data}, next) {
 	}
 
 	// XML options
-	const xml2jsOptions = require('extendr').deepExtend({}, feedr.config.xml2jsOptions || {}, feed.xml2jsOptions || {})
+	const xml2jsOptions = require('extendr').deep({}, feedr.config.xml2jsOptions || {}, feed.xml2jsOptions || {})
 
 	// Prepare Parse
 	const xml2js = require('xml2js')

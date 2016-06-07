@@ -1,4 +1,4 @@
-export const parse = function ({feed, response, data}, next) {
+module.exports.parse = function parseYAML ({feed, response, data}, next) {
 	// Detect
 	const isYAML =
 		feed.parse === 'yaml' ||

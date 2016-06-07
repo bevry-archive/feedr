@@ -1,4 +1,4 @@
-export const parse = function ({feed, data}, next) {
+module.exports.parse = function parseString ({feed, data}, next) {
 	// Detect
 	const isText = require('istextorbinary').isTextSync(feed.basename, data)
 	if ( !isText ) {

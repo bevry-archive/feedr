@@ -1,4 +1,4 @@
-export const parse = function ({feedr, feed, response, data}, next) {
+module.exports.parse = function parseJSON ({feedr, feed, response, data}, next) {
 	// Detect
 	const isJSON =
 		feed.parse === 'json' ||

@@ -1,4 +1,4 @@
-# August 25, 2015
+# 2016 April 27
 # https://github.com/bevry/base
 
 # Use the latest travis infrastructure
@@ -8,20 +8,25 @@ sudo: false
 language: node_js
 node_js:
   - "0.12"
-  - iojs
+  - "4"
+  - "5"
+  - "6"
 cache:
   directories:
     - node_modules
 
 # Prepare our tests
-# Ensure npm is the latest version that we support
 # Ensure the project is setup correctly and compiled
-install: "npm install -g npm@3 && npm run-script setup"
+install: "npm run-script setup"
 before_script: "npm run-script compile"
 
 # Run our tests
 script: "npm test"
 
 # Custom notifications
-# travis encrypt --org "$SLACK_SUBDOMAIN:$SLACK_TRAVIS_TOKEN#updates" --add notifications.slack
-# travis encrypt --org "$TRAVIS_NOTIFICATION_EMAIL" --add notifications.email.recipients
+notifications:
+  slack:
+    secure: g9kAD31Oo98N7ZphgpBDL5iN3/aMfRxnZ5+RQGV+elLFx1kVxvf3rORxL5HIC0XArZ8mt1YwSR9CsqutuuKVh0QmmEpOQOKfSJxIy8LuiJiXllSIKQEMt5a5wCNnZ3yAzFwpqyK/XJ9CnuHHgBxdoQfiqHYV+owEvYk/17mzqMg=
+  email:
+    recipients:
+      secure: T4f8/wO/u5MEntEupbQ7xpnQZvRoa4ff46sAt2829TNC6Nlsr3nPoMx339qCPH9eDtM/1/PbgPAOyW/eivKskk2tk94PGzTauWhzBCKu4qXo+4YFFmA2cDx8j+b69GKFpUMgnLOv1KJYtZCqSC/iB3t+MkZys1aFn+dpAOHsw+g=

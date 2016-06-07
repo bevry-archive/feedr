@@ -1,9 +1,7 @@
-'use strict'
-
 // Requires
 const extendr = require('extendr')
 const eachr = require('eachr')
-const TaskGroup = require('taskgroup')
+const {TaskGroup} = require('taskgroup')
 const typeChecker = require('typechecker')
 const safefs = require('safefs')
 const safeps = require('safeps')
@@ -11,7 +9,7 @@ const pathUtil = require('path')
 const request = require('request')
 
 // Define
-export default class Feedr {
+class Feedr {
 	// Helpers
 	static create (...args) {
 		return new Feedr(...args)
@@ -48,13 +46,13 @@ export default class Feedr {
 		const me = this
 
 		// Extend and dereference our configuration
-		this.config = extendr.deepExtend({
+		this.config = extendr.deep({
 			log: null,
 			cache: 1000 * 60 * 60 * 24,  // one day by default
 			tmpPath: null,
 			requestOptions: null,
 			plugins: null
-		}, this.config, config)
+		}, this.config || {}, config)
 
 		// Get the temp path right away
 		safeps.getTmpPath(function (err, tmpPath) {
@@ -83,7 +81,7 @@ export default class Feedr {
 
 		// Prepare options
 		let feeds = null
-		let defaultfeed = {}  // what is this?
+		const defaultfeed = {}  // what is this?
 		let next = null
 
 		// Extract the configuration from the arguments
@@ -105,10 +103,10 @@ export default class Feedr {
 		})
 
 		// Extract
-		let results = {}
+		const results = {}
 
 		// Tasks
-		const tasks = TaskGroup.create({concurrency: 0, onError: 'ignore'}).done(function () {
+		const tasks = TaskGroup.create({concurrency: 0, abortOnError: false}).done(function () {
 			let message = 'Feedr finished fetching'
 			let err = null
 
@@ -133,7 +131,7 @@ export default class Feedr {
 				if ( typeChecker.isString(feed) ) {
 					feed = {url: feed}
 				}
-				feeds[index] = feed = extendr.deepExtend({}, defaultfeed, feed)
+				feeds[index] = feed = extendr.deep({}, defaultfeed, feed)
 
 				// Read
 				me.readFeed(feed, function (err, data) {
@@ -235,12 +233,12 @@ export default class Feedr {
 		feed = this.prepareFeed(feed)
 
 		// Plugins
-		let plugins = {}
+		const plugins = {}
 		if ( typeChecker.isString(feed.plugins) ) {
 			feed.plugins = feed.plugins.split(' ')
 		}
 		if ( typeChecker.isArray(feed.plugins) ) {
-			for ( let name of feed.plugins ) {
+			for ( const name of feed.plugins ) {
 				try {
 					plugins[name] = require('./plugins/' + name)
 				}
@@ -373,7 +371,7 @@ export default class Feedr {
 
 
 		// Request options
-		const requestOptions = extendr.deepExtend({
+		const requestOptions = extendr.deep({
 			url: feed.url,
 			timeout: 1 * 60 * 1000,
 			encoding: null,
@@ -655,3 +653,6 @@ export default class Feedr {
 	}
 
 }
+
+// Exports
+module.exports = Feedr

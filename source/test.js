@@ -1,5 +1,6 @@
 // Require
-const rootPath = require('path').join(__dirname, '..', '..')
+const {join} = require('path')
+const rootPath = join(__dirname, '..')
 const {equal, deepEqual, errorEqual} = require('assert-helpers')
 const joe = require('joe')
 const Feedr = require(rootPath)
@@ -21,9 +22,9 @@ const timeoutServer = require('http').createServer(function (req, res) {
 
 joe.describe('feedr', function (describe, it) {
 	const fixturePath = {
-		atom: rootPath + '/test/atom.json',
-		json: rootPath + '/test/package.json',
-		raw: rootPath + '/test/bevry.png'
+		atom: join(rootPath, 'test-fixtures', 'atom.json'),
+		json: join(rootPath, 'test-fixtures', 'package.json'),
+		raw: join(rootPath, 'test-fixtures', 'bevry.png')
 	}
 	const fixtureData = {}
 	const feedrConfig = {
