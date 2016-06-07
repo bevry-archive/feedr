@@ -1,5 +1,8 @@
 # History
 
+## v2.13.1 2016 June 8
+- Meta change, correct syntaxes that are used in editions
+
 ## v2.13.0 2016 June 8
 - Converted from CoffeeScript to JavaScript
 - Updated dependencies
