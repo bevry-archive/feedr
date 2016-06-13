@@ -1,7 +1,7 @@
 {
   "title": "Feedr",
   "name": "feedr",
-  "version": "2.13.1",
+  "version": "2.13.2",
   "description": "Use feedr to fetch the data from a remote url, respect its caching, and parse its data. Despite its name, it's not just for feed data but also for all data that you can feed into it (including binary data).",
   "homepage": "https://github.com/bevry/feedr",
   "license": "MIT",
@@ -48,11 +48,11 @@
   },
   "author": "2012+ Bevry Pty Ltd <us@bevry.me> (https://bevry.me)",
   "maintainers": [
-    "Benjamin Lupton <b@lupton.cc> (https://balupton.com)"
+    "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
   ],
   "contributors": [
-    "Zearin (https://github.com/Zearin)",
-    "Benjamin Lupton <b@lupton.cc> (https://balupton.com)"
+    "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)",
+    "Zearin (https://github.com/Zearin)"
   ],
   "bugs": {
     "url": "https://github.com/bevry/feedr/issues"
@@ -121,18 +121,18 @@
     "request": "^2.72.0",
     "safefs": "^4.1.0",
     "safeps": "^6.3.0",
-    "taskgroup": "^5.0.0",
+    "taskgroup": "^5.0.1",
     "typechecker": "^4.3.0",
     "xml2js": "~0.4.16"
   },
   "devDependencies": {
     "assert-helpers": "^4.4.0",
-    "babel-cli": "^6.9.0",
+    "babel-cli": "^6.10.1",
     "babel-preset-es2015": "^6.9.0",
-    "eslint": "^2.11.1",
+    "eslint": "^2.12.0",
     "eslint-plugin-babel": "^3.2.0",
     "joe": "^1.8.0",
     "joe-reporter-console": "^1.2.1",
-    "projectz": "^1.1.5"
+    "projectz": "^1.1.6"
   }
 }

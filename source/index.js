@@ -170,7 +170,7 @@ class Feedr {
 		if ( feed.parse == null )          feed.parse = true
 		if ( feed.parse === 'raw' )        feed.parse = false
 		if ( feed.checkResponse != null )  feed.check = feed.checkResponse
-		if ( feed.plugins == null )        feed.plugins = this.config.plugins
+		if ( feed.plugins == null )        feed.plugins = this.config.plugins || 'github xml cson json yaml string'
 		if ( feed.metaData == null )       feed.metaData = {}
 
 		// Return

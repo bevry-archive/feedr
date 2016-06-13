@@ -1,5 +1,10 @@
 # History
 
+## v2.13.2 2016 June 13
+- Fixed unknown clear method error (regression since v2.13.0)
+- By default, use all plugins, like v2.12.0 and earlier (regression since v2.13.0)
+	- Thanks to [Chris Krycho](https://github.com/chriskrycho) for #6](https://github.com/bevry/feedr/issues/6)
+
 ## v2.13.1 2016 June 8
 - Meta change, correct syntaxes that are used in editions
 
@@ -75,9 +80,9 @@
 
 ## v2.7.0 2013 October 3
 - Can now parse yaml files
-- Can now customise parsing via `parse` feed optio
+- Can now customise parsing via `parse` feed option
 - Parsing is now determined by extensions instead of file formats (b/c break)
-	- If your url does not have an extension you must eplicitly set the `parse` feed optionn
+	- If your url does not have an extension you must eplicitly set the `parse` feed option
 
 ## v2.6.0 2013 October 2
 - Some options have changed (b/c break)

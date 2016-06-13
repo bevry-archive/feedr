@@ -1,0 +1,22 @@
+[
+  {
+    "login": "balupton",
+    "id": 61148,
+    "avatar_url": "https://avatars.githubusercontent.com/u/61148?v=3",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/balupton",
+    "html_url": "https://github.com/balupton",
+    "followers_url": "https://api.github.com/users/balupton/followers",
+    "following_url": "https://api.github.com/users/balupton/following{/other_user}",
+    "gists_url": "https://api.github.com/users/balupton/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/balupton/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/balupton/subscriptions",
+    "organizations_url": "https://api.github.com/users/balupton/orgs",
+    "repos_url": "https://api.github.com/users/balupton/repos",
+    "events_url": "https://api.github.com/users/balupton/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/balupton/received_events",
+    "type": "User",
+    "site_admin": false,
+    "contributions": 68
+  }
+]
