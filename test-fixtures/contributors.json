@@ -17,6 +17,6 @@
     "received_events_url": "https://api.github.com/users/balupton/received_events",
     "type": "User",
     "site_admin": false,
-    "contributions": 68
+    "contributions": "cleaned by feedr test runner"
   }
 ]

@@ -159,7 +159,7 @@ These amazing people have contributed code to this project:
 
 Unless stated otherwise all works are:
 
-<ul><li>Copyright &copy; 2012+ <a href="https://bevry.me">Bevry Pty Ltd</a></li></ul>
+<ul><li>Copyright &copy; 2012+ <a href="http://bevry.me">Bevry Pty Ltd</a></li></ul>
 
 and licensed under:
 

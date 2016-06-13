@@ -1,3 +1,5 @@
+/* eslint no-sync:0 */
+
 // Require
 const {join} = require('path')
 const rootPath = join(__dirname, '..')
@@ -18,26 +20,43 @@ const timeoutServer = require('http').createServer(function (req, res) {
 
 
 // =====================================
+// Helpers
+
+function cleanAtomData (data) {
+	return JSON.parse(
+		JSON.stringify(data).replace(/"[^"]+?avatar[^"]+?"/g, '"cleaned by feedr test runner"')
+	)
+}
+
+function cleanContributorsData (data) {
+	return data.map((i) => {
+		i.contributions = 'cleaned by feedr test runner'
+		return i
+	})
+}
+
+const fixturePath = {
+	atom: join(rootPath, 'test-fixtures', 'atom.json'),
+	json: join(rootPath, 'test-fixtures', 'package.json'),
+	raw: join(rootPath, 'test-fixtures', 'bevry.png'),
+	contributors: join(rootPath, 'test-fixtures', 'contributors.json')
+}
+const fixtureData = {
+	atom: cleanAtomData(require(fixturePath.atom)),
+	json: require(fixturePath.json),
+	raw: fsUtil.readFileSync(fixturePath.raw),
+	contributors: cleanContributorsData(require(fixturePath.contributors))
+}
+const write = true
+
+
+// =====================================
 // Tests
 
 joe.describe('feedr', function (describe, it) {
-	const fixturePath = {
-		atom: join(rootPath, 'test-fixtures', 'atom.json'),
-		json: join(rootPath, 'test-fixtures', 'package.json'),
-		raw: join(rootPath, 'test-fixtures', 'bevry.png'),
-		contributors: join(rootPath, 'test-fixtures', 'contributors.json'),
-	}
-	const fixtureData = {}
 	const feedrConfig = {
 		cache: true,
 		log: console.log
-	}
-	const write = false
-
-	const cleanData = function (data) {
-		return JSON.parse(
-			JSON.stringify(data).replace(/"https:\/\/0.gravatar.com\/avatar\/.+?"/g, '""')
-		)
 	}
 
 	const feedsObject = {
@@ -131,11 +150,10 @@ joe.describe('feedr', function (describe, it) {
 		it('pass object', function (done) {
 			feedr.readFeed({url: feedsObject.atom.url, parse: 'xml', cache: false}, function (err, result) {
 				errorEqual(err, null, 'error')
-				result = cleanData(result)
+				result = cleanAtomData(result)
 				if ( write ) {
 					fsUtil.writeFileSync(fixturePath.atom, JSON.stringify(result, null, '  '))
 				}
-				fixtureData.atom = cleanData(require(fixturePath.atom))
 				deepEqual(result, fixtureData.atom, 'result')
 				done()
 			})
@@ -144,8 +162,7 @@ joe.describe('feedr', function (describe, it) {
 		it('pass string', function (done) {
 			feedr.readFeed(feedsObject.atom.url, function (err, result) {
 				errorEqual(err, null, 'error')
-				result = cleanData(result)
-				deepEqual(result, fixtureData.atom, 'result')
+				deepEqual(cleanAtomData(result), fixtureData.atom, 'result')
 				done()
 			})
 		})
@@ -158,7 +175,6 @@ joe.describe('feedr', function (describe, it) {
 				if ( write ) {
 					fsUtil.writeFileSync(fixturePath.json, JSON.stringify(result, null, '  '))
 				}
-				fixtureData.json = require(fixturePath.json)
 				deepEqual(result, fixtureData.json, 'result')
 				done()
 			})
@@ -180,7 +196,6 @@ joe.describe('feedr', function (describe, it) {
 				if ( write ) {
 					fsUtil.writeFileSync(fixturePath.raw, result)
 				}
-				fixtureData.raw = fsUtil.readFileSync(fixturePath.raw)
 				deepEqual(result, fixtureData.raw, 'result')
 				done()
 			})
@@ -199,10 +214,10 @@ joe.describe('feedr', function (describe, it) {
 		it('pass', function (done) {
 			feedr.readFeed({url: feedsObject.contributors.url, cache: false}, function (err, result) {
 				errorEqual(err, null, 'error')
+				result = cleanContributorsData(result)
 				if ( write ) {
 					fsUtil.writeFileSync(fixturePath.contributors, JSON.stringify(result, null, '  '))
 				}
-				fixtureData.contributors = require(fixturePath.contributors)
 				deepEqual(result, fixtureData.contributors, 'result')
 				done()
 			})
@@ -212,10 +227,10 @@ joe.describe('feedr', function (describe, it) {
 	it('should fetch the feeds correctly when passing an object', function (done) {
 		feedr.readFeeds(feedsObject, function (err, result) {
 			errorEqual(err, null, 'error')
-			deepEqual(cleanData(result.atom), fixtureData.atom, 'atom result')
+			deepEqual(cleanAtomData(result.atom), fixtureData.atom, 'atom result')
 			deepEqual(result.json, fixtureData.json, 'json result')
 			deepEqual(result.raw, fixtureData.raw, 'raw result')
-			deepEqual(result.contributors, fixtureData.contributors, 'contributors result')
+			deepEqual(cleanContributorsData(result.contributors), fixtureData.contributors, 'contributors result')
 			equal(result.fail, null, 'fail')
 			equal(result.timeout, null, 'timeout')
 			done()
@@ -225,10 +240,10 @@ joe.describe('feedr', function (describe, it) {
 	it('should fetch the feeds correctly when passing an array', function (done) {
 		feedr.readFeeds(feedsArray, function (err, result) {
 			errorEqual(err, null, 'error')
-			deepEqual(cleanData(result[0]), fixtureData.atom, 'atom result')
+			deepEqual(cleanAtomData(result[0]), fixtureData.atom, 'atom result')
 			deepEqual(result[1], fixtureData.json, 'json result')
 			deepEqual(result[2], fixtureData.raw, 'raw result')
-			deepEqual(result[3], fixtureData.contributors, 'contributors result')
+			deepEqual(cleanContributorsData(result[3]), fixtureData.contributors, 'contributors result')
 			equal(result[4], null, 'fail')
 			equal(result[5], null, 'timeout')
 			done()
