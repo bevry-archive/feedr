@@ -250,7 +250,7 @@ class Feedr {
 		}
 
 		// Generators
-		const generateParser = function (name, method, opts, complete) {
+		function generateParser (name, method, opts, complete) {
 			me.log('debug', `Feedr parse [${feed.url}] with ${name} attempt`)
 			method(opts, function (err, data) {
 				if ( err ) {
@@ -267,7 +267,7 @@ class Feedr {
 				complete(null, data)
 			})
 		}
-		const generateChecker = function (name, method, opts, complete) {
+		function generateChecker (name, method, opts, complete) {
 			me.log('debug', `Feedr check [${feed.url}] with ${name} attempt`)
 			method(opts, function (err, data) {
 				if ( err ) {
@@ -381,7 +381,7 @@ class Feedr {
 		}, me.config.requestOptions || {}, feed.requestOptions || {})
 
 		// Read a file
-		const readFile = function (path, readFileComplete) {
+		function readFile (path, readFileComplete) {
 			// Log
 			me.log('debug', `Feedr === reading [${feed.url}] on [${path}], checking exists`)
 
@@ -422,7 +422,7 @@ class Feedr {
 		}
 
 		// Parse a file
-		const readMetaFile = function (path, readMetaFileComplete) {
+		function readMetaFile (path, readMetaFileComplete) {
 			// Log
 			me.log('debug', `Feedr === parsing [${feed.url}] on [${path}]`)
 
@@ -461,7 +461,7 @@ class Feedr {
 		}
 
 		// Write the feed
-		const writeFeed = function (response, data, writeFeedComplete) {
+		function writeFeed (response, data, writeFeedComplete) {
 			// Log
 			me.log('debug', `Feedr === writing [${feed.url}] to [${feed.path}]`)
 
@@ -502,7 +502,7 @@ class Feedr {
 
 		// Get the file via reading the cached copy
 		// next(err, data, meta)
-		const viaCache = function (viaCacheComplete) {
+		function viaCache (viaCacheComplete) {
 			// Log
 			me.log('debug', `Feedr === remembering [${feed.url}] from cache`)
 
@@ -552,7 +552,7 @@ class Feedr {
 
 		// Get the file via performing a fresh request
 		// next(err, data, meta)
-		const viaRequest = function (viaRequestComplete) {
+		function viaRequest (viaRequestComplete) {
 			// Log
 			me.log('debug', `Feedr === fetching [${feed.url}] to [${feed.path}], requesting`)
 
@@ -570,7 +570,7 @@ class Feedr {
 				me.log('debug', `Feedr === fetching [${feed.url}] to [${feed.path}], requested`)
 
 				// What should happen if an error occurs
-				const handleError = function (err) {
+				function handleError (err) {
 					// Log
 					me.log('warn', `Feedr === fetching [${feed.url}] to [${feed.path}], failed`, err.stack)
 
@@ -656,3 +656,5 @@ class Feedr {
 
 // Exports
 module.exports = Feedr
+module.exports.Feedr = Feedr
+// ^ legacy api, sill used by these: https://github.com/search?utf8=✓&q=%22new+require%28%27feedr%27%29.Feedr%22&type=Code&ref=searchresults

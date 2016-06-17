@@ -1,5 +1,8 @@
 # History
 
+## v2.13.3 2016 June 18
+- Fixed legacy API `require('feedr').Feedr` not existing (regression since v2.13.0)
+
 ## v2.13.2 2016 June 13
 - Fixed unknown clear method error (regression since v2.13.0)
 - By default, use all plugins, like v2.12.0 and earlier (regression since v2.13.0)
