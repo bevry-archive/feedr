@@ -1,32 +1,151 @@
-# 2016 April 27
+# 2017 February 24
 # https://github.com/bevry/base
+
 
 # Use the latest travis infrastructure
 sudo: false
 
-# We use node
+
+# Complete Node.js Version Matrix
+# https://github.com/balupton/awesome-travis#complete-nodejs-version-matrix
 language: node_js
 node_js:
-  - "0.12"
-  - "4"
-  - "5"
-  - "6"
+  - "0.8"   # end of life
+  - "0.10"  # end of life
+  - "0.12"  # maintenance
+  - "4"     # lts
+  - "6"     # lts
+  - "7"     # stable
+matrix:
+  fast_finish: true
+  allow_failures:
+    - node_js: "0.8"
+    - node_js: "0.10"
 cache:
   directories:
-    - node_modules
+    - $HOME/.npm  # npm's cache
 
-# Prepare our tests
-# Ensure the project is setup correctly and compiled
-install: "npm run-script setup"
-before_script: "npm run-script compile"
 
-# Run our tests
-script: "npm test"
+install: |
+  # Ensure NPM is latest
+  # https://github.com/balupton/awesome-travis#ensure-npm-is-latest
+  export CURRENT_NPM_VERSION="$(npm --version)"
+  export LATEST_NPM_VERSION="$(npm view npm version)"
+  if test "$CURRENT_NPM_VERSION" != "$LATEST_NPM_VERSION"; then
+    echo "running an old npm version, upgrading npm..."
+    npm install npm --global --cache-min=Infinity
+    echo "...npm upgrade complete"
+  fi
 
-# Custom notifications
+  # Ensure dependencies install with a LTS node version
+  # https://github.com/balupton/awesome-travis#use-lts-node-version-for-preparation
+  export CURRENT_NODE_VERSION="$(node --version)"
+  export LTS_NODE_VERSIONS="$(nvm ls-remote --lts)"
+  if echo "$LTS_NODE_VERSIONS" | grep "$CURRENT_NODE_VERSION"; then
+    echo "running on a LTS node version, completing setup..."
+    npm run our:setup
+    echo "...setup complete with current LTS version"
+  else
+    echo "running on a non-LTS node version, completing setup on a LTS node version..."
+    nvm install --lts
+    export LTS_NODE_INSTALLED_VERSION="$(node --version)"
+    npm run our:setup
+    nvm use "$TRAVIS_NODE_VERSION"
+    echo "...setup complete with LTS"
+  fi
+
+
+before_script: |
+  # Ensure compilation and linting occur on a LTS node version
+  # https://github.com/balupton/awesome-travis#use-lts-node-version-for-preparation
+  if test "$LTS_NODE_INSTALLED_VERSION"; then
+    echo "running on a non-LTS node version, compiling with LTS, skipping linting..."
+    nvm use "$LTS_NODE_INSTALLED_VERSION"
+    npm run our:compile
+    nvm use "$TRAVIS_NODE_VERSION"
+    echo "...compiled"
+  else
+    echo "running on a LTS node version, compiling and linting..."
+    npm run our:compile && npm run our:verify
+    echo "...compiled and linted"
+  fi
+
+
+after_success: |
+  # Release to Surge
+  # https://github.com/balupton/awesome-travis#release-to-surge
+  export CURRENT_NODE_VERSION="$(node --version)"
+  export LTS_NODE_LATEST_VERSION="$(nvm version-remote --lts)"
+  if test "$CURRENT_NODE_VERSION" = "$LTS_NODE_LATEST_VERSION"; then
+    echo "running on latest LTS node version, performing release to surge..."
+    echo "preparing release"
+    npm run our:meta
+    echo "installing surge"
+    npm install surge
+    echo "performing deploy"
+    export SURGE_SLUG="$(echo $TRAVIS_REPO_SLUG | sed 's/^\(.*\)\/\(.*\)/\2.\1/')"
+    if test "$TRAVIS_BRANCH"; then
+      echo "deploying branch..."
+      surge --project . --domain "$TRAVIS_BRANCH.$SURGE_SLUG.surge.sh"
+    fi
+    if test "$TRAVIS_TAG"; then
+      echo "deploying tag..."
+      surge --project . --domain "$TRAVIS_TAG.$SURGE_SLUG.surge.sh"
+    fi
+    if test "$TRAVIS_COMMIT"; then
+      echo "deploying commit..."
+      surge --project . --domain "$TRAVIS_COMMIT.$SURGE_SLUG.surge.sh"
+    fi
+    echo "...released to surge"
+  else
+    echo "running on non-latest LTS node version, skipping release to surge"
+  fi
+
+  # Release to NPM
+  # https://github.com/balupton/awesome-travis#release-to-npm
+  export CURRENT_NODE_VERSION="$(node --version)"
+  export LTS_NODE_LATEST_VERSION="$(nvm version-remote --lts)"
+  if test "$CURRENT_NODE_VERSION" = "$LTS_NODE_LATEST_VERSION"; then
+    if test "$TRAVIS_TAG"; then
+      echo "logging in..."
+      echo -e "$NPM_USERNAME\n$NPM_PASSWORD\n$NPM_EMAIL" | npm login
+      echo "publishing..."
+      npm publish
+      echo "...released to npm"
+    else
+      echo "non-tag, no need for release"
+    fi
+  else
+    echo "running on non-latest LTS node version, skipping release to npm"
+  fi
+
+
+# ========================================
+# Custom Configuration
+# https://github.com/bevry/base#configuration
+
+env:
+  global:
+  # Release to NPM
+  # https://github.com/balupton/awesome-travis#release-to-npm
+  - secure: iRdc1tBmrwX6V9JDIpUdtUnya7VF99yK+mBeQuLy5+ksZrgrxpCCUCoWh/typIQWN1ztwUChQZlCQY2wVQSLjlkU9QVHsoISCweB8x9m7R8VmwELr8sXXE7hqABAvXGnfNvkkgDvod5Bbjclq5Eekgh6xXJyWe2jVWKpzFz23yw=
+  - secure: ACWkqcwonK3NyqzS1UtiWgUo59tu7o8rlhznhiZMw2JIGjPqzLxowK9ARv6bGECCcaun1m9h5T5wCVooVBra48xzAUhNHIs1sl3UExgpIZ+hSxtxfPN1nRWvpsNVdT0QCyWO7jXQ0j4uJZQXYJc66CYpTjx5VBi6jI1JbTRsfvY=
+  - secure: ITx0zbXYH/XYtHyLsM2Idaz2VPwPs26+kYkExXXNk5pXfufw/GpX7VzORlN8ydoO7DTYkm06Fv10l2tZXyxLk6SB/AkJ2f+eD3CS9iA/8CDUQ9IKhYPZeiOjGbKLc5Vw5grKsZsx3u6/vtBCvXJlIXMSmUjVyOY+JyIHPdSrNKg=
+  # Release to Surge
+  # https://github.com/balupton/awesome-travis#release-to-surge
+  - secure: HukpYl0AUCxzVuhNgNiUgtudkky03CMYyLBwdaPYqeK3ZfbPyKonOEZolOfdtl/IOr8Ab7X1iJn2agZyKJLhE/2GLOvMPS/1W2wfoCy4uKK00NxEOXISRvr7Auz+ySH/3yQTOp1Bq2gwUFtTgbmLKi2W7fTnfJTUg3tP8kgf1go=
+  - secure: EjorhooVqy1hx3JpFRJy34SpLkvcBBTDwDHxXb0gLhGbCxKLX8negICwi/aJURE4kOhQ4rprAUze+FRawKDn3uLUcpwWfFLYi+Vc4hePzoK/RuwGPcB6wKGIHvDf5TAxQjHCf04nNTHbdAf8cEV9p8SEq6IbbVjCSJEuLYG12Qg=
+  # Custom Configuration for this repository
+  # travis encrypt "GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID" --add env.global
+  # travis encrypt "GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET" --add env.global
+  - secure: R+IA7Pp2ARqrFVjUEFSjlBnuN8ALYxkL4BMApZp2kDByOi9jiLcaewVpy11DrpCbRYEmHpSD3NIbvt8YvkFd1wtvYvW+LyLbKPnNlgnnk68yJMCkBYODJKxdpvz881xnIEyYFi+KAYWdT8UHe9aNvV06xvTFmVYavLSpfHgIqZo=
+  - secure: Y0EYbLFJ9j+LfrJpH5dhd3mKE4wFUxF0n40zu3bS5cyWp9SHp8fcnr/R034w9dDhJydQ6yN2pPxKfoJaW3Bl/4SqZ3PRopyaGASDo5HHie7V2/xe+LV9avxyHayMMpzP8IR7ksF9JemxmoyoKKoedsSzyYtJe743rovzcFqf7Is=
+
+# https://github.com/balupton/awesome-travis#slack
+# https://github.com/balupton/awesome-travis#email
 notifications:
   slack:
-    secure: g9kAD31Oo98N7ZphgpBDL5iN3/aMfRxnZ5+RQGV+elLFx1kVxvf3rORxL5HIC0XArZ8mt1YwSR9CsqutuuKVh0QmmEpOQOKfSJxIy8LuiJiXllSIKQEMt5a5wCNnZ3yAzFwpqyK/XJ9CnuHHgBxdoQfiqHYV+owEvYk/17mzqMg=
+    secure: O3UG4mtT63erxkWs3ATJ/OdcCvgb6n/aFK0j+2Lb34FlUk/FpERkW5SDAJfRn+CZmRuIFT3V+EWSmu1YtW+0ivHywA/fUxlUl/axqtTFIFb5/HlqFrnTqjvd8gcQ7LQEjzN5sZtZfgsQnYGBoMdtY7/RIAU2tntJ//tWfpmjn1U=
   email:
     recipients:
-      secure: T4f8/wO/u5MEntEupbQ7xpnQZvRoa4ff46sAt2829TNC6Nlsr3nPoMx339qCPH9eDtM/1/PbgPAOyW/eivKskk2tk94PGzTauWhzBCKu4qXo+4YFFmA2cDx8j+b69GKFpUMgnLOv1KJYtZCqSC/iB3t+MkZys1aFn+dpAOHsw+g=
+      secure: SkyOCRaASraAtErXDoL3ckxq06GVCHx2WaHChi84a25+4Fdd8mUwDjZPOlrnAsUi8GDDPGd99HTGHJidNitIryP/dkyC+sTYUHXorUdLTn2rMHM/nuhbUuARS8de9tLQPPI3dF2RMs0E82E2CuUDZbyclUSOBssYvmhwt53KPIM=

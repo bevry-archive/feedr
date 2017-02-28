@@ -1,3 +1,5 @@
+'use strict'
+
 // Requires
 const extendr = require('extendr')
 const eachr = require('eachr')
@@ -169,7 +171,7 @@ class Feedr {
 		if ( feed.cache == null )          feed.cache = this.config.cache
 		if ( feed.parse == null )          feed.parse = true
 		if ( feed.parse === 'raw' )        feed.parse = false
-		if ( feed.checkResponse != null )  feed.check = feed.checkResponse
+		if ( feed.check == null )          feed.check = true
 		if ( feed.plugins == null )        feed.plugins = this.config.plugins || 'github xml cson json yaml string'
 		if ( feed.metaData == null )       feed.metaData = {}
 
@@ -278,12 +280,17 @@ class Feedr {
 				complete(null, data)
 			})
 		}
-		let parseResponse = null
-		let checkResponse = null
 
+
+
+		// ------------------------------
 		// Parser
+
+		let parseResponse = null
+
+		// Specific
 		if ( typeChecker.isString(feed.parse) ) {
-			// Specific
+			// Exists
 			if ( typeChecker.isFunction(plugins[feed.parse] && plugins[feed.parse].parse) ) {
 				parseResponse = generateParser.bind(null, feed.parse, plugins[feed.parse].parse)
 			}
@@ -328,9 +335,14 @@ class Feedr {
 		}
 
 
+		// ------------------------------
 		// Checker
+
+		let checkResponse = null
+
+		// Specific
 		if ( typeChecker.isString(feed.check) ) {
-			// Specific
+			// Exists
 			if ( typeChecker.isFunction(plugins[feed.check] && plugins[feed.check].check) ) {
 				checkResponse = generateChecker.bind(null, feed.check, plugins[feed.check].check)
 			}
@@ -424,14 +436,14 @@ class Feedr {
 		// Parse a file
 		function readMetaFile (path, readMetaFileComplete) {
 			// Log
-			me.log('debug', `Feedr === parsing [${feed.url}] on [${path}]`)
+			me.log('debug', `Feedr === parsing meta file [${feed.url}] on [${path}]`)
 
 			// Parse
 			readFile(path, function (err, rawData) {
 				// Check
 				if ( err || !rawData ) {
 					// Log
-					me.log('debug', `Feedr === parsing [${feed.url}] on [${path}], read failed`, err && err.stack)
+					me.log('debug', `Feedr === parsing meta file [${feed.url}] on [${path}], read failed`, err && err.stack)
 
 					// Exit
 					readMetaFileComplete(err)
@@ -445,7 +457,7 @@ class Feedr {
 				}
 				catch ( err ) {
 					// Log
-					me.log('warn', `Feedr === parsing [${feed.url}] on [${path}], parse failed`, err.stack)
+					me.log('warn', `Feedr === parsing meta file [${feed.url}] on [${path}], parse failed`, err.stack)
 
 					// Exit
 					readMetaFileComplete(err)
@@ -453,7 +465,7 @@ class Feedr {
 				}
 
 				// Log
-				me.log('debug', `Feedr === parsing [${feed.url}] on [${path}], parse completed`)
+				me.log('debug', `Feedr === parsing meta file [${feed.url}] on [${path}], parse completed`)
 
 				// Exit
 				readMetaFileComplete(null, data)

@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports.parse = function parseXML ({feedr, feed, response, data}, next) {
 	// Detect
 	const isXML = feed.parse === 'xml' ||

@@ -1,5 +1,10 @@
 # History
 
+## v2.13.4 2017 February 28
+- Fixed checks never firing (regression since v2.10.0)
+- Updated dependencies
+- Updated base files
+
 ## v2.13.3 2016 June 18
 - Fixed legacy API `require('feedr').Feedr` not existing (regression since v2.13.0)
 

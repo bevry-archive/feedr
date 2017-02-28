@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports.parse = function parseCSON ({feed, response, data}, next) {
 	// Detect
 	const isCSON = (

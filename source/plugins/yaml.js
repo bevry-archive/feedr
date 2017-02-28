@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports.parse = function parseYAML ({feed, response, data}, next) {
 	// Detect
 	const isYAML =

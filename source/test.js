@@ -1,4 +1,5 @@
 /* eslint no-sync:0 */
+'use strict'
 
 // Require
 const {join} = require('path')
@@ -67,7 +68,7 @@ joe.describe('feedr', function (describe, it) {
 			url: 'https://raw.githubusercontent.com/bevry/feedr/for-testing/package.json'
 		},
 		raw: {
-			url: 'https://raw.githubusercontent.com/bevry/designs/1437c9993a77b24c3ad1856087908b508f3ceec6/bevry/avatars/No%20Shadow/avatar.png',
+			url: 'https://raw.githubusercontent.com/bevry/designs/1437c9993a77b24c3ad1856087908b508f3ceec6/bevry/avatars/No%20Shadow/avatar.png'
 		},
 		contributors: {
 			url: `https://api.github.com/repos/bevry/feedr/contributors?per_page=100&client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_CLIENT_SECRET}`
@@ -100,7 +101,7 @@ joe.describe('feedr', function (describe, it) {
 				Feedr.isFeedCacheStillRelevant({
 					cache: true
 				}, {
-					expires: new Date(now.getTime() - 1000 * 60)  // a minute from now
+					expires: new Date(now.getTime() - (1000 * 60))  // a minute from now
 				})
 			, false)
 		})
@@ -111,7 +112,7 @@ joe.describe('feedr', function (describe, it) {
 				Feedr.isFeedCacheStillRelevant({
 					cache: true
 				}, {
-					expires: new Date(now.getTime() + 1000 * 60)  // a minute from now
+					expires: new Date(now.getTime() + (1000 * 60))  // a minute from now
 				})
 			, true)
 		})
@@ -122,8 +123,8 @@ joe.describe('feedr', function (describe, it) {
 				Feedr.isFeedCacheStillRelevant({
 					cache: 1000 * 60  // a minute from now
 				}, {
-					expires: new Date(now.getTime() - 1000 * 60),  // a minute ago
-					date: new Date(now.getTime() - 1000 * 60 * 60)  // an hour ago
+					expires: new Date(now.getTime() - (1000 * 60)),  // a minute ago
+					date: new Date(now.getTime() - (1000 * 60 * 60))  // an hour ago
 				})
 			, false)
 		})
@@ -134,7 +135,7 @@ joe.describe('feedr', function (describe, it) {
 				Feedr.isFeedCacheStillRelevant({
 					cache: 1000 * 60  // a minute from now
 				}, {
-					expires: new Date(now.getTime() - 1000 * 60),  // a minute ago
+					expires: new Date(now.getTime() - (1000 * 60)),  // a minute ago
 					date: now
 				})
 			, true)

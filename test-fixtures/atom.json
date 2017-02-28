@@ -28,7 +28,7 @@
       "Recent Commits to feedr:for-testing"
     ],
     "updated": [
-      "2012-10-22T08:14:03+11:00"
+      "2012-10-21T21:14:03Z"
     ],
     "entry": [
       {
@@ -45,10 +45,10 @@
           }
         ],
         "title": [
-          "\n        Fixed config dereferencing. Changed refreshCache to cache. Fixed failures count. Added xml2jsOptions. Added cache testing.\n    "
+          "\n        Fixed config dereferencing. Changed refreshCache to cache. Fixed fail…\n    "
         ],
         "updated": [
-          "2012-10-22T08:14:03+11:00"
+          "2012-10-21T21:14:03Z"
         ],
         "media:thumbnail": [
           {
@@ -95,7 +95,7 @@
           "\n        removed chai dependency\n    "
         ],
         "updated": [
-          "2012-10-22T07:38:09+11:00"
+          "2012-10-21T20:38:09Z"
         ],
         "media:thumbnail": [
           {
@@ -142,7 +142,7 @@
           "\n        Improved makefile\n    "
         ],
         "updated": [
-          "2012-10-22T07:35:59+11:00"
+          "2012-10-21T20:35:59Z"
         ],
         "media:thumbnail": [
           {
@@ -189,7 +189,7 @@
           "\n        Attempt at fixing travis\n    "
         ],
         "updated": [
-          "2012-10-22T07:34:20+11:00"
+          "2012-10-21T20:34:20Z"
         ],
         "media:thumbnail": [
           {
@@ -236,7 +236,7 @@
           "\n        Updated readme\n    "
         ],
         "updated": [
-          "2012-10-22T07:30:53+11:00"
+          "2012-10-21T20:30:53Z"
         ],
         "media:thumbnail": [
           {
@@ -283,7 +283,7 @@
           "\n        Updated code for the abstraction. Need to complete readme.\n    "
         ],
         "updated": [
-          "2012-10-22T07:25:00+11:00"
+          "2012-10-21T20:25:00Z"
         ],
         "media:thumbnail": [
           {
@@ -330,7 +330,7 @@
           "\n        Working on the abstraction from the docpad plugin\n    "
         ],
         "updated": [
-          "2012-10-22T07:24:08+11:00"
+          "2012-10-21T20:24:08Z"
         ],
         "media:thumbnail": [
           {
@@ -377,7 +377,7 @@
           "\n        Updated plugin homepages. Updated HighlightJS readme.\n    "
         ],
         "updated": [
-          "2012-10-01T19:09:59+10:00"
+          "2012-10-01T09:09:59Z"
         ],
         "media:thumbnail": [
           {
@@ -421,10 +421,10 @@
           }
         ],
         "title": [
-          "\n        Published new version of the cache, feeder and text plugins. Fixes and improvements.\n    "
+          "\n        Published new version of the cache, feeder and text plugins. Fixes an…\n    "
         ],
         "updated": [
-          "2012-08-19T00:24:08+10:00"
+          "2012-08-18T14:24:08Z"
         ],
         "media:thumbnail": [
           {
@@ -471,7 +471,7 @@
           "\n        Fixed the cachr plugin. Improved the text plugin.\n    "
         ],
         "updated": [
-          "2012-08-17T13:37:49+10:00"
+          "2012-08-17T03:37:49Z"
         ],
         "media:thumbnail": [
           {
@@ -515,10 +515,10 @@
           }
         ],
         "title": [
-          "\n        Re-added markdown files to nom distribution as they are required for the nom website. Fixed typo in feeder plugin. Updated text plugin for DocPad 6.5\n    "
+          "\n        Re-added markdown files to nom distribution as they are required for …\n    "
         ],
         "updated": [
-          "2012-08-10T22:44:20+10:00"
+          "2012-08-10T12:44:20Z"
         ],
         "media:thumbnail": [
           {
@@ -562,10 +562,10 @@
           }
         ],
         "title": [
-          "\n        That feedr problem in the last commit was actually on our side. It was due to conflicts in the cache. Now resolved. Also removed osenv dependency for the new balUtil version.\n    "
+          "\n        That feedr problem in the last commit was actually on our side. It wa…\n    "
         ],
         "updated": [
-          "2012-08-10T20:31:18+10:00"
+          "2012-08-10T10:31:18Z"
         ],
         "media:thumbnail": [
           {
@@ -612,7 +612,7 @@
           "\n        Fixed feedr plugin. GitHub fixed their feeds so output changed.\n    "
         ],
         "updated": [
-          "2012-08-10T20:16:38+10:00"
+          "2012-08-10T10:16:38Z"
         ],
         "media:thumbnail": [
           {
@@ -656,10 +656,10 @@
           }
         ],
         "title": [
-          "\n        Added readme files to everything. Split the coffee plugin into individual plugins.\n    "
+          "\n        Added readme files to everything. Split the coffee plugin into indivi…\n    "
         ],
         "updated": [
-          "2012-07-18T15:04:03+10:00"
+          "2012-07-18T05:04:03Z"
         ],
         "media:thumbnail": [
           {
@@ -706,7 +706,7 @@
           "\n        Many changes\n    "
         ],
         "updated": [
-          "2012-07-08T02:44:08+10:00"
+          "2012-07-07T16:44:08Z"
         ],
         "media:thumbnail": [
           {
@@ -753,7 +753,7 @@
           "\n        Somewhere the feedr plugin was lost. Re-added and updated it.\n    "
         ],
         "updated": [
-          "2012-06-11T20:31:05+10:00"
+          "2012-06-11T10:31:05Z"
         ],
         "media:thumbnail": [
           {
@@ -797,10 +797,10 @@
           }
         ],
         "title": [
-          "\n        Plugins updated for DocPad 5.3.x/6.0.x. Plugins now pre-compile. Plugins now run their own tests (can now run their tests individually).\n    "
+          "\n        Plugins updated for DocPad 5.3.x/6.0.x. Plugins now pre-compile. Plug…\n    "
         ],
         "updated": [
-          "2012-06-07T10:20:48+10:00"
+          "2012-06-07T00:20:48Z"
         ],
         "media:thumbnail": [
           {
@@ -847,7 +847,7 @@
           "\n        Lots of updates, see description\n    "
         ],
         "updated": [
-          "2012-05-23T16:15:21+10:00"
+          "2012-05-23T06:15:21Z"
         ],
         "media:thumbnail": [
           {
@@ -891,10 +891,10 @@
           }
         ],
         "title": [
-          "\n        Added History.md files to most plugins. Published nearly all plugins (as v1.0.0). Added tests for html2jade.\n    "
+          "\n        Added History.md files to most plugins. Published nearly all plugins …\n    "
         ],
         "updated": [
-          "2012-04-14T22:43:11+10:00"
+          "2012-04-14T12:43:11Z"
         ],
         "media:thumbnail": [
           {
@@ -938,10 +938,10 @@
           }
         ],
         "title": [
-          "\n        Cleaned up the package.json files. Added tests for the partials plugin. Got the partials plugin going with DocPad 5.x\n    "
+          "\n        Cleaned up the package.json files. Added tests for the partials plugi…\n    "
         ],
         "updated": [
-          "2012-04-14T20:41:20+10:00"
+          "2012-04-14T10:41:20Z"
         ],
         "media:thumbnail": [
           {

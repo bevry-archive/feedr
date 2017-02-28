@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports.parse = function parseJSON ({feedr, feed, response, data}, next) {
 	// Detect
 	const isJSON =
@@ -12,7 +14,7 @@ module.exports.parse = function parseJSON ({feedr, feed, response, data}, next) 
 
 	// strip comments, whitespace, and semicolons from the start and finish
 	// targets facebook graph api
-	data = data.toString().trim().replace(/(^([\s\;]|\/\*\*\/)+|[\s\;]+$)/g, '')
+	data = data.toString().trim().replace(/(^([\s;]|\/\*\*\/)+|[\s;]+$)/g, '')
 
 	// strip the jsonp callback if it exists
 	data = data.replace(/^[a-z0-9]+/gi, '').replace(/^\(|\)$/g, '')
