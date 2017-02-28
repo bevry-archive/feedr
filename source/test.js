@@ -9,6 +9,8 @@ const joe = require('joe')
 const Feedr = require(rootPath)
 const fsUtil = require('fs')
 const eachr = require('eachr')
+const util = require('util')
+
 
 // =====================================
 // Timout Server
@@ -57,7 +59,11 @@ const write = true
 joe.describe('feedr', function (describe, it) {
 	const feedrConfig = {
 		cache: true,
-		log: console.log
+		log (...args) {
+			console.log(
+				args.map((arg) => util.inspect(arg, {colors: true})).join(' ').replace(/(client_id|clientid|key|secret)=[a-z0-9]+/gi, '$1=SECRET_REMOVED_BY_FEEDR_CLEAN')
+			)
+		}
 	}
 
 	const feedsObject = {
