@@ -231,6 +231,12 @@ class Feedr {
 			return this
 		}
 
+		// Check deprecations
+		if ( feed.checkReponse ) {
+			next(new Error('Feed checkResponse option is deprecated for check'))
+			return this
+		}
+
 		// Ensure optional
 		feed = this.prepareFeed(feed)
 
@@ -240,7 +246,8 @@ class Feedr {
 			feed.plugins = feed.plugins.split(' ')
 		}
 		if ( typeChecker.isArray(feed.plugins) ) {
-			for ( const name of feed.plugins ) {
+			for ( let i = 0; i < feed.plugins.length; ++i ) {
+				const name = feed.plugins[i]
 				try {
 					plugins[name] = require('./plugins/' + name)
 				}

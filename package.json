@@ -1,7 +1,7 @@
 {
   "title": "Feedr",
   "name": "feedr",
-  "version": "2.13.4",
+  "version": "2.13.5",
   "description": "Use feedr to fetch the data from a remote url, respect its caching, and parse its data. Despite its name, it's not just for feed data but also for all data that you can feed into it (including binary data).",
   "homepage": "https://github.com/bevry/feedr",
   "license": "MIT",
@@ -70,7 +70,7 @@
   "editions": [
     {
       "description": "Source + ESNext + Require",
-      "entry": "source/index.js",
+      "entry": "index.js",
       "directory": "source",
       "syntaxes": [
         "javascript",
@@ -81,14 +81,13 @@
         "spread",
         "rest",
         "destructuring",
-        "forof",
         "classes",
         "template strings"
       ]
     },
     {
       "description": "Babel Compiled + ES2015 + Require",
-      "entry": "es2015/index.js",
+      "entry": "index.js",
       "directory": "es2015",
       "syntaxes": [
         "javascript",

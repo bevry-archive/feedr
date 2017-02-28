@@ -1,5 +1,9 @@
 # History
 
+## v2.13.5 2017 February 28
+- Internal: swapped a `forof` loop for `forin` loop, for better compat with old environments
+- Added error for `checkResponse` instead of `check`
+
 ## v2.13.4 2017 February 28
 - Fixed checks never firing (regression since v2.10.0)
 - Updated dependencies
