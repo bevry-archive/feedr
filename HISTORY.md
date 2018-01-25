@@ -1,5 +1,10 @@
 # History
 
+## v3.0.0 2018 January 25
+- Minimum node version is now version 4 due to the nested dependencies [hoek](https://www.npmjs.com/package/hoek) and [hawk](https://www.npmjs.com/package/hawk) publishing code that does not work with earlier node verisons - if only they used [editions](https://github.com/bevry/editions)
+- Updated base files
+- Updated dependencies
+
 ## v2.13.5 2017 February 28
 - Internal: swapped a `forof` loop for `forin` loop, for better compat with old environments
 - Added error for `checkResponse` instead of `check`
