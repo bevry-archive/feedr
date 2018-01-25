@@ -2,9 +2,9 @@
 'use strict'
 
 // Require
-const {join} = require('path')
-const rootPath = join(__dirname, '..')
-const {equal, deepEqual, errorEqual} = require('assert-helpers')
+const path = require('path')
+const rootPath = path.join(__dirname, '..')
+const { equal, deepEqual, errorEqual } = require('assert-helpers')
 const joe = require('joe')
 const Feedr = require(rootPath)
 const fsUtil = require('fs')
@@ -18,7 +18,7 @@ const util = require('util')
 const timeoutServerAddress = '127.0.0.1'
 const timeoutServerPort = 9666
 const timeoutServer = require('http').createServer(function (req, res) {
-	res.writeHead(200, {'Content-Type': 'text/plain'})
+	res.writeHead(200, { 'Content-Type': 'text/plain' })
 }).listen(timeoutServerPort, timeoutServerAddress)
 
 
@@ -39,10 +39,10 @@ function cleanContributorsData (data) {
 }
 
 const fixturePath = {
-	atom: join(rootPath, 'test-fixtures', 'atom.json'),
-	json: join(rootPath, 'test-fixtures', 'package.json'),
-	raw: join(rootPath, 'test-fixtures', 'bevry.png'),
-	contributors: join(rootPath, 'test-fixtures', 'contributors.json')
+	atom: path.join(rootPath, 'test-fixtures', 'atom.json'),
+	json: path.join(rootPath, 'test-fixtures', 'package.json'),
+	raw: path.join(rootPath, 'test-fixtures', 'bevry.png'),
+	contributors: path.join(rootPath, 'test-fixtures', 'contributors.json')
 }
 const fixtureData = {
 	atom: cleanAtomData(require(fixturePath.atom)),
@@ -61,7 +61,7 @@ joe.describe('feedr', function (describe, it) {
 		cache: true,
 		log (...args) {
 			console.log(
-				args.map((arg) => util.inspect(arg, {colors: true})).join(' ').replace(/(client_id|clientid|key|secret)=[a-z0-9]+/gi, '$1=SECRET_REMOVED_BY_FEEDR_CLEAN')
+				args.map((arg) => util.inspect(arg, { colors: true })).join(' ').replace(/(client_id|clientid|key|secret)=[a-z0-9]+/gi, '$1=SECRET_REMOVED_BY_FEEDR_CLEAN')
 			)
 		}
 	}
@@ -98,7 +98,7 @@ joe.describe('feedr', function (describe, it) {
 				Feedr.isFeedCacheStillRelevant({
 					cache: false
 				}, {})
-			, false)
+				, false)
 		})
 
 		it('should be false when using cache and is not relevant', function () {
@@ -109,7 +109,7 @@ joe.describe('feedr', function (describe, it) {
 				}, {
 					expires: new Date(now.getTime() - (1000 * 60))  // a minute from now
 				})
-			, false)
+				, false)
 		})
 
 		it('should be true when using cache and is relevant', function () {
@@ -120,7 +120,7 @@ joe.describe('feedr', function (describe, it) {
 				}, {
 					expires: new Date(now.getTime() + (1000 * 60))  // a minute from now
 				})
-			, true)
+				, true)
 		})
 
 		it('should be false when using cache and is not relevant and outside max age', function () {
@@ -132,7 +132,7 @@ joe.describe('feedr', function (describe, it) {
 					expires: new Date(now.getTime() - (1000 * 60)),  // a minute ago
 					date: new Date(now.getTime() - (1000 * 60 * 60))  // an hour ago
 				})
-			, false)
+				, false)
 		})
 
 		it('should be true when using cache and is not relevant and within max age', function () {
@@ -144,7 +144,7 @@ joe.describe('feedr', function (describe, it) {
 					expires: new Date(now.getTime() - (1000 * 60)),  // a minute ago
 					date: now
 				})
-			, true)
+				, true)
 		})
 	})
 
@@ -155,10 +155,10 @@ joe.describe('feedr', function (describe, it) {
 
 	describe('atom feed', function (describe, it) {
 		it('pass object', function (done) {
-			feedr.readFeed({url: feedsObject.atom.url, parse: 'xml', cache: false}, function (err, result) {
+			feedr.readFeed({ url: feedsObject.atom.url, parse: 'xml', cache: false }, function (err, result) {
 				errorEqual(err, null, 'error')
 				result = cleanAtomData(result)
-				if ( write ) {
+				if (write) {
 					fsUtil.writeFileSync(fixturePath.atom, JSON.stringify(result, null, '  '))
 				}
 				deepEqual(result, fixtureData.atom, 'result')
@@ -177,9 +177,9 @@ joe.describe('feedr', function (describe, it) {
 
 	describe('json feed', function (describe, it) {
 		it('pass object', function (done) {
-			feedr.readFeed({url: feedsObject.json.url, parse: 'json', cache: false}, function (err, result) {
+			feedr.readFeed({ url: feedsObject.json.url, parse: 'json', cache: false }, function (err, result) {
 				errorEqual(err, null, 'error')
-				if ( write ) {
+				if (write) {
 					fsUtil.writeFileSync(fixturePath.json, JSON.stringify(result, null, '  '))
 				}
 				deepEqual(result, fixtureData.json, 'result')
@@ -198,9 +198,9 @@ joe.describe('feedr', function (describe, it) {
 
 	describe('raw feed', function (describe, it) {
 		it('pass object', function (done) {
-			feedr.readFeed({url: feedsObject.raw.url, parse: 'raw', cache: false}, function (err, result) {
+			feedr.readFeed({ url: feedsObject.raw.url, parse: 'raw', cache: false }, function (err, result) {
 				errorEqual(err, null, 'error')
-				if ( write ) {
+				if (write) {
 					fsUtil.writeFileSync(fixturePath.raw, result)
 				}
 				deepEqual(result, fixtureData.raw, 'result')
@@ -219,10 +219,10 @@ joe.describe('feedr', function (describe, it) {
 
 	describe('contributors feed', function (describe, it) {
 		it('pass', function (done) {
-			feedr.readFeed({url: feedsObject.contributors.url, cache: false}, function (err, result) {
+			feedr.readFeed({ url: feedsObject.contributors.url, cache: false }, function (err, result) {
 				errorEqual(err, null, 'error')
 				result = cleanContributorsData(result)
-				if ( write ) {
+				if (write) {
 					fsUtil.writeFileSync(fixturePath.contributors, JSON.stringify(result, null, '  '))
 				}
 				deepEqual(result, fixtureData.contributors, 'result')
