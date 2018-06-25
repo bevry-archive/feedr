@@ -20,7 +20,7 @@
 ## v2.13.2 2016 June 13
 - Fixed unknown clear method error (regression since v2.13.0)
 - By default, use all plugins, like v2.12.0 and earlier (regression since v2.13.0)
-	- Thanks to [Chris Krycho](https://github.com/chriskrycho) for #6](https://github.com/bevry/feedr/issues/6)
+	- Thanks to [Chris Krycho](https://github.com/chriskrycho) for [issue #6](https://github.com/bevry/feedr/issues/6)
 
 ## v2.13.1 2016 June 8
 - Meta change, correct syntaxes that are used in editions
