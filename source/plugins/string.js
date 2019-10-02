@@ -1,12 +1,11 @@
 'use strict'
 
-module.exports.parse = function parseString ({feed, data}, next) {
+module.exports.parse = function parseString({ feed, data }, next) {
 	// Detect
 	const isText = require('istextorbinary').isTextSync(feed.basename, data)
-	if ( !isText ) {
+	if (!isText) {
 		next()
-	}
-	else {
+	} else {
 		// Parse
 		next(null, data.toString())
 	}

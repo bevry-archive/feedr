@@ -1,7 +1,7 @@
 {
   "title": "Feedr",
   "name": "feedr",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Use feedr to fetch the data from a remote url, respect its caching, and parse its data. Despite its name, it's not just for feed data but also for all data that you can feed into it (including binary data).",
   "homepage": "https://github.com/bevry/feedr",
   "license": "MIT",
@@ -29,24 +29,23 @@
       "daviddmdev",
       "---",
       "patreon",
-      "opencollective",
-      "gratipay",
       "flattr",
+      "liberapay",
+      "buymeacoffee",
+      "opencollective",
+      "crypto",
       "paypal",
-      "bitcoin",
-      "wishlist",
-      "---",
-      "slackin"
+      "wishlist"
     ],
     "config": {
-      "patreonUsername": "bevry",
-      "opencollectiveUsername": "bevry",
-      "gratipayUsername": "bevry",
+      "buymeacoffeeUsername": "balupton",
+      "cryptoURL": "https://bevry.me/crypto",
       "flattrUsername": "balupton",
+      "liberapayUsername": "bevry",
+      "opencollectiveUsername": "bevry",
+      "patreonUsername": "bevry",
       "paypalURL": "https://bevry.me/paypal",
-      "bitcoinURL": "https://bevry.me/bitcoin",
-      "wishlistURL": "https://bevry.me/wishlist",
-      "slackinURL": "https://slack.bevry.me"
+      "wishlistURL": "https://bevry.me/wishlist"
     }
   },
   "author": "2012+ Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
@@ -65,79 +64,79 @@
     "url": "https://github.com/bevry/feedr.git"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=8"
   },
   "editions": [
     {
-      "description": "Source + ESNext + Require",
-      "entry": "index.js",
+      "description": "esnext source code with require for modules",
       "directory": "source",
-      "syntaxes": [
+      "entry": "index.js",
+      "tags": [
         "javascript",
         "esnext",
-        "require",
-        "const",
-        "let",
-        "spread",
-        "rest",
-        "destructuring",
-        "classes",
-        "template strings"
-      ]
-    },
-    {
-      "description": "Babel Compiled + ES2015 + Require",
-      "entry": "index.js",
-      "directory": "es2015",
-      "syntaxes": [
-        "javascript",
-        "es2015",
         "require"
-      ]
+      ],
+      "engines": {
+        "node": "8 || 10 || 11 || 12",
+        "browsers": false
+      }
     }
   ],
-  "main": "index.js",
+  "main": "source/index.js",
   "dependencies": {
     "cson": "^5.1.0",
     "eachr": "^3.2.0",
-    "editions": "^1.3.3",
-    "extendr": "^3.2.2",
-    "istextorbinary": "^2.1.0",
-    "js-yaml": "^3.8.1",
-    "request": "^2.79.0",
+    "extendr": "^3.4.1",
+    "get-port": "^5.0.0",
+    "istextorbinary": "^2.5.1",
+    "js-yaml": "^3.13.1",
+    "request": "^2.88.0",
     "safefs": "^4.1.0",
     "safeps": "^7.0.1",
-    "taskgroup": "^5.0.1",
-    "typechecker": "^4.4.1",
-    "xml2js": "~0.4.17"
+    "taskgroup": "^5.3.0",
+    "typechecker": "^4.7.0",
+    "xml2js": "~0.4.22"
   },
   "devDependencies": {
-    "assert-helpers": "^4.5.0",
-    "babel-cli": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1",
-    "eslint": "^4.16.0",
-    "joe": "^2.0.2",
-    "joe-reporter-console": "^2.0.1",
-    "projectz": "^1.4.0"
+    "assert-helpers": "^4.9.7",
+    "eslint": "^6.5.1",
+    "eslint-config-bevry": "^1.2.1",
+    "eslint-config-prettier": "^6.3.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "githubauthquerystring": "^1.0.2",
+    "kava": "^3.1.0",
+    "prettier": "^1.18.2",
+    "projectz": "^1.7.5",
+    "valid-directory": "^1.0.0"
   },
   "scripts": {
-    "our:setup": "npm run our:setup:npm",
-    "our:setup:npm": "npm install",
-    "our:clean": "rm -Rf ./docs ./es2015 ./es5 ./out",
-    "our:compile": "npm run our:compile:es2015",
-    "our:compile:es2015": "babel ./source --out-dir ./es2015 --presets es2015",
+    "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
+    "our:compile": "echo no need for this project",
+    "our:deploy": "echo no need for this project",
     "our:meta": "npm run our:meta:projectz",
     "our:meta:projectz": "projectz compile",
-    "our:verify": "npm run our:verify:eslint",
-    "our:verify:eslint": "eslint --fix ./source",
-    "our:test": "npm run our:verify && npm test",
-    "our:release": "npm run our:release:prepare && npm run our:release:check && npm run our:release:tag && npm run our:release:push",
+    "our:release": "npm run our:release:prepare && npm run our:release:check-changelog && npm run our:release:check-dirty && npm run our:release:tag && npm run our:release:push",
+    "our:release:check-changelog": "cat ./HISTORY.md | grep v$npm_package_version || (echo add a changelog entry for v$npm_package_version && exit -1)",
+    "our:release:check-dirty": "git diff --exit-code",
     "our:release:prepare": "npm run our:clean && npm run our:compile && npm run our:test && npm run our:meta",
-    "our:release:check": "npm run our:release:check:changelog && npm run our:release:check:dirty",
-    "our:release:check:changelog": "cat ./HISTORY.md | grep v$npm_package_version || (echo add a changelog entry for v$npm_package_version && exit -1)",
-    "our:release:check:dirty": "git diff --exit-code",
-    "our:release:tag": "export MESSAGE=$(cat ./HISTORY.md | sed -n \"/## v$npm_package_version/,/##/p\" | sed 's/## //' | awk 'NR>1{print buf}{buf = $0}') && test \"$MESSAGE\" || (echo 'proper changelog entry not found' && exit -1) && git tag v$npm_package_version -am \"$MESSAGE\"",
     "our:release:push": "git push origin master && git push origin --tags",
-    "test": "node --harmony ./test.js --joe-reporter=console"
+    "our:release:tag": "export MESSAGE=$(cat ./HISTORY.md | sed -n \"/## v$npm_package_version/,/##/p\" | sed 's/## //' | awk 'NR>1{print buf}{buf = $0}') && test \"$MESSAGE\" || (echo 'proper changelog entry not found' && exit -1) && git tag v$npm_package_version -am \"$MESSAGE\"",
+    "our:setup": "npm run our:setup:install",
+    "our:setup:install": "npm install",
+    "our:test": "npm run our:verify && npm test",
+    "our:verify": "npm run our:verify:directory && npm run our:verify:eslint && npm run our:verify:prettier",
+    "our:verify:directory": "npx valid-directory",
+    "our:verify:eslint": "eslint --fix --ignore-pattern '**/*.d.ts' --ignore-pattern '**/vendor/' --ignore-pattern '**/node_modules/' --ext .mjs,.js,.jsx,.ts,.tsx ./source",
+    "our:verify:prettier": "prettier --write ./source/**",
+    "test": "node ./source/test.js"
+  },
+  "eslintConfig": {
+    "extends": [
+      "bevry"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

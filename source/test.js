@@ -3,46 +3,44 @@
 
 // Require
 const path = require('path')
-const rootPath = path.join(__dirname, '..')
 const { equal, deepEqual, errorEqual } = require('assert-helpers')
-const joe = require('joe')
-const Feedr = require(rootPath)
+const kava = require('kava')
+const Feedr = require('./')
 const fsUtil = require('fs')
 const eachr = require('eachr')
 const util = require('util')
-
-
-// =====================================
-// Timout Server
-
-const timeoutServerAddress = '127.0.0.1'
-const timeoutServerPort = 9666
-const timeoutServer = require('http').createServer(function (req, res) {
-	res.writeHead(200, { 'Content-Type': 'text/plain' })
-}).listen(timeoutServerPort, timeoutServerAddress)
-
+const getPort = require('get-port')
+const {
+	fetchGithubAuthQueryString,
+	redactGithubAuthQueryString
+} = require('githubauthquerystring')
+const githubAuthQueryString = fetchGithubAuthQueryString()
 
 // =====================================
 // Helpers
 
-function cleanAtomData (data) {
+function cleanAtomData(data) {
 	return JSON.parse(
-		JSON.stringify(data).replace(/"[^"]+?avatar[^"]+?"/g, '"cleaned by feedr test runner"')
+		JSON.stringify(data).replace(
+			/"[^"]+?avatar[^"]+?"/g,
+			'"cleaned by feedr test runner"'
+		)
 	)
 }
 
-function cleanContributorsData (data) {
-	return data.map((i) => {
+function cleanContributorsData(data) {
+	return data.map(i => {
 		i.contributions = 'cleaned by feedr test runner'
 		return i
 	})
 }
 
+const fixturesPath = path.join(__dirname, '..', 'test-fixtures')
 const fixturePath = {
-	atom: path.join(rootPath, 'test-fixtures', 'atom.json'),
-	json: path.join(rootPath, 'test-fixtures', 'package.json'),
-	raw: path.join(rootPath, 'test-fixtures', 'bevry.png'),
-	contributors: path.join(rootPath, 'test-fixtures', 'contributors.json')
+	atom: path.join(fixturesPath, 'atom.json'),
+	json: path.join(fixturesPath, 'package.json'),
+	raw: path.join(fixturesPath, 'bevry.png'),
+	contributors: path.join(fixturesPath, 'contributors.json')
 }
 const fixtureData = {
 	atom: cleanAtomData(require(fixturePath.atom)),
@@ -50,124 +48,170 @@ const fixtureData = {
 	raw: fsUtil.readFileSync(fixturePath.raw),
 	contributors: cleanContributorsData(require(fixturePath.contributors))
 }
+let timeoutServer = null
 const write = true
+const minute = 1000 * 60
+const hour = minute * 60
 
+let feedr = null
+const feedrConfig = {
+	cache: true,
+	log(...args) {
+		console.log(
+			redactGithubAuthQueryString(
+				args.map(arg => util.inspect(arg, { colors: true })).join(' ')
+			)
+		)
+	}
+}
+const feedsObject = {
+	atom: {
+		url: 'https://github.com/bevry/feedr/commits/for-testing.atom'
+	},
+	json: {
+		url:
+			'https://raw.githubusercontent.com/bevry/feedr/for-testing/package.json'
+	},
+	raw: {
+		url:
+			'https://raw.githubusercontent.com/bevry/designs/1437c9993a77b24c3ad1856087908b508f3ceec6/bevry/avatars/No%20Shadow/avatar.png'
+	},
+	contributors: {
+		url: `https://api.github.com/repos/bevry/feedr/contributors?per_page=100&${githubAuthQueryString}`
+	},
+	fail: {
+		url: 'https://i-dont-exist-123213123123.com/'
+	},
+	timeout: {
+		url: null // set later
+	}
+}
+const feedsArray = []
 
 // =====================================
 // Tests
 
-joe.describe('feedr', function (describe, it) {
-	const feedrConfig = {
-		cache: true,
-		log (...args) {
-			console.log(
-				args.map((arg) => util.inspect(arg, { colors: true })).join(' ').replace(/(client_id|clientid|key|secret)=[a-z0-9]+/gi, '$1=SECRET_REMOVED_BY_FEEDR_CLEAN')
+kava.suite('feedr', function(suite, test) {
+	test('setup timeout server', function() {
+		const opts = { host: '127.0.0.1' }
+		getPort(opts).then(function(port) {
+			opts.port = port
+			timeoutServer = require('http')
+				.createServer(function(req, res) {
+					res.writeHead(200, { 'Content-Type': 'text/plain' })
+				})
+				.listen(opts)
+			feedsObject.timeout.url = `http://${opts.host}:${opts.port}`
+		})
+	})
+
+	test('setup feeds', function() {
+		eachr(feedsObject, function(feed) {
+			feedsArray.push(feed.url)
+		})
+	})
+
+	suite('caching relevance works', function(suite, test) {
+		test('should be false when not using cache', function() {
+			equal(
+				Feedr.isFeedCacheStillRelevant(
+					{
+						cache: false
+					},
+					{}
+				),
+				false
 			)
-		}
-	}
-
-	const feedsObject = {
-		atom: {
-			url: 'https://github.com/bevry/feedr/commits/for-testing.atom'
-		},
-		json: {
-			url: 'https://raw.githubusercontent.com/bevry/feedr/for-testing/package.json'
-		},
-		raw: {
-			url: 'https://raw.githubusercontent.com/bevry/designs/1437c9993a77b24c3ad1856087908b508f3ceec6/bevry/avatars/No%20Shadow/avatar.png'
-		},
-		contributors: {
-			url: `https://api.github.com/repos/bevry/feedr/contributors?per_page=100&client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_CLIENT_SECRET}`
-		},
-		fail: {
-			url: 'https://i-dont-exist-123213123123.com/'
-		},
-		timeout: {
-			url: `http://${timeoutServerAddress}:${timeoutServerPort}`
-		}
-	}
-
-	const feedsArray = []
-	eachr(feedsObject, function (feed) {
-		feedsArray.push(feed.url)
-	})
-
-	describe('caching relevance works', function (describe, it) {
-		it('should be false when not using cache', function () {
-			equal(
-				Feedr.isFeedCacheStillRelevant({
-					cache: false
-				}, {})
-				, false)
 		})
 
-		it('should be false when using cache and is not relevant', function () {
+		test('should be false when using cache and is not relevant', function() {
 			const now = new Date()
 			equal(
-				Feedr.isFeedCacheStillRelevant({
-					cache: true
-				}, {
-					expires: new Date(now.getTime() - (1000 * 60))  // a minute from now
-				})
-				, false)
+				Feedr.isFeedCacheStillRelevant(
+					{
+						cache: true
+					},
+					{
+						expires: new Date(now.getTime() - minute) // a minute from now
+					}
+				),
+				false
+			)
 		})
 
-		it('should be true when using cache and is relevant', function () {
+		test('should be true when using cache and is relevant', function() {
 			const now = new Date()
 			equal(
-				Feedr.isFeedCacheStillRelevant({
-					cache: true
-				}, {
-					expires: new Date(now.getTime() + (1000 * 60))  // a minute from now
-				})
-				, true)
+				Feedr.isFeedCacheStillRelevant(
+					{
+						cache: true
+					},
+					{
+						expires: new Date(now.getTime() + minute) // a minute from now
+					}
+				),
+				true
+			)
 		})
 
-		it('should be false when using cache and is not relevant and outside max age', function () {
+		test('should be false when using cache and is not relevant and outside max age', function() {
 			const now = new Date()
 			equal(
-				Feedr.isFeedCacheStillRelevant({
-					cache: 1000 * 60  // a minute from now
-				}, {
-					expires: new Date(now.getTime() - (1000 * 60)),  // a minute ago
-					date: new Date(now.getTime() - (1000 * 60 * 60))  // an hour ago
-				})
-				, false)
+				Feedr.isFeedCacheStillRelevant(
+					{
+						cache: minute // a minute from now
+					},
+					{
+						expires: new Date(now.getTime() - minute), // a minute ago
+						date: new Date(now.getTime() - hour) // an hour ago
+					}
+				),
+				false
+			)
 		})
 
-		it('should be true when using cache and is not relevant and within max age', function () {
+		test('should be true when using cache and is not relevant and within max age', function() {
 			const now = new Date()
 			equal(
-				Feedr.isFeedCacheStillRelevant({
-					cache: 1000 * 60  // a minute from now
-				}, {
-					expires: new Date(now.getTime() - (1000 * 60)),  // a minute ago
-					date: now
-				})
-				, true)
+				Feedr.isFeedCacheStillRelevant(
+					{
+						cache: minute // a minute from now
+					},
+					{
+						expires: new Date(now.getTime() - minute), // a minute ago
+						date: now
+					}
+				),
+				true
+			)
 		})
 	})
 
-	let feedr = null
-	it('should instantiate correct', function () {
+	test('should instantiate correct', function() {
 		feedr = new Feedr(feedrConfig)
 	})
 
-	describe('atom feed', function (describe, it) {
-		it('pass object', function (done) {
-			feedr.readFeed({ url: feedsObject.atom.url, parse: 'xml', cache: false }, function (err, result) {
-				errorEqual(err, null, 'error')
-				result = cleanAtomData(result)
-				if (write) {
-					fsUtil.writeFileSync(fixturePath.atom, JSON.stringify(result, null, '  '))
+	suite('atom feed', function(suite, test) {
+		test('pass object', function(done) {
+			feedr.readFeed(
+				{ url: feedsObject.atom.url, parse: 'xml', cache: false },
+				function(err, result) {
+					errorEqual(err, null, 'error')
+					result = cleanAtomData(result)
+					if (write) {
+						fsUtil.writeFileSync(
+							fixturePath.atom,
+							JSON.stringify(result, null, '  ')
+						)
+					}
+					deepEqual(result, fixtureData.atom, 'result')
+					done()
 				}
-				deepEqual(result, fixtureData.atom, 'result')
-				done()
-			})
+			)
 		})
 
-		it('pass string', function (done) {
-			feedr.readFeed(feedsObject.atom.url, function (err, result) {
+		test('pass string', function(done) {
+			feedr.readFeed(feedsObject.atom.url, function(err, result) {
 				errorEqual(err, null, 'error')
 				deepEqual(cleanAtomData(result), fixtureData.atom, 'result')
 				done()
@@ -175,20 +219,26 @@ joe.describe('feedr', function (describe, it) {
 		})
 	})
 
-	describe('json feed', function (describe, it) {
-		it('pass object', function (done) {
-			feedr.readFeed({ url: feedsObject.json.url, parse: 'json', cache: false }, function (err, result) {
-				errorEqual(err, null, 'error')
-				if (write) {
-					fsUtil.writeFileSync(fixturePath.json, JSON.stringify(result, null, '  '))
+	suite('json feed', function(suite, test) {
+		test('pass object', function(done) {
+			feedr.readFeed(
+				{ url: feedsObject.json.url, parse: 'json', cache: false },
+				function(err, result) {
+					errorEqual(err, null, 'error')
+					if (write) {
+						fsUtil.writeFileSync(
+							fixturePath.json,
+							JSON.stringify(result, null, '  ')
+						)
+					}
+					deepEqual(result, fixtureData.json, 'result')
+					done()
 				}
-				deepEqual(result, fixtureData.json, 'result')
-				done()
-			})
+			)
 		})
 
-		it('pass string', function (done) {
-			feedr.readFeed(feedsObject.json.url, function (err, result) {
+		test('pass string', function(done) {
+			feedr.readFeed(feedsObject.json.url, function(err, result) {
 				equal(err || null, null, 'error')
 				deepEqual(result, fixtureData.json, 'result')
 				done()
@@ -196,20 +246,23 @@ joe.describe('feedr', function (describe, it) {
 		})
 	})
 
-	describe('raw feed', function (describe, it) {
-		it('pass object', function (done) {
-			feedr.readFeed({ url: feedsObject.raw.url, parse: 'raw', cache: false }, function (err, result) {
-				errorEqual(err, null, 'error')
-				if (write) {
-					fsUtil.writeFileSync(fixturePath.raw, result)
+	suite('raw feed', function(suite, test) {
+		test('pass object', function(done) {
+			feedr.readFeed(
+				{ url: feedsObject.raw.url, parse: 'raw', cache: false },
+				function(err, result) {
+					errorEqual(err, null, 'error')
+					if (write) {
+						fsUtil.writeFileSync(fixturePath.raw, result)
+					}
+					deepEqual(result, fixtureData.raw, 'result')
+					done()
 				}
-				deepEqual(result, fixtureData.raw, 'result')
-				done()
-			})
+			)
 		})
 
-		it('pass string', function (done) {
-			feedr.readFeed(feedsObject.raw.url, function (err, result) {
+		test('pass string', function(done) {
+			feedr.readFeed(feedsObject.raw.url, function(err, result) {
 				errorEqual(err, null, 'error')
 				deepEqual(result, fixtureData.raw, 'result')
 				done()
@@ -217,47 +270,61 @@ joe.describe('feedr', function (describe, it) {
 		})
 	})
 
-	describe('contributors feed', function (describe, it) {
-		it('pass', function (done) {
-			feedr.readFeed({ url: feedsObject.contributors.url, cache: false }, function (err, result) {
-				errorEqual(err, null, 'error')
-				result = cleanContributorsData(result)
-				if (write) {
-					fsUtil.writeFileSync(fixturePath.contributors, JSON.stringify(result, null, '  '))
+	suite('contributors feed', function(suite, test) {
+		test('pass', function(done) {
+			feedr.readFeed(
+				{ url: feedsObject.contributors.url, cache: false },
+				function(err, result) {
+					errorEqual(err, null, 'error')
+					result = cleanContributorsData(result)
+					if (write) {
+						fsUtil.writeFileSync(
+							fixturePath.contributors,
+							JSON.stringify(result, null, '  ')
+						)
+					}
+					deepEqual(result, fixtureData.contributors, 'result')
+					done()
 				}
-				deepEqual(result, fixtureData.contributors, 'result')
-				done()
-			})
+			)
 		})
 	})
 
-	it('should fetch the feeds correctly when passing an object', function (done) {
-		feedr.readFeeds(feedsObject, function (err, result) {
+	test('should fetch the feeds correctly when passing an object', function(done) {
+		feedr.readFeeds(feedsObject, function(err, result) {
 			errorEqual(err, null, 'error')
 			deepEqual(cleanAtomData(result.atom), fixtureData.atom, 'atom result')
 			deepEqual(result.json, fixtureData.json, 'json result')
 			deepEqual(result.raw, fixtureData.raw, 'raw result')
-			deepEqual(cleanContributorsData(result.contributors), fixtureData.contributors, 'contributors result')
+			deepEqual(
+				cleanContributorsData(result.contributors),
+				fixtureData.contributors,
+				'contributors result'
+			)
 			equal(result.fail, null, 'fail')
 			equal(result.timeout, null, 'timeout')
 			done()
 		})
 	})
 
-	it('should fetch the feeds correctly when passing an array', function (done) {
-		feedr.readFeeds(feedsArray, function (err, result) {
+	test('should fetch the feeds correctly when passing an array', function(done) {
+		feedr.readFeeds(feedsArray, function(err, result) {
 			errorEqual(err, null, 'error')
 			deepEqual(cleanAtomData(result[0]), fixtureData.atom, 'atom result')
 			deepEqual(result[1], fixtureData.json, 'json result')
 			deepEqual(result[2], fixtureData.raw, 'raw result')
-			deepEqual(cleanContributorsData(result[3]), fixtureData.contributors, 'contributors result')
+			deepEqual(
+				cleanContributorsData(result[3]),
+				fixtureData.contributors,
+				'contributors result'
+			)
 			equal(result[4], null, 'fail')
 			equal(result[5], null, 'timeout')
 			done()
 		})
 	})
 
-	it('should close our timeout server', function () {
+	test('should close our timeout server', function() {
 		timeoutServer.close()
 	})
 })

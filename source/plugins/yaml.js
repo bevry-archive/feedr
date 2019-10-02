@@ -1,12 +1,12 @@
 'use strict'
 
-module.exports.parse = function parseYAML ({feed, response, data}, next) {
+module.exports.parse = function parseYAML({ feed, response, data }, next) {
 	// Detect
 	const isYAML =
 		feed.parse === 'yaml' ||
-		['.yml', '.yaml'].indexOf(feed.extension) !== -1  ||
+		['.yml', '.yaml'].indexOf(feed.extension) !== -1 ||
 		response.headers['content-type'].indexOf('yaml') !== -1
-	if ( !isYAML ) {
+	if (!isYAML) {
 		next()
 		return
 	}
@@ -14,8 +14,7 @@ module.exports.parse = function parseYAML ({feed, response, data}, next) {
 	// Parse
 	try {
 		data = require('js-yaml').load(data.toString().trim())
-	}
-	catch ( err ) {
+	} catch (err) {
 		next(err)
 		return
 	}
