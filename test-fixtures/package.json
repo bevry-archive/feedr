@@ -30,7 +30,7 @@
     "node": ">=0.4.0"
   },
   "dependencies": {
-    "request": "2.9.x",
+    "request": "2.88.x",
     "bal-util": "1.13.x",
     "xml2js": "0.2.x"
   },
