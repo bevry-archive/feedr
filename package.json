@@ -45,8 +45,13 @@
       "opencollectiveUsername": "bevry",
       "patreonUsername": "bevry",
       "paypalURL": "https://bevry.me/paypal",
-      "wishlistURL": "https://bevry.me/wishlist"
+      "wishlistURL": "https://bevry.me/wishlist",
+      "travisTLD": "com"
     }
+  },
+  "funding": {
+    "type": "cooperative",
+    "url": "https://bevry.me/fund"
   },
   "author": "2012+ Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
   "maintainers": [
@@ -54,7 +59,8 @@
   ],
   "contributors": [
     "Benjamin Lupton <b@lupton.cc> (http://balupton.com)",
-    "Zearin (https://github.com/Zearin)"
+    "Zearin (https://github.com/Zearin)",
+    "dependabot[bot] (http://github.com/apps/dependabot)"
   ],
   "bugs": {
     "url": "https://github.com/bevry/feedr/issues"
@@ -77,7 +83,7 @@
         "require"
       ],
       "engines": {
-        "node": "8 || 10 || 11 || 12",
+        "node": "8 || 10 || 12 || 13",
         "browsers": false
       }
     }
@@ -86,7 +92,7 @@
   "dependencies": {
     "cson": "^5.1.0",
     "eachr": "^3.2.0",
-    "extendr": "^3.4.1",
+    "extendr": "^3.5.0",
     "get-port": "^5.0.0",
     "istextorbinary": "^2.5.1",
     "js-yaml": "^3.13.1",
@@ -94,18 +100,18 @@
     "safefs": "^4.1.0",
     "safeps": "^7.0.1",
     "taskgroup": "^5.3.0",
-    "typechecker": "^4.7.0",
+    "typechecker": "^4.8.0",
     "xml2js": "~0.4.22"
   },
   "devDependencies": {
     "assert-helpers": "^4.9.7",
-    "eslint": "^6.5.1",
+    "eslint": "^6.6.0",
     "eslint-config-bevry": "^1.2.1",
-    "eslint-config-prettier": "^6.3.0",
+    "eslint-config-prettier": "^6.5.0",
     "eslint-plugin-prettier": "^3.1.1",
-    "githubauthquerystring": "^1.0.2",
+    "githubauthquerystring": "^1.1.0",
     "kava": "^3.1.0",
-    "prettier": "^1.18.2",
+    "prettier": "^1.19.0",
     "projectz": "^1.7.5",
     "valid-directory": "^1.0.0"
   },

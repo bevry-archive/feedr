@@ -7,7 +7,7 @@
 
 <!-- BADGES/ -->
 
-<span class="badge-travisci"><a href="http://travis-ci.org/bevry/feedr" title="Check this project's build status on TravisCI"><img src="https://img.shields.io/travis/bevry/feedr/master.svg" alt="Travis CI Build Status" /></a></span>
+<span class="badge-travisci"><a href="http://travis-ci.com/bevry/feedr" title="Check this project's build status on TravisCI"><img src="https://img.shields.io/travis/com/bevry/feedr/master.svg" alt="Travis CI Build Status" /></a></span>
 <span class="badge-npmversion"><a href="https://npmjs.org/package/feedr" title="View this project on NPM"><img src="https://img.shields.io/npm/v/feedr.svg" alt="NPM version" /></a></span>
 <span class="badge-npmdownloads"><a href="https://npmjs.org/package/feedr" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/feedr.svg" alt="NPM downloads" /></a></span>
 <span class="badge-daviddm"><a href="https://david-dm.org/bevry/feedr" title="View the status of this project's dependencies on DavidDM"><img src="https://img.shields.io/david/bevry/feedr.svg" alt="Dependency Status" /></a></span>
@@ -150,7 +150,8 @@ No sponsors yet! Will you be the first?
 These amazing people have contributed code to this project:
 
 <ul><li><a href="http://balupton.com">Benjamin Lupton</a> — <a href="https://github.com/bevry/feedr/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/feedr">view contributions</a></li>
-<li><a href="https://github.com/Zearin">Zearin</a> — <a href="https://github.com/bevry/feedr/commits?author=Zearin" title="View the GitHub contributions of Zearin on repository bevry/feedr">view contributions</a></li></ul>
+<li><a href="https://github.com/Zearin">Zearin</a> — <a href="https://github.com/bevry/feedr/commits?author=Zearin" title="View the GitHub contributions of Zearin on repository bevry/feedr">view contributions</a></li>
+<li><a href="http://github.com/apps/dependabot">dependabot[bot]</a> — <a href="https://github.com/bevry/feedr/commits?author=dependabot[bot]" title="View the GitHub contributions of dependabot[bot] on repository bevry/feedr">view contributions</a></li></ul>
 
 <a href="https://github.com/bevry/feedr/blob/master/CONTRIBUTING.md#files">Discover how you can contribute by heading on over to the <code>CONTRIBUTING.md</code> file.</a>
 
