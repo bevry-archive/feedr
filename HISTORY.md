@@ -1,5 +1,9 @@
 # History
 
+## v4.1.0 2019 November 9
+
+-   Updated [base files](https://github.com/bevry/base) and [editions](https://editions.bevry.me) using [boundation](https://github.com/bevry/boundation)
+
 ## v4.0.0 2019 October 2
 
 -   Updated [base files](https://github.com/bevry/base) and [editions](https://editions.bevry.me) using [boundation](https://github.com/bevry/boundation)
