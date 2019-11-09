@@ -10,12 +10,12 @@ matrix:
   allow_failures: []
 cache: npm
 install:
-- eval "$(curl -fsSL https://raw.githubusercontent.com/bevry/awesome-travis/be651cc263221278d0b3ab25802283fd26033f72/scripts/node-install.bash)"
+- eval "$(curl -fsSL https://raw.githubusercontent.com/bevry/awesome-travis/c91c9d5eef34ecb0e92029667fd5052640225fa3/scripts/node-install.bash)"
 before_script:
-- eval "$(curl -fsSL https://raw.githubusercontent.com/bevry/awesome-travis/be651cc263221278d0b3ab25802283fd26033f72/scripts/node-verify.bash)"
+- eval "$(curl -fsSL https://raw.githubusercontent.com/bevry/awesome-travis/c91c9d5eef34ecb0e92029667fd5052640225fa3/scripts/node-verify.bash)"
 after_success:
-- eval "$(curl -fsSL https://raw.githubusercontent.com/bevry/awesome-travis/be651cc263221278d0b3ab25802283fd26033f72/scripts/node-publish.bash)"
+- eval "$(curl -fsSL https://raw.githubusercontent.com/bevry/awesome-travis/c91c9d5eef34ecb0e92029667fd5052640225fa3/scripts/node-publish.bash)"
 notifications:
   email:
     recipients:
-      secure: TQpp9OToAfv3kvXAfkUx3INxVLh9ZmoWnrrDXh93JJL9JuXMeleU6G0yDMfd4qS+D8e0WgQ6X0ZOw/aeeT3adiQ4VAdMwjnQm7FPOA9uOMiVWNMNjcnvVMKrKXLvpCJ5q+qXNpNkw6fp4QYlr9X9i1cr2ilD+cKJ4/38Oerr+6s=
+      secure: TiYEyheHbIjszttTRkFkAstIpP3r/FwPSH48PtlnHmaK1Wy3IVuvUuX/w78qXPg7xqGa3GJm6LHfg1wDHre47fUQAICcuad6UGECkwut6CxwtX6v6fGQmhvKz2qMVv+c0hmsnYxAv33D+uX5upuoliZLFgSgBsyVGy/zJ6fwIOQ=
