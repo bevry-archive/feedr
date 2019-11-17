@@ -10,6 +10,7 @@ const fsUtil = require('fs')
 const eachr = require('eachr')
 const util = require('util')
 const getPort = require('get-port')
+const ghapi = process.env.GITHUB_API || 'https://api.github.com'
 const {
 	fetchGithubAuthQueryString,
 	redactGithubAuthQueryString
@@ -77,7 +78,7 @@ const feedsObject = {
 			'https://raw.githubusercontent.com/bevry/designs/1437c9993a77b24c3ad1856087908b508f3ceec6/bevry/avatars/No%20Shadow/avatar.png'
 	},
 	contributors: {
-		url: `https://api.github.com/repos/bevry/feedr/contributors?per_page=100&${githubAuthQueryString}`
+		url: `${ghapi}/repos/bevry/feedr/contributors?${githubAuthQueryString}`
 	},
 	fail: {
 		url: 'https://i-dont-exist-123213123123.com/'

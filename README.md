@@ -151,7 +151,8 @@ These amazing people have contributed code to this project:
 
 <ul><li><a href="http://balupton.com">Benjamin Lupton</a> — <a href="https://github.com/bevry/feedr/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/feedr">view contributions</a></li>
 <li><a href="https://github.com/Zearin">Zearin</a> — <a href="https://github.com/bevry/feedr/commits?author=Zearin" title="View the GitHub contributions of Zearin on repository bevry/feedr">view contributions</a></li>
-<li><a href="http://github.com/apps/dependabot">dependabot[bot]</a> — <a href="https://github.com/bevry/feedr/commits?author=dependabot[bot]" title="View the GitHub contributions of dependabot[bot] on repository bevry/feedr">view contributions</a></li></ul>
+<li><a href="http://github.com/apps/dependabot">dependabot[bot]</a> — <a href="https://github.com/bevry/feedr/commits?author=dependabot[bot]" title="View the GitHub contributions of dependabot[bot] on repository bevry/feedr">view contributions</a></li>
+<li><a href="http://github.com/apps/dependabot-preview">dependabot-preview[bot]</a> — <a href="https://github.com/bevry/feedr/commits?author=dependabot-preview[bot]" title="View the GitHub contributions of dependabot-preview[bot] on repository bevry/feedr">view contributions</a></li></ul>
 
 <a href="https://github.com/bevry/feedr/blob/master/CONTRIBUTING.md#files">Discover how you can contribute by heading on over to the <code>CONTRIBUTING.md</code> file.</a>
 

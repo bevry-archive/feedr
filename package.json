@@ -1,7 +1,7 @@
 {
   "title": "Feedr",
   "name": "feedr",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "description": "Use feedr to fetch the data from a remote url, respect its caching, and parse its data. Despite its name, it's not just for feed data but also for all data that you can feed into it (including binary data).",
   "homepage": "https://github.com/bevry/feedr",
   "license": "MIT",
@@ -49,10 +49,7 @@
       "travisTLD": "com"
     }
   },
-  "funding": {
-    "type": "cooperative",
-    "url": "https://bevry.me/fund"
-  },
+  "funding": "https://bevry.me/fund",
   "author": "2012+ Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
   "maintainers": [
     "Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
@@ -60,7 +57,8 @@
   "contributors": [
     "Benjamin Lupton <b@lupton.cc> (http://balupton.com)",
     "Zearin (https://github.com/Zearin)",
-    "dependabot[bot] (http://github.com/apps/dependabot)"
+    "dependabot[bot] (http://github.com/apps/dependabot)",
+    "dependabot-preview[bot] (http://github.com/apps/dependabot-preview)"
   ],
   "bugs": {
     "url": "https://github.com/bevry/feedr/issues"
@@ -83,37 +81,37 @@
         "require"
       ],
       "engines": {
-        "node": "8 || 10 || 12 || 13",
+        "node": "8 || 10 || 12",
         "browsers": false
       }
     }
   ],
   "main": "source/index.js",
   "dependencies": {
-    "cson": "^6.2.0",
-    "eachr": "^3.2.0",
+    "cson": "^6.3.0",
+    "eachr": "^3.3.0",
     "extendr": "^3.5.0",
     "get-port": "^5.0.0",
-    "istextorbinary": "^2.5.1",
+    "istextorbinary": "^2.6.0",
     "js-yaml": "^3.13.1",
     "request": "^2.88.0",
-    "safefs": "^5.0.0",
-    "safeps": "^8.0.0",
-    "taskgroup": "^6.0.0",
-    "typechecker": "^4.8.0",
+    "safefs": "^5.1.0",
+    "safeps": "^8.1.0",
+    "taskgroup": "^6.1.0",
+    "typechecker": "^4.9.0",
     "xml2js": "~0.4.22"
   },
   "devDependencies": {
-    "assert-helpers": "^5.2.1",
+    "assert-helpers": "^5.3.0",
     "eslint": "^6.6.0",
     "eslint-config-bevry": "^1.2.1",
-    "eslint-config-prettier": "^6.5.0",
+    "eslint-config-prettier": "^6.6.0",
     "eslint-plugin-prettier": "^3.1.1",
-    "githubauthquerystring": "^1.1.0",
-    "kava": "^3.2.0",
+    "githubauthquerystring": "^1.2.0",
+    "kava": "^4.0.0",
     "prettier": "^1.19.1",
-    "projectz": "^1.9.0",
-    "valid-directory": "^1.0.0"
+    "projectz": "^1.10.0",
+    "valid-directory": "^1.1.1"
   },
   "scripts": {
     "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
