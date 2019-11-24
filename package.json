@@ -92,7 +92,7 @@
     "eachr": "^4.1.0",
     "extendr": "^3.5.0",
     "get-port": "^5.0.0",
-    "istextorbinary": "^2.6.0",
+    "istextorbinary": "^3.0.0",
     "js-yaml": "^3.13.1",
     "request": "^2.88.0",
     "safefs": "5.1.0",
