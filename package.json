@@ -90,7 +90,7 @@
   "dependencies": {
     "cson": "6.4.0",
     "eachr": "^4.1.0",
-    "extendr": "^3.5.0",
+    "extendr": "^4.0.0",
     "get-port": "^5.0.0",
     "istextorbinary": "^3.0.0",
     "js-yaml": "^3.13.1",
