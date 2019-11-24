@@ -97,7 +97,7 @@
     "request": "^2.88.0",
     "safefs": "5.1.0",
     "safeps": "8.1.0",
-    "taskgroup": "6.1.0",
+    "taskgroup": "6.2.0",
     "typechecker": "^4.10.0",
     "xml2js": "~0.4.22"
   },
