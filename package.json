@@ -96,7 +96,7 @@
     "js-yaml": "^3.13.1",
     "request": "^2.88.0",
     "safefs": "5.1.0",
-    "safeps": "8.1.0",
+    "safeps": "9.0.0",
     "taskgroup": "6.2.0",
     "typechecker": "^5.0.0",
     "xml2js": "~0.4.22"
