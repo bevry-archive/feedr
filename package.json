@@ -1,7 +1,7 @@
 {
   "title": "Feedr",
   "name": "feedr",
-  "version": "4.7.0",
+  "version": "4.8.0",
   "description": "Use feedr to fetch the data from a remote url, respect its caching, and parse its data. Despite its name, it's not just for feed data but also for all data that you can feed into it (including binary data).",
   "homepage": "https://github.com/bevry/feedr",
   "license": "MIT",
@@ -28,6 +28,7 @@
       "daviddm",
       "daviddmdev",
       "---",
+      "githubsponsors",
       "patreon",
       "flattr",
       "liberapay",
@@ -38,6 +39,7 @@
       "wishlist"
     ],
     "config": {
+      "githubSponsorsUsername": "balupton",
       "buymeacoffeeUsername": "balupton",
       "cryptoURL": "https://bevry.me/crypto",
       "flattrUsername": "balupton",
@@ -85,32 +87,33 @@
       }
     }
   ],
+  "type": "commonjs",
   "main": "source/index.js",
   "dependencies": {
-    "cson": "^6.7.0",
-    "eachr": "^4.4.0",
-    "extendr": "^4.2.0",
+    "cson": "^6.8.0",
+    "eachr": "^4.5.0",
+    "extendr": "^4.3.0",
     "get-port": "^5.0.0",
-    "istextorbinary": "^3.1.0",
+    "istextorbinary": "^3.2.0",
     "js-yaml": "^3.13.1",
     "request": "^2.88.0",
-    "safefs": "^5.3.0",
-    "safeps": "^9.1.0",
-    "taskgroup": "^6.3.0",
-    "typechecker": "^5.1.0",
+    "safefs": "^5.4.0",
+    "safeps": "^9.2.0",
+    "taskgroup": "^6.4.0",
+    "typechecker": "^6.2.0",
     "xml2js": "~0.4.22"
   },
   "devDependencies": {
-    "assert-helpers": "^5.7.0",
+    "assert-helpers": "^5.8.0",
     "eslint": "^6.7.2",
-    "eslint-config-bevry": "^2.2.0",
+    "eslint-config-bevry": "^2.3.0",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-prettier": "^3.1.1",
-    "githubauthquerystring": "^2.1.0",
-    "kava": "^4.2.0",
+    "githubauthquerystring": "^2.2.0",
+    "kava": "^4.3.0",
     "prettier": "^1.19.1",
-    "projectz": "^1.13.0",
-    "valid-directory": "^1.4.0"
+    "projectz": "^1.15.0",
+    "valid-directory": "^1.5.0"
   },
   "scripts": {
     "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
